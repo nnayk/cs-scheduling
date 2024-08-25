@@ -1,9 +1,11 @@
 from flask import Flask
 from constants import Resources
 from flask import logging 
+from config import Config
 
-def create_app():
+def create_app(config_class=Config):
     app = Flask(__name__)
+    app.config.from_object(config_class)
     logging.basicConfig(level=logging.INFO)
     logger = logging.create_logger(app)
 
