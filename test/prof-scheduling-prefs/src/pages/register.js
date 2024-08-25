@@ -119,7 +119,7 @@ const Register = () => {
       <div className="bg-white p-8 rounded shadow-md w-96">
         <h2 className="text-2xl font-semibold mb-4 text-gray-600">Register</h2>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label className="block text-gray-600 text-sm font-medium">
               Username
             </label>
@@ -133,10 +133,10 @@ const Register = () => {
             {usernameError && (
               <p className="text-red-500 text-sm">{usernameError}</p>
             )}
-          </div>
+          </div> */}
           <div className="mb-4">
             <label className="block text-gray-600 text-sm font-medium">
-              Email
+              Cal Poly Email
             </label>
             <input
               type="email"
@@ -201,6 +201,9 @@ const Register = () => {
               Log in
             </Link>
           </p>
+          <Link href="/login" className="text-blue-500 hover:underline text-sm">
+            Forgot password?
+          </Link>
         </form>
       </div>
     </div>
