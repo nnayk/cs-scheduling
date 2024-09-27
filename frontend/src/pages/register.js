@@ -7,6 +7,8 @@ import { AiFillQuestionCircle } from "react-icons/ai";
 import Link from "next/link";
 import Error from "next/error";
 
+const MIN_PWD_LEN = 7;
+
 const Register = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -32,7 +34,7 @@ const Register = () => {
   /* Password validation function */
   const isPasswordValid = (password) => {
     // Define regular expressions for password rules
-    const minLengthRegex = /(?=.{10,})/;
+    const minLengthRegex = /(?=.{MIN_PWD_LEN,})/;
     const uppercaseRegex = /(?=.*[A-Z])/;
     const lowercaseRegex = /(?=.*[a-z])/;
     const numberRegex = /(?=.*\d)/;
@@ -117,10 +119,10 @@ const Register = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-96">
-        <h2 className="text-2xl font-semibold mb-4 text-gray-600">Register</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-green-900">Register</h2>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-600 text-sm font-medium">
+          {/* <div className="mb-4">
+            <label className="block text-green-900 text-sm font-medium">
               Username
             </label>
             <input
@@ -128,29 +130,29 @@ const Register = () => {
               name="username"
               value={formData.username}
               onChange={handleChange}
-              className="w-full border rounded p-2 text-gray-600"
+              className="w-full border rounded p-2 text-green-900"
             />
             {usernameError && (
               <p className="text-red-500 text-sm">{usernameError}</p>
             )}
-          </div>
+          </div> */}
           <div className="mb-4">
-            <label className="block text-gray-600 text-sm font-medium">
-              Email
+            <label className="block text-green-900 text-sm font-medium">
+              Cal Poly Email
             </label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full border rounded p-2 text-gray-600"
+              className="w-full border rounded p-2 text-green-900"
             />
             {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
           </div>
 
           <div className="ho">
             <div>
-              <label className="block text-gray-600 text-sm font-medium">
+              <label className="block text-green-900 text-sm font-medium">
                 Password{" "}
                 <span
                   data-tooltip-id="test"
@@ -168,13 +170,13 @@ const Register = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full border rounded p-2 text-gray-600"
+              className="w-full border rounded p-2 text-green-900"
             />
             {pwdError && <p className="text-red-500 text-sm">{pwdError}</p>}
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-600 text-sm font-medium">
+            <label className="block text-green-900 text-sm font-medium">
               Confirm Password
             </label>
             <input
@@ -182,25 +184,31 @@ const Register = () => {
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="w-full border rounded p-2 text-gray-600"
+              className="w-full border rounded p-2 text-green-900"
             />
             {confirmPwdError && (
-              <p className="text-red-500 text-sm">{confirmPwdError}</p>
+              <p className="text-red-900 text-sm">{confirmPwdError}</p>
             )}
           </div>
           <button
             type="submit"
-            className="bg-blue-500 text-white rounded p-2 hover:bg-blue-600 transition duration-200; mb-4"
+            className="bg-green-900 text-white rounded p-2 hover:bg-green-900 transition duration-200; mb-4"
             onClick={handleSubmit}
           >
             Register
           </button>
-          <p className="text-gray-600 text-sm">
+          <p className="text-gray-900 text-sm">
             Already have an account?{" "}
-            <Link href="/login" className="text-blue-500 hover:underline">
+            <Link href="/login" className="text-green-900 hover:underline">
               Log in
             </Link>
           </p>
+          <Link
+            href="/login"
+            className="text-green-900 hover:underline text-sm"
+          >
+            Forgot password?
+          </Link>
         </form>
       </div>
     </div>

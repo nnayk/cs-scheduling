@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { isAuthenticated } from "./auth";
+// import { isAuthenticated } from "./auth";
 
 export default function InitialLanding() {
   return (
@@ -12,8 +12,8 @@ export default function InitialLanding() {
         <Image
           src="/logo.png" // The path to your image
           alt="Description of the image" // Alternative text for the image
-          width={1000} // Desired width of the image (in pixels)
-          height={500} // Desired height of the image (in pixels)
+          width={500} // Desired width of the image (in pixels)
+          height={300} // Desired height of the image (in pixels)
           layout="responsive" // This will make the image scale nicely to the parent element
         />
       </div>
@@ -38,15 +38,15 @@ export async function getServerSideProps(context) {
   const { req } = context;
   const token = req.cookies["token"]; // Replace "your_cookie_name" with your actual cookie name
 
-  if (await isAuthenticated(token)) {
-    // If the user is authenticated, redirect them to the Create page
-    return {
-      redirect: {
-        destination: "/create",
-        permanent: false,
-      },
-    };
-  }
+  // if (await isAuthenticated(token)) {
+  //   // If the user is authenticated, redirect them to the Create page
+  //   return {
+  //     redirect: {
+  //       destination: "/create",
+  //       permanent: false,
+  //     },
+  //   };
+  // }
 
   // If the user is authenticated, render the Index page
   return {
