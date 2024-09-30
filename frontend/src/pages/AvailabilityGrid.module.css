@@ -1,0 +1,30 @@
+.grid {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+  }
+  
+  .grid th, .grid td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .grid th {
+    background-color: #f0f0f0;
+  }
+  
+  .grid td {
+    background-color: #fff;
+  }
+  
+  .grid td.available {
+    background-color: #4caf50; /* Green for selected availability */
+    color: white;
+  }
+  
+  .grid td:hover {
+    background-color: #ddd;
+  }
+  
