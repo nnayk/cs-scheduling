@@ -48,11 +48,6 @@ const Register = () => {
     );
   };
 
-  /* Username validation function */
-  const isValidUsername = (username) => {
-    return username.length > 0;
-  };
-
   /* Email validation function */
   const isValidEmail = (email) => {
     const emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
@@ -61,29 +56,16 @@ const Register = () => {
 
   /* handle registration form submission */
   const handleSubmit = async (e) => {
+    console.log("Handling register submit");
     e.preventDefault();
+    console.log("After default");
     const { username, email, password, confirmPassword } = formData;
-    // Handle registration logic here
-    if (!isValidUsername(username)) {
-      setUsernameError("Please enter a valid username.");
-      return; // Prevent form submission
-    } else {
-      setUsernameError("");
-    }
     if (!isValidEmail(email)) {
       setEmailError("Please enter a valid email address.");
       return; // Prevent form submission
     } else {
       setEmailError("");
     }
-    if (!isPasswordValid(password)) {
-      setPwdError("Password does not meet the required criteria.");
-      console.log("3");
-      return;
-    } else {
-      setPwdError("");
-    }
-
     if (password !== confirmPassword) {
       console.log("4");
       setConfirmPwdError("Passwords do not match.");
@@ -95,23 +77,13 @@ const Register = () => {
     try {
       console.log("try");
       const response = await axios.post(
-        "https://picture-perfect.azurewebsites.net/register",
+        "/register",
         formData
       );
       router.push("/login");
       return response;
     } catch (error) {
       console.log("err", error);
-      if (error != null) {
-        if (error.response.data.message.toLowerCase().includes("username")) {
-          setUsernameError("Username already taken.");
-        } else if (
-          error.response.data.message.toLowerCase().includes("email")
-        ) {
-          setEmailError("Email already taken.");
-        } else throw new Error("Unknown registration error");
-      }
-      console.log(error);
       return false;
     }
   };
