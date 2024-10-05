@@ -1,7 +1,11 @@
-from flask import Flask, Config
+import sys
+print(sys.executable)
+
+from flask import Flask, Config, request
 from constants import Resources
 from flask import logging
 from flask_cors import CORS 
+import db_access
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -31,6 +35,11 @@ def create_app(config_class=Config):
         plain_text_password = data["password"] or "123"
         email = data["email"] or "bobby@gmail.com"
         print(plain_text_password,email)
+        response = db_access.addUser(email,plain_text_password)
+        if response:
+            return {"message":"User added successfully"}
+        else:
+            return {"message":"User not added"},500 
     @app.route(Resources.PROFESSORS,methods=['GET'])
     def get_professors_preferences():
         return 'Hello, World!'
@@ -39,3 +48,4 @@ def create_app(config_class=Config):
     def set_professors_preferences():
         return 'Hello, World!'
     return app
+
