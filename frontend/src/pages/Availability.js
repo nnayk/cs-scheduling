@@ -61,18 +61,18 @@ export default function Availability() {
         <thead>
           <tr>
             <th></th>
-            {times.map((time, index) => (
-              <th key={index}>{time}</th>
+            {days.map((day, index) => (
+              <th key={index}>{day}</th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {days.map((day, dayIndex) => (
-            <tr key={dayIndex}>
-              <th className="foo">{day}</th>
-              {times.map((time, timeIndex) => (
+          {times.map((time, timeIndex) => (
+            <tr key={timeIndex}>
+              <th className="foo">{time}</th>
+              {days.map((day, dayIndex) => (
                 <td
-                  key={timeIndex}
+                  key={dayIndex}
                   className={
                     getAvailabilityStyle(dayIndex, timeIndex)
                     // availability[dayIndex][timeIndex] ? styles.available : ""
@@ -88,8 +88,8 @@ export default function Availability() {
           ))}
         </tbody>
       </table>
-      <h2>Selected Availability:</h2>
-      <pre>{JSON.stringify(availability, null, 2)}</pre> {/* Debug output */}
+      {/* <h2>Selected Availability:</h2> */}
+      {/* <pre>{JSON.stringify(availability, null, 2)}</pre> Debug output */}
     </div>
   );
 }
