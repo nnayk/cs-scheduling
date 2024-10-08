@@ -13,24 +13,45 @@ const times = [
   "4 PM",
   "5 PM",
 ];
-
+const Preference = {
+  UNACCEPTABLE: 0,
+  PREFERRED: 1,
+  ACCEPTABLE: 2,
+};
 export default function Availability() {
   const [availability, setAvailability] = useState(
     // Initialize a 2D array of false values (no availability)
     Array(days.length)
       .fill(null)
-      .map(() => Array(times.length).fill(false))
+      .map(() => Array(times.length).fill(0))
   );
 
   const getAvailabilityStyle = (dayIndex, timeIndex) => {
-    return availability[dayIndex][timeIndex] ? styles.available : "";
+    return availability[dayIndex][timeIndex] === Preference.UNACCEPTABLE
+      ? styles.unacceptable
+      : availability[dayIndex][timeIndex] === Preference.PREFERRED
+      ? styles.preferred
+      : availability[dayIndex][timeIndex] === Preference.ACCEPTABLE
+      ? styles.acceptable
+      : "";
+    // return availability[dayIndex][timeIndex] ? styles.available : "";
+  };
+  const getAvailabilityIcon = (dayIndex, timeIndex) => {
+    return availability[dayIndex][timeIndex] === Preference.UNACCEPTABLE
+      ? "Unacceptable"
+      : availability[dayIndex][timeIndex] === Preference.PREFERRED
+      ? "Preferred"
+      : availability[dayIndex][timeIndex] === Preference.ACCEPTABLE
+      ? "Acceptable"
+      : "";
+    // return availability[dayIndex][timeIndex] ? styles.available : "";
   };
 
   const toggleAvailability = (dayIndex, timeIndex) => {
     // Toggle the selected time slot
     const newAvailability = [...availability];
     newAvailability[dayIndex][timeIndex] =
-      !newAvailability[dayIndex][timeIndex];
+      (newAvailability[dayIndex][timeIndex] + 1) % 3;
     setAvailability(newAvailability);
   };
 
@@ -59,7 +80,8 @@ export default function Availability() {
                   onClick={() => toggleAvailability(dayIndex, timeIndex)}
                 >
                   {/* Show selected availability status */}
-                  {availability[dayIndex][timeIndex] ? "✓" : "X"}
+                  {/* {availability[dayIndex][timeIndex] ? "✓" : "X"} */}
+                  {getAvailabilityIcon(dayIndex, timeIndex)}
                 </td>
               ))}
             </tr>

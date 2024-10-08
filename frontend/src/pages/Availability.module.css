@@ -26,8 +26,16 @@
     background-color: yellow;
   }
   
-  .grid td.available {
+  .grid td.preferred {
     background-color: #4caf50; /* Green for selected availability */
+    color: white;
+  }
+  .grid td.unacceptable {
+    background-color: lightcoral; /* Green for selected availability */
+    color: white;
+  }
+  .grid td.acceptable {
+    background-color: lightblue; /* Green for selected availability */
     color: white;
   }
   
