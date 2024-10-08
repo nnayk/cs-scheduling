@@ -1,4 +1,4 @@
-import AvailabilityGrid from "./AvailabilityGrid";
+import AvailabilityGrid from "./Availability";
 
 // export default function Home() {
 //   return (

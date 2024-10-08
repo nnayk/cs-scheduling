@@ -1,5 +1,5 @@
 import { useState } from "react";
-import styles from "./AvailabilityGrid.module.css"; // Import the CSS styles
+import styles from "./Availability.module.css"; // Import the CSS styles
 
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 const times = [
@@ -14,13 +14,17 @@ const times = [
   "5 PM",
 ];
 
-export default function AvailabilityGrid() {
+export default function Availability() {
   const [availability, setAvailability] = useState(
     // Initialize a 2D array of false values (no availability)
     Array(days.length)
       .fill(null)
       .map(() => Array(times.length).fill(false))
   );
+
+  const getAvailabilityStyle = (dayIndex, timeIndex) => {
+    return availability[dayIndex][timeIndex] ? styles.available : "";
+  };
 
   const toggleAvailability = (dayIndex, timeIndex) => {
     // Toggle the selected time slot
@@ -44,17 +48,18 @@ export default function AvailabilityGrid() {
         <tbody>
           {days.map((day, dayIndex) => (
             <tr key={dayIndex}>
-              <td>{day}</td>
+              <th className="foo">{day}</th>
               {times.map((time, timeIndex) => (
                 <td
                   key={timeIndex}
                   className={
-                    availability[dayIndex][timeIndex] ? styles.available : ""
+                    getAvailabilityStyle(dayIndex, timeIndex)
+                    // availability[dayIndex][timeIndex] ? styles.available : ""
                   }
                   onClick={() => toggleAvailability(dayIndex, timeIndex)}
                 >
                   {/* Show selected availability status */}
-                  {availability[dayIndex][timeIndex] ? "✓" : ""}
+                  {availability[dayIndex][timeIndex] ? "✓" : "X"}
                 </td>
               ))}
             </tr>

@@ -12,11 +12,18 @@
   }
   
   .grid th {
-    background-color: #f0f0f0;
+    /* background-color: #f0f0f0; */
+    background-color: green;
+    color: goldenrod;
   }
   
   .grid td {
-    background-color: #fff;
+    /* background-color: #fff; */
+    background-color: lightcoral;
+  }
+  
+  .grid th.foo {
+    background-color: yellow;
   }
   
   .grid td.available {
@@ -25,6 +32,7 @@
   }
   
   .grid td:hover {
-    background-color: #ddd;
+    /* background-color: #ddd; */
+    /* background-color: wheat; */
   }
   
