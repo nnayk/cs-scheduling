@@ -5,11 +5,12 @@ from flask import Flask, Config, request
 from constants import Resources
 from flask import logging
 from flask_cors import CORS 
-import db_access
+import backend.db as db
 
 def create_app(config_class=Config):
     app = Flask(__name__)
     cors = CORS(app)
+    cors = CORS(app, resources={r"/*": {"origins": "*"}})
     app.config["CORS_HEADERS"] = "Content-Type"
     app.config.from_object(config_class)
     logger = logging.create_logger(app)
@@ -35,7 +36,7 @@ def create_app(config_class=Config):
         plain_text_password = data["password"] or "123"
         email = data["email"] or "bobby@gmail.com"
         print(plain_text_password,email)
-        response = db_access.addUser(email,plain_text_password)
+        response = db.addUser(email,plain_text_password)
         if response:
             return {"message":"User added successfully"}
         else:
