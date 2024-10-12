@@ -4,7 +4,10 @@
 .grid {
     border-collapse: collapse;
     width: 100%;
-    margin: 20px 0;
+    margin: 20px auto;
+    max-width: 90%;     /* Add some space on the sides by reducing the width */
+    border-radius: 10px; /* Round the edges of the table */
+    overflow: hidden;    /* Ensure content stays within the rounded corners */
   }
   
   .grid th, .grid td {
@@ -47,7 +50,7 @@
     /* background-color: wheat; */
   }
 
-  /* Availability.module.css */
+  /* availability.module.css */
 .submitButton {
   background-color: green;  /* Green background */
   color: gold;              /* Gold text */
@@ -57,10 +60,34 @@
   border-radius: 10px;      /* Rounded edges */
   cursor: pointer;          /* Pointer cursor on hover */
   transition: background-color 0.3s ease;  /* Smooth transition for hover */
+  display: block;       /* Make the button a block element */
+  margin: 20px auto;    /* Center the button horizontally and add vertical margin */
 }
 
 .submitButton:hover {
   background-color: darkgreen; /* Slightly darker green on hover */
 }
 
-  
+ /* Add this to the CSS */
+.title {
+  margin-top: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 30px;
+  color: green; /* You can customize the color and size */
+}
+
+/* availability.module.css */
+.subtitle {
+  font-size: 16px;
+  color: #555;    /* Subtle color for the subtitle */
+  margin-bottom: 20px;  /* Space below the subtitle */
+  text-align: center;   /* Center the subtitle */
+}
+
+/* availability.module.css */
+.disabled {
+  background-color: gray !important; /* Gray background for disabled cell */
+  color: white; /* Lighter color for text */
+  cursor: not-allowed; /* Not-allowed cursor */
+}
