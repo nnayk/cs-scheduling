@@ -55,8 +55,32 @@ export default function Availability() {
     setAvailability(newAvailability);
   };
 
+  const processPrefs = () => {
+    // Process the selected availability
+    const prefs = [];
+    for (let dayIndex = 0; dayIndex < days.length; dayIndex++) {
+      for (let timeIndex = 0; timeIndex < times.length; timeIndex++) {
+        if (availability[dayIndex][timeIndex] === Preference.PREFERRED) {
+          prefs.push({
+            day: days[dayIndex],
+            time: times[timeIndex],
+            preference: "Preferred",
+          });
+        } else if (
+          availability[dayIndex][timeIndex] === Preference.ACCEPTABLE
+        ) {
+          prefs.push({
+            day: days[dayIndex],
+            time: times[timeIndex],
+            preference: "Acceptable",
+          });
+        }
+      }
+    }
+    console.log(prefs);
+  };
   return (
-    <div>
+    <div className={styles.container}>
       <table className={styles.grid}>
         <thead>
           <tr>
@@ -69,7 +93,11 @@ export default function Availability() {
         <tbody>
           {times.map((time, timeIndex) => (
             <tr key={timeIndex}>
-              <th className="foo">{time}</th>
+              <th>
+                {timeIndex < times.length - 1
+                  ? time + "-" + times[timeIndex + 1]
+                  : time + "-6 PM"}
+              </th>
               {days.map((day, dayIndex) => (
                 <td
                   key={dayIndex}
@@ -88,6 +116,9 @@ export default function Availability() {
           ))}
         </tbody>
       </table>
+      <button onClick={processPrefs} className={styles.submitButton}>
+        Submit
+      </button>
       {/* <h2>Selected Availability:</h2> */}
       {/* <pre>{JSON.stringify(availability, null, 2)}</pre> Debug output */}
     </div>

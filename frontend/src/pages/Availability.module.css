@@ -1,3 +1,6 @@
+
+/* You can also apply a background color to the container of your table */
+
 .grid {
     border-collapse: collapse;
     width: 100%;
@@ -43,4 +46,21 @@
     /* background-color: #ddd; */
     /* background-color: wheat; */
   }
+
+  /* Availability.module.css */
+.submitButton {
+  background-color: green;  /* Green background */
+  color: gold;              /* Gold text */
+  border: none;             /* Remove default border */
+  padding: 10px 20px;       /* Add some padding */
+  font-size: 16px;          /* Font size */
+  border-radius: 10px;      /* Rounded edges */
+  cursor: pointer;          /* Pointer cursor on hover */
+  transition: background-color 0.3s ease;  /* Smooth transition for hover */
+}
+
+.submitButton:hover {
+  background-color: darkgreen; /* Slightly darker green on hover */
+}
+
   
