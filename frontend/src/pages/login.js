@@ -33,10 +33,7 @@ const Login = () => {
 
     try {
       console.log("try");
-      const response = await axios.post(
-        "https://picture-perfect.azurewebsites.net/login",
-        formData
-      );
+      const response = await axios.post("", formData);
       console.log("response", response);
 
       // Store the token in cookie

@@ -77,7 +77,7 @@ const Register = () => {
     try {
       console.log("try");
       const response = await axios.post(
-        "http://127.0.0.1:5000/register",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/register`,
         formData
       );
       router.push("/login");

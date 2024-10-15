@@ -13,6 +13,8 @@ import Link from "next/link";
 import Image from "next/image";
 // import { isAuthenticated } from "./auth";
 
+const BACKEND_URL = process.env.BACKEND_URL;
+import Cookies from "js-cookie";
 export default function InitialLanding() {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-50">
