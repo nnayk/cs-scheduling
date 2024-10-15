@@ -3,18 +3,31 @@ print(sys.executable)
 
 from flask import Flask, Config, request
 from constants import Resources
-from flask import logging
+from flask import logging, jsonify
 from flask_cors import CORS 
-import backend.db as db
+import db
+import bcrypt
+
+def hash_password(password):
+    # Generate a salt
+    salt = bcrypt.gensalt()
+    # Hash the password with the generated salt
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return hashed_password
 
 def create_app(config_class=Config):
     app = Flask(__name__)
     cors = CORS(app)
-    cors = CORS(app, resources={r"/*": {"origins": "*"}})
+    # cors = CORS(app, resources={r"/*": {"origins": "*"}})
     app.config["CORS_HEADERS"] = "Content-Type"
-    app.config.from_object(config_class)
+    # app.config.from_object(config_class)
     logger = logging.create_logger(app)
-    
+
+    @app.route("/availability",methods=['POST'])
+    def get_availability():
+        data = request.get_json()
+        print(data)
+        return 'Hello, World!' 
     @app.route("/register",methods=['POST'])
     def register():
         data = request.get_json()
@@ -34,9 +47,11 @@ def create_app(config_class=Config):
             )
 
         plain_text_password = data["password"] or "123"
+        # Hash the password
+        hashed_password = hash_password(plain_text_password)
         email = data["email"] or "bobby@gmail.com"
         print(plain_text_password,email)
-        response = db.addUser(email,plain_text_password)
+        response = db.addUser(email,hashed_password)
         if response:
             return {"message":"User added successfully"}
         else:
