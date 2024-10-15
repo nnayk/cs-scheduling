@@ -10,12 +10,12 @@ import Cookies from "js-cookie";
 const Login = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    username: "",
+    email: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
-  const [usernameError, setUsernameError] = useState("");
+  const [emailError, setemailError] = useState("");
   const [pwdError, setPwdError] = useState("");
 
   const handleChange = (e) => {
@@ -29,41 +29,44 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle login logic here
-    const { username, password } = formData;
+    const { email, password } = formData;
 
     try {
       console.log("try");
-      const response = await axios.post("", formData);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/login`,
+        formData
+      );
       console.log("response", response);
 
       // Store the token in cookie
-      Cookies.set("token", response.data.access_token, {
-        expires: 7,
-        path: "/",
-      });
+      // Cookies.set("token", response.data.access_token, {
+      //   expires: 7,
+      //   path: "/",
+      // });
 
-      router.push("/portfolio");
+      router.push("/availability");
       return response;
     } catch (error) {
       console.log(`error=${error},${error.response.data.message}`);
       let msg = error.response.data.message.toLowerCase();
       if (msg.includes("missing")) {
-        if (msg.includes("username")) {
-          setUsernameError("Please enter a username.");
+        if (msg.includes("email")) {
+          setemailError("Please enter an email.");
           setPwdError("");
         }
         if (msg.includes("password")) {
           setPwdError("Please enter a password.");
-          if (!msg.includes("username")) {
-            setUsernameError("");
+          if (!msg.includes("email")) {
+            setemailError("");
           }
         }
-      } else if (msg.includes("username")) {
-        setUsernameError("Username does not exist.");
+      } else if (msg.includes("email")) {
+        setemailError("email does not exist.");
         setPwdError("");
       } else if (msg.includes("password")) {
         setPwdError("Incorrect password.");
-        setUsernameError("");
+        setemailError("");
       } else throw new Error("Unknown login error");
       return false;
     }
@@ -76,18 +79,16 @@ const Login = () => {
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-600 text-sm font-medium">
-              Username
+              email
             </label>
             <input
               type="text"
-              name="username"
-              value={formData.username}
+              name="email"
+              value={formData.email}
               onChange={handleChange}
               className="w-full border rounded p-2 text-gray-600 "
             />
-            {usernameError && (
-              <p className="text-red-500 text-sm">{usernameError}</p>
-            )}
+            {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
           </div>
 
           <div className="mb-4">

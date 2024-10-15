@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styles from "./availability.module.css"; // Import the CSS styles
 import axios from "axios";
+import { isAuthenticated } from "./auth";
 
 const days = ["MWF Schedule", "TR Schedule"];
 const times = [
@@ -141,5 +142,26 @@ const Availability = () => {
     </div>
   );
 };
+
+export async function getServerSideProps(context) {
+  const { req } = context;
+  // const token = req.cookies["token"];
+  const token = "foo";
+  console.log("checking if user is authenticated...");
+  if (!(await isAuthenticated(token))) {
+    // If the user is not authenticated, redirect them to the login page
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  // If the user is authenticated, render the Portfolio page
+  return {
+    props: {}, // Will be passed to the page component as props
+  };
+}
 
 export default Availability;

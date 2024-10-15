@@ -26,6 +26,12 @@ def addUser(email,password):
         passed = False
     return passed
 
+def get_user_by_email(email):
+    query = "SELECT * FROM users WHERE email = %s"
+    cur.execute(query, (email,))
+    user = cur.fetchone()  # Retrieves the first row from the result set
+    return user
+
 def createUsersTable():
     cur.execute("""CREATE TABLE IF NOT EXISTS Users(
         id SERIAL PRIMARY KEY,

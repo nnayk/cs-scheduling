@@ -17,8 +17,8 @@ def hash_password(password):
 
 def create_app(config_class=Config):
     app = Flask(__name__)
-    cors = CORS(app)
-    # cors = CORS(app, resources={r"/*": {"origins": "*"}})
+    # cors = CORS(app)
+    cors = CORS(app, resources={r"/*": {"origins": "*"}})
     app.config["CORS_HEADERS"] = "Content-Type"
     # app.config.from_object(config_class)
     logger = logging.create_logger(app)
@@ -28,11 +28,24 @@ def create_app(config_class=Config):
         data = request.get_json()
         print(data)
         return 'Hello, World!' 
+    
+    @app.route("/login",methods=['POST'])
+    def login():
+        print("login")
+        data = request.get_json()
+        print(f"login data = {data}")
+        user_id, username, expected_pwd_hash = db.get_user_by_email(data["email"]) 
+        if expected_pwd_hash == hash_password(data["password"]):
+            return {"message":"User authenticated"},200
+        else:
+            return {"message":"User not authenticated"},401
+
     @app.route("/register",methods=['POST'])
     def register():
         data = request.get_json()
         # Validate required fields
         required_fields = ["password", "email"]
+        # Skipping check for existing email given use case of this app
         missing_fields = [field for field in required_fields if field not in data]
 
         if missing_fields:
@@ -56,6 +69,28 @@ def create_app(config_class=Config):
             return {"message":"User added successfully"}
         else:
             return {"message":"User not added"},500 
+    @app.route("/api/verify_user", methods=["GET"])
+    # @jwt_required()
+    def verify_user():
+        try:
+            # Retrieve the user by username
+            # user = get_jwt_identity()
+            # temp = User.objects.get(pk=user).username
+            return jsonify({"authenticated": True}), 200
+
+        except DoesNotExist:
+            # If the user is not found
+            return jsonify({"error": "User not found"}), 404
+        except jwt.ExpiredSignatureError:
+            # Token has expired
+            return jsonify({"authenticated": False}), 200
+        except jwt.InvalidTokenError:
+            # Invalid token
+            return jsonify({"authenticated": False}), 200
+        except Exception as e:
+            # Handle any other exceptions
+            return jsonify({"error": str(e)}), 500
+    
     @app.route(Resources.PROFESSORS,methods=['GET'])
     def get_professors_preferences():
         return 'Hello, World!'
