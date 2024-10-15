@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styles from "./availability.module.css"; // Import the CSS styles
+import axios from "axios";
 
 const days = ["MWF Schedule", "TR Schedule"];
 const times = [
@@ -66,13 +67,13 @@ const Availability = () => {
     setavailability(newavailability);
   };
 
-  const processPrefs = () => {
+  const processPrefs = async (e) => {
     const prefs = [];
     for (let dayIndex = 0; dayIndex < days.length; dayIndex++) {
       for (let timeIndex = 0; timeIndex < times.length; timeIndex++) {
         if (availability[dayIndex][timeIndex] === Preference.PREFERRED) {
           prefs.push({
-            day: days[dayIndex],
+            schedule: days[dayIndex],
             time: times[timeIndex],
             preference: "Preferred",
           });
@@ -80,13 +81,17 @@ const Availability = () => {
           availability[dayIndex][timeIndex] === Preference.ACCEPTABLE
         ) {
           prefs.push({
-            day: days[dayIndex],
+            schedule: days[dayIndex],
             time: times[timeIndex],
             preference: "Acceptable",
           });
         }
       }
     }
+    const response = await axios.post(
+      "http://127.0.0.1:5000/availability",
+      prefs
+    );
     console.log(prefs);
   };
 
