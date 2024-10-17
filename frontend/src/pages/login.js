@@ -39,11 +39,11 @@ const Login = () => {
       );
       console.log("response", response);
 
-      // Store the token in cookie
-      // Cookies.set("token", response.data.access_token, {
-      //   expires: 7,
-      //   path: "/",
-      // });
+      //Store the token in cookie
+      Cookies.set("token", response.data.access_token, {
+        expires: 7,
+        path: "/",
+      });
 
       router.push("/availability");
       return response;

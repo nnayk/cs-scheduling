@@ -1,4 +1,6 @@
 import sys
+
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 print(sys.executable)
 
 from flask import Flask, Config, request
@@ -11,6 +13,8 @@ from auth import hash_password, check_password
 
 def create_app(config_class=Config):
     app = Flask(__name__)
+    app.config["JWT_SECRET_KEY"] = "CHANGE_TO_SECURE_KEY"
+    jwt = JWTManager(app)
     # cors = CORS(app)
     # CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
@@ -19,13 +23,20 @@ def create_app(config_class=Config):
     logger = logging.create_logger(app)
 
     @app.route("/availability",methods=['POST'])
+    # @jwt_required()
     def get_availability():
         data = request.get_json()
         print(data)
         return 'Hello, World!' 
     
-    @app.route("/login",methods=['POST'])
+    @app.route("/login",methods=['POST','OPTIONS'])
     def login():
+        if request.method == 'OPTIONS':
+            response = make_response()
+            response.headers.add("Access-Control-Allow-Origin", "*")
+            response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
+            response.headers.add("Access-Control-Allow-Methods", "POST, OPTIONS")
+            return response
         print("login")
         data = request.get_json()
         print(f"login data = {data}")
@@ -36,13 +47,18 @@ def create_app(config_class=Config):
         print(f"expected_pwd_hash = {expected_pwd_hash}")
         print(f"hash_password(data['password']) = {hash_password(data['password'])}")
         if check_password(data["password"],expected_pwd_hash):
-            return {"message":"User authenticated"},200
+            access_token = create_access_token(identity=str(user_id))
+            print(f"access_token = {access_token}")
+            return {"message":"User authenticated",
+                    "access_token":access_token
+                    },200
         else:
             return {"message":"Incorrect password"},401
 
     @app.route("/register",methods=['POST','OPTIONS'])
     def register():
         if request.method == 'OPTIONS':
+            print("options")
             response = make_response()
             response.headers.add("Access-Control-Allow-Origin", "*")
             response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
