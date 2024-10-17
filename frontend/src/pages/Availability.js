@@ -20,7 +20,7 @@ const Preference = {
   PREFERRED: 1,
   ACCEPTABLE: 2,
 };
-const Availability = () => {
+export default function Availability() {
   const [availability, setavailability] = useState(
     Array(days.length)
       .fill(null)
@@ -141,14 +141,14 @@ const Availability = () => {
       <h1 className={styles.title}>Preferences</h1>
     </div>
   );
-};
+}
 
 export async function getServerSideProps(context) {
   const { req } = context;
-  // const token = req.cookies["token"];
-  const token = "foo";
+  const token = req.cookies["token"];
   console.log("checking if user is authenticated...");
   if (!(await isAuthenticated(token))) {
+    console.log("user is not authenticated, redirecting to login page...");
     // If the user is not authenticated, redirect them to the login page
     return {
       redirect: {
@@ -163,5 +163,3 @@ export async function getServerSideProps(context) {
     props: {}, // Will be passed to the page component as props
   };
 }
-
-export default Availability;

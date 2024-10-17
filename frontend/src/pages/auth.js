@@ -7,17 +7,20 @@ import axios from "axios";
 export async function isAuthenticated(token) {
   try {
     // make axios get request sending cookie.
+    console.log("Token:", token);
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/verify_user`,
       {
-        // headers: {
-        //   Authorization: `Bearer ${token}`, // Send the JWT token in the Authorization header
-        // },
+        headers: {
+          Authorization: `Bearer ${token}`, // Send the JWT token in the Authorization header
+        },
       }
     );
+    console.log("response details:");
+    console.log(response.data);
     return response.data.authenticated;
   } catch (error) {
-    // console.error('Error during user verification:', error);
+    console.error("Error during user verification:", error);
     return false;
   }
 }

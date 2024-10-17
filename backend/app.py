@@ -43,7 +43,7 @@ def create_app(config_class=Config):
         user = db.get_user_by_email(data["email"])
         if not user:
             return {"message":"Email doesn't exist"},401
-        user_id, username, expected_pwd_hash = user 
+        user_id, email, expected_pwd_hash = user 
         print(f"expected_pwd_hash = {expected_pwd_hash}")
         print(f"hash_password(data['password']) = {hash_password(data['password'])}")
         if check_password(data["password"],expected_pwd_hash):
@@ -94,25 +94,23 @@ def create_app(config_class=Config):
         else:
             return {"message":"User not added"},500 
     @app.route("/api/verify_user", methods=["GET"])
-    # @jwt_required()
+    @jwt_required()
     def verify_user():
         try:
             # Retrieve the user by username
-            # user = get_jwt_identity()
+            user = get_jwt_identity()
+            print(f'user jwt={user}')
             # temp = User.objects.get(pk=user).username
             return jsonify({"authenticated": True}), 200
-
-        except DoesNotExist:
-            # If the user is not found
-            return jsonify({"error": "User not found"}), 404
-        except jwt.ExpiredSignatureError:
-            # Token has expired
-            return jsonify({"authenticated": False}), 200
-        except jwt.InvalidTokenError:
-            # Invalid token
-            return jsonify({"authenticated": False}), 200
+        # except jwt.ExpiredSignatureError:
+        #     # Token has expired
+        #     return jsonify({"authenticated": False}), 200
+        # except jwt.InvalidTokenError:
+        #     # Invalid token
+        #     return jsonify({"authenticated": False}), 200
         except Exception as e:
             # Handle any other exceptions
+            print(f"exception = {e}")
             return jsonify({"error": str(e)}), 500
     
     @app.route(Resources.PROFESSORS,methods=['GET'])
