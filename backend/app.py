@@ -6,14 +6,8 @@ from constants import Resources
 from flask import logging, jsonify, make_response
 from flask_cors import CORS 
 import db
-import bcrypt
+from auth import hash_password, check_password
 
-def hash_password(password):
-    # Generate a salt
-    salt = bcrypt.gensalt()
-    # Hash the password with the generated salt
-    hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
-    return hashed_password
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -35,11 +29,16 @@ def create_app(config_class=Config):
         print("login")
         data = request.get_json()
         print(f"login data = {data}")
-        user_id, username, expected_pwd_hash = db.get_user_by_email(data["email"]) 
-        if expected_pwd_hash == hash_password(data["password"]):
+        user = db.get_user_by_email(data["email"])
+        if not user:
+            return {"message":"Email doesn't exist"},401
+        user_id, username, expected_pwd_hash = user 
+        print(f"expected_pwd_hash = {expected_pwd_hash}")
+        print(f"hash_password(data['password']) = {hash_password(data['password'])}")
+        if check_password(data["password"],expected_pwd_hash):
             return {"message":"User authenticated"},200
         else:
-            return {"message":"User not authenticated"},401
+            return {"message":"Incorrect password"},401
 
     @app.route("/register",methods=['POST','OPTIONS'])
     def register():
@@ -70,6 +69,7 @@ def create_app(config_class=Config):
         plain_text_password = data["password"] or "123"
         # Hash the password
         hashed_password = hash_password(plain_text_password)
+        print(f"plaintext pwd = {plain_text_password},hashed_password = {hashed_password}")
         email = data["email"] or "bobby@gmail.com"
         print(plain_text_password,email)
         response = db.addUser(email,hashed_password)
