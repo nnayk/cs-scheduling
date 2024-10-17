@@ -3,7 +3,7 @@ print(sys.executable)
 
 from flask import Flask, Config, request
 from constants import Resources
-from flask import logging, jsonify
+from flask import logging, jsonify, make_response
 from flask_cors import CORS 
 import db
 import bcrypt
@@ -18,6 +18,7 @@ def hash_password(password):
 def create_app(config_class=Config):
     app = Flask(__name__)
     # cors = CORS(app)
+    # CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
     app.config["CORS_HEADERS"] = "Content-Type"
     # app.config.from_object(config_class)
@@ -40,8 +41,15 @@ def create_app(config_class=Config):
         else:
             return {"message":"User not authenticated"},401
 
-    @app.route("/register",methods=['POST'])
+    @app.route("/register",methods=['POST','OPTIONS'])
     def register():
+        if request.method == 'OPTIONS':
+            response = make_response()
+            response.headers.add("Access-Control-Allow-Origin", "*")
+            response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
+            response.headers.add("Access-Control-Allow-Methods", "POST, OPTIONS")
+            return response
+
         data = request.get_json()
         # Validate required fields
         required_fields = ["password", "email"]

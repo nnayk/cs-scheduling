@@ -79,7 +79,7 @@ const Login = () => {
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-600 text-sm font-medium">
-              email
+              Email
             </label>
             <input
               type="text"
