@@ -41,7 +41,7 @@ def createUsersTable():
     """)
     conn.commit()
 
-def createPreferencesTable():
+def createPreferencesTables():
     print("Creating preferences table")
     times = ", ".join([
             '"9 AM" VARCHAR(255)',
@@ -55,17 +55,50 @@ def createPreferencesTable():
             '"5 PM" VARCHAR(255)',
             ]);
     cur.execute(f"""
-    CREATE TABLE IF NOT EXISTS preferences (
+    CREATE TABLE IF NOT EXISTS mwf_preferences (
         user_id INT PRIMARY KEY,
         {times},
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     );
     """)
-    print("Preferences table created")
+    cur.execute(f"""
+    CREATE TABLE IF NOT EXISTS tr_preferences (
+        user_id INT PRIMARY KEY,
+        {times},
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    );
+    """)
+    # print("Preferences table created")
+    conn.commit()
+
+def save_preferences(user_id,data):
+    print(f"Saving preferences for user {user_id}, data = {data}")
+    for entry in data:
+        schedule = entry['schedule']
+        time = entry['time'].upper()  # '10 am' to '10 am', adjust case as needed
+        preference = entry['preference']
+        
+        # Choose the correct table based on the schedule
+        if schedule == 'MWF Schedule':
+            table = "mwf_preferences"
+        elif schedule == 'TR Schedule':
+            table = "tr_preferences"
+        else:
+            print(f"Schedule not recognized: {schedule}")
+            continue  # Skip if schedule is not recognized
+        print(f"table = {table}")
+        # Prepare the update statement for the specific time slot
+        sql = f"""
+        INSERT INTO {table} (user_id, "{time}")
+        VALUES (%s, %s)
+        ON CONFLICT (user_id) DO UPDATE
+        SET "{time}" = EXCLUDED."{time}";
+        """
+        cur.execute(sql,(user_id,preference))    
     conn.commit()
 if __name__ == "__main__":
     print("calling function to create users table")
     createUsersTable()
     print("calling function to create preferences table")
-    createPreferencesTable()
+    createPreferencesTables()
     cur.close()

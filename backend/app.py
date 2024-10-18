@@ -23,10 +23,13 @@ def create_app(config_class=Config):
     logger = logging.create_logger(app)
 
     @app.route("/availability",methods=['POST'])
-    # @jwt_required()
-    def get_availability():
+    @jwt_required()
+    def set_availability():
+        user = get_jwt_identity()
+        print(f'user jwt={user}')
         data = request.get_json()
         print(data)
+        db.save_preferences(user,data)
         return 'Hello, World!' 
     
     @app.route("/login",methods=['POST','OPTIONS'])

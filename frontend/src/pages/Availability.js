@@ -3,6 +3,7 @@ import styles from "./availability.module.css"; // Import the CSS styles
 import axios from "axios";
 import { isAuthenticated } from "./auth";
 import { useUser } from "./UserContext";
+import Cookie from "js-cookie";
 
 const days = ["MWF Schedule", "TR Schedule"];
 const times = [
@@ -94,7 +95,13 @@ export default function Availability() {
     }
     const response = await axios.post(
       "http://127.0.0.1:5000/availability",
-      prefs
+      prefs,
+      {
+        headers: {
+          Authorization: `Bearer ${Cookie.get("token")}`,
+          "Content-Type": "application/json", // Ensure content type is JSON
+        },
+      }
     );
     console.log(prefs);
   };
