@@ -2,6 +2,7 @@ import { useState } from "react";
 import styles from "./availability.module.css"; // Import the CSS styles
 import axios from "axios";
 import { isAuthenticated } from "./auth";
+import { useUser } from "./UserContext";
 
 const days = ["MWF Schedule", "TR Schedule"];
 const times = [
@@ -21,6 +22,8 @@ const Preference = {
   ACCEPTABLE: 2,
 };
 export default function Availability() {
+  const { username, setUsername } = useUser();
+
   const [availability, setavailability] = useState(
     Array(days.length)
       .fill(null)
@@ -98,6 +101,7 @@ export default function Availability() {
 
   return (
     <div className={styles.container}>
+      <h1 className={styles.title}>Welcome {username}</h1>
       <h1 className={styles.title}>Select Your Availability</h1>
       <p className={styles.subtitle}>
         <strong>Note:</strong> If you are tenure track, please select

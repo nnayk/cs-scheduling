@@ -6,8 +6,10 @@ import "tailwindcss/tailwind.css"; // Import Tailwind CSS
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Cookies from "js-cookie";
+import { useUser } from "./UserContext";
 
 const Login = () => {
+  const { username, setUsername } = useUser();
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
@@ -44,11 +46,13 @@ const Login = () => {
         expires: 7,
         path: "/",
       });
-
+      console.log("using user");
+      console.log("username", username);
+      setUsername(email);
       router.push("/availability");
       return response;
     } catch (error) {
-      console.log(`error=${error},${error.response.data.message}`);
+      console.log(`error=${error},${error.response}`);
       let msg = error.response.data.message.toLowerCase();
       if (msg.includes("missing")) {
         if (msg.includes("email")) {
