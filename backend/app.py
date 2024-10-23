@@ -16,8 +16,14 @@ def create_app(config_class=Config):
     app.config["JWT_SECRET_KEY"] = "CHANGE_TO_SECURE_KEY"
     jwt = JWTManager(app)
     # cors = CORS(app)
+    # Configure CORS for all routes
+    cors = CORS(app, resources={r"/*": {
+        "origins": "*",  # Allow all origins (for development only)
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization","Access-Control-Allow-Origin"]
+    }})
     # CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
-    cors = CORS(app, resources={r"/*": {"origins": "*"}})
+    # cors = CORS(app, resources={r"/*": {"origins": "*"}})
     app.config["CORS_HEADERS"] = "Content-Type"
     # app.config.from_object(config_class)
     logger = logging.create_logger(app)
@@ -30,7 +36,7 @@ def create_app(config_class=Config):
         data = request.get_json()
         print(data)
         db.save_preferences(user,data)
-        return 'Hello, World!' 
+        return jsonify({"message":"Preferences saved"}),200
     
     @app.route("/login",methods=['POST','OPTIONS'])
     def login():
@@ -56,18 +62,10 @@ def create_app(config_class=Config):
                     "access_token":access_token
                     },200
         else:
-            return {"message":"Incorrect password"},401
+            return jsonify({"message":"Incorrect password"}),401
 
-    @app.route("/register",methods=['POST','OPTIONS'])
+    @app.route("/register",methods=['POST'])
     def register():
-        if request.method == 'OPTIONS':
-            print("options")
-            response = make_response()
-            response.headers.add("Access-Control-Allow-Origin", "*")
-            response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
-            response.headers.add("Access-Control-Allow-Methods", "POST, OPTIONS")
-            return response
-
         data = request.get_json()
         # Validate required fields
         required_fields = ["password", "email"]
@@ -96,9 +94,16 @@ def create_app(config_class=Config):
             return {"message":"User added successfully"}
         else:
             return {"message":"User not added"},500 
-    @app.route("/api/verify_user", methods=["GET"])
+    @app.route("/api/verify_user", methods=["GET","OPTIONS"])
     @jwt_required()
     def verify_user():
+        if request.method == 'OPTIONS':
+            print("options")
+            response = make_response()
+            response.headers.add("Access-Control-Allow-Origin", "*")
+            response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
+            response.headers.add("Access-Control-Allow-Methods", "POST, OPTIONS")
+            return response
         try:
             # Retrieve the user by username
             user = get_jwt_identity()
@@ -123,5 +128,11 @@ def create_app(config_class=Config):
     @app.route(Resources.PROFESSORS,methods=['POST'])
     def set_professors_preferences():
         return 'Hello, World!'
+    
+    @app.before_request
+    def log_request_info():
+        print(f"Headers: {request.headers}")
+        print(f"Body: {request.get_data()}")
+
     return app
 
