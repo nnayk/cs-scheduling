@@ -36,7 +36,20 @@ def create_app(config_class=Config):
         data = request.get_json()
         print(data)
         db.save_preferences(user,data)
-        return jsonify({"message":"Preferences saved"}),200
+        return jsonify("Saved preferences"),200
+    
+    @app.route("/get_availability",methods=['GET'])
+    @jwt_required()
+    def get_availability():
+        user = get_jwt_identity()
+        print(f'user jwt={user}')
+        try:
+            preferences = db.get_preferences(user)
+            print(f'preferences={preferences}')
+            return jsonify(preferences), 200
+        except Exception as e:
+            print(e)
+            return jsonify("Error reading from DB"), 500
     
     @app.route("/login",methods=['POST','OPTIONS'])
     def login():

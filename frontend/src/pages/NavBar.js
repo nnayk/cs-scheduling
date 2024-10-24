@@ -19,7 +19,7 @@ const NavBar = () => {
         <div className="flex justify-between items-center">
           {/* Left side - Logo */}
           <div className="flex">
-            <Link href="/">
+            <Link href="/availability">
               <span className="flex items-center py-4 px-2 cursor-pointer font-semibold text-yellow-500 text-lg">
                 Poly Preferences
               </span>

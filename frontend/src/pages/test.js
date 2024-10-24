@@ -5,7 +5,7 @@ const TestPage = () => {
     <div style={{ textAlign: "center", marginTop: "50px" }}>
       <h1>This is the Test Page</h1>
       <p>If you see this page, the routing is working correctly!</p>
-      <Link href="/availability">
+      <Link href="/profiles">
         <button
           style={{
             padding: "10px 20px",

@@ -71,6 +71,29 @@ def createPreferencesTables():
     # print("Preferences table created")
     conn.commit()
 
+def get_preferences(user_id):
+    sql = f"""
+    SELECT * 
+    FROM mwf_preferences
+    JOIN tr_preferences ON mwf_preferences.user_id = tr_preferences.user_id
+    WHERE mwf_preferences.user_id = {user_id}
+    """
+    print('sttarty')
+    cur.execute(sql)
+    data = cur.fetchall()
+    print(f'returning {data}')
+    # The query response is provided in a rather ugly form: 
+    # [(user_id,<mwf 9 am pref>,<mwf 10 am pref>,...user_id,<tr 9 am pref>,...)].
+    # Clean this up and return a 2d array where:
+    # element 0 = list of mwf preferences
+    # element 1 = list of tr preferences
+    print(f'looking for {user_id} in {data},{type(data)},{len(data)}')
+    data = data[0]
+    split_index = data.index(int(user_id),1)
+    mwf_prefs = list(data[1:split_index])
+    tr_prefs = list(data[split_index+1:])
+    return [mwf_prefs,tr_prefs]
+
 def save_preferences(user_id,data):
     print(f"Saving preferences for user {user_id}, data = {data}")
     for entry in data:

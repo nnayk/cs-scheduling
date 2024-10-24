@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./availability.module.css"; // Import the CSS styles
 import axios from "axios";
 import { isAuthenticated } from "./auth";
@@ -17,10 +17,11 @@ const times = [
   "4 PM",
   "5 PM",
 ];
+
 const Preference = {
-  UNACCEPTABLE: 0,
-  PREFERRED: 1,
-  ACCEPTABLE: 2,
+  UNACCEPTABLE: "Unacceptable",
+  PREFERRED: "Preferred",
+  ACCEPTABLE: "Acceptable",
 };
 export default function Availability() {
   const { username, setUsername } = useUser();
@@ -28,8 +29,41 @@ export default function Availability() {
   const [availability, setavailability] = useState(
     Array(days.length)
       .fill(null)
-      .map(() => Array(times.length).fill(0))
+      .map(() => Array(times.length).fill("Unacceptable"))
   );
+
+  useEffect(() => {
+    const fetchAvailability = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/get_availability`,
+          {
+            headers: {
+              Authorization: `Bearer ${Cookie.get("token")}`, // Use token if required for authorization
+            },
+          }
+        );
+        const fetchedData = response.data;
+        console.log(`fetchedData = ${fetchedData}`);
+        // Assuming `fetchedData` is an array of the same shape as `availability`
+        setavailability(fetchedData);
+      } catch (error) {
+        console.error("Error fetching availability:", error);
+      }
+    };
+
+    fetchAvailability();
+  }, []);
+
+  const getNewAvailability = (availability) => {
+    if (availability == Preference.UNACCEPTABLE) {
+      return Preference.PREFERRED;
+    } else if (availability == Preference.PREFERRED) {
+      return Preference.ACCEPTABLE;
+    } else {
+      return Preference.UNACCEPTABLE;
+    }
+  };
 
   const getavailabilityStyle = (dayIndex, timeIndex) => {
     // Apply special style for disabled cell (TR 11 AM - 12 PM)
@@ -67,8 +101,10 @@ export default function Availability() {
     }
 
     const newavailability = [...availability];
-    newavailability[dayIndex][timeIndex] =
-      (newavailability[dayIndex][timeIndex] + 1) % 3;
+    newavailability[dayIndex][timeIndex] = getNewAvailability(
+      newavailability[dayIndex][timeIndex]
+    );
+    console.log(`new avail = ${newavailability}`);
     setavailability(newavailability);
   };
 
@@ -89,6 +125,12 @@ export default function Availability() {
             schedule: days[dayIndex],
             time: times[timeIndex],
             preference: "Acceptable",
+          });
+        } else {
+          prefs.push({
+            schedule: days[dayIndex],
+            time: times[timeIndex],
+            preference: "Unacceptable",
           });
         }
       }
