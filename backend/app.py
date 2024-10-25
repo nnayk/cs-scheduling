@@ -18,9 +18,7 @@ def create_app(config_class=Config):
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization","Access-Control-Allow-Origin"]
     }})
-    # cors = CORS(app, resources={r"/*": {"origins": "*"}})
     app.config["CORS_HEADERS"] = "Content-Type"
-    # logger = logging.create_logger(app)
 
     @app.route("/availability",methods=['POST'])
     @jwt_required()
@@ -106,7 +104,6 @@ def create_app(config_class=Config):
             user = get_jwt_identity()
             return jsonify({"authenticated": True}), 200
         except Exception as e:
-            # Handle any other exceptions
             app.logger.error(f"exception = {e}")
             return jsonify({"error": str(e)}), 500
     

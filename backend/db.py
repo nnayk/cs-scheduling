@@ -7,18 +7,12 @@ cur = conn.cursor()
 def addUser(email,password):
     passed = True
     try:
-        # Example INSERT operation
         cur.execute("INSERT INTO users (email, password) VALUES (%s, %s)", (email, password))
-        
-        # Attempt to commit the transaction
         conn.commit()
-        
-        # If the commit is successful, you can print a confirmation
-        print("Transaction committed successfully.")
+        logging.debug(f"Inserted user {email} into DB")
     except pg.DatabaseError as error:
         # Rollback the transaction in case of error
         conn.rollback()
-        
         # Print the error message
         print(f"Error occurred during commit: {error}")
         passed = False
@@ -28,6 +22,7 @@ def get_user_by_email(email):
     query = "SELECT * FROM users WHERE email = %s"
     cur.execute(query, (email,))
     user = cur.fetchone()  # Retrieves the first row from the result set
+    logging.debug(f"Selected user {email} from DB")
     return user
 
 def createUsersTable():
@@ -38,6 +33,7 @@ def createUsersTable():
     );
     """)
     conn.commit()
+    logging.debug(f"Created users table")
 
 def createPreferencesTables():
     print("Creating preferences table")
@@ -66,7 +62,7 @@ def createPreferencesTables():
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     );
     """)
-    # print("Preferences table created")
+    logging.debug(f"Created preferences table")
     conn.commit()
 
 def get_preferences(user_id):
@@ -93,7 +89,7 @@ def save_preferences(user_id,data):
     print(f"Saving preferences for user {user_id}, data = {data}")
     for entry in data:
         schedule = entry['schedule']
-        time = entry['time'].upper()  # '10 am' to '10 am', adjust case as needed
+        time = entry['time'].upper()  
         preference = entry['preference']
         
         # Choose the correct table based on the schedule
@@ -105,7 +101,6 @@ def save_preferences(user_id,data):
             print(f"Schedule not recognized: {schedule}")
             continue  # Skip if schedule is not recognized
         print(f"table = {table}")
-        # Prepare the update statement for the specific time slot
         sql = f"""
         INSERT INTO {table} (user_id, "{time}")
         VALUES (%s, %s)
@@ -114,6 +109,8 @@ def save_preferences(user_id,data):
         """
         cur.execute(sql,(user_id,preference))    
     conn.commit()
+    logging.info("Saved preferences")
+    
 if __name__ == "__main__":
     print("calling function to create users table")
     createUsersTable()
