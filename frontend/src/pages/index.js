@@ -1,21 +1,9 @@
-// export default function Home() {
-//   return (
-//     <div>
-//       <h1>Select Your Availability</h1>
-//       <AvailabilityGrid />
-//     </div>
-//   );
-// }
-
-// // src/pages/index.js
-
 import Link from "next/link";
 import Image from "next/image";
-// import { isAuthenticated } from "./auth";
-
 const BACKEND_URL = process.env.BACKEND_URL;
 import Cookies from "js-cookie";
 import { UserProvider } from "./UserContext";
+import { isAuthenticated } from "./auth";
 export default function InitialLanding() {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-50">
@@ -50,15 +38,15 @@ export async function getServerSideProps(context) {
   const { req } = context;
   const token = req.cookies["token"]; // Replace "your_cookie_name" with your actual cookie name
 
-  // if (await isAuthenticated(token)) {
-  //   // If the user is authenticated, redirect them to the Create page
-  //   return {
-  //     redirect: {
-  //       destination: "/create",
-  //       permanent: false,
-  //     },
-  //   };
-  // }
+  if (await isAuthenticated(token)) {
+    // If the user is authenticated, redirect them to the Create page
+    return {
+      redirect: {
+        destination: "/availability",
+        permanent: false,
+      },
+    };
+  }
 
   // If the user is authenticated, render the Index page
   return {

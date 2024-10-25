@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { useUser } from "./UserContext";
+import { isAuthenticated } from "./auth";
 
 const Login = () => {
   const { username, setUsername } = useUser();
@@ -135,5 +136,25 @@ const Login = () => {
     </div>
   );
 };
+
+export async function getServerSideProps(context) {
+  const { req } = context;
+  const token = req.cookies["token"]; // Replace "your_cookie_name" with your actual cookie name
+
+  if (await isAuthenticated(token)) {
+    // If the user is authenticated, redirect them to the Create page
+    return {
+      redirect: {
+        destination: "/availability",
+        permanent: false,
+      },
+    };
+  }
+
+  // If the user is authenticated, render the Index page
+  return {
+    props: {}, // Will be passed to the page component as props
+  };
+}
 
 export default Login;
