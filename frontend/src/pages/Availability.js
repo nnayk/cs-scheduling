@@ -26,6 +26,8 @@ const Preference = {
 export default function Availability() {
   const { username, setUsername } = useUser();
 
+  const [saveMessage, setSaveMessage] = useState("");
+
   const [availability, setavailability] = useState(
     // availabity is a 2d array where element 0 contains string preferences for MWF 9-5
     // and element 1 for TR
@@ -111,6 +113,11 @@ export default function Availability() {
   };
 
   const processPrefs = async (e) => {
+    console.log("Processing prefs");
+    setTimeout(() => {
+      console.log("setting saveMessage");
+      setSaveMessage("");
+    }, 5000); // Message disappears after 3 seconds
     const prefs = [];
     for (let dayIndex = 0; dayIndex < days.length; dayIndex++) {
       for (let timeIndex = 0; timeIndex < times.length; timeIndex++) {
@@ -147,6 +154,8 @@ export default function Availability() {
         },
       }
     );
+    if (response.status == 200) setSaveMessage("Preferences saved!");
+    else setSaveMessage("Failed to save preferences");
     console.log(prefs);
   };
 
@@ -192,6 +201,7 @@ export default function Availability() {
       <button onClick={processPrefs} className={styles.submitButton}>
         Save Preferences
       </button>
+      <h2 className={styles.subtitle}>{saveMessage && <p>{saveMessage}</p>}</h2>
       <br></br>
       <h1 className={styles.title}>Preferences</h1>
     </div>

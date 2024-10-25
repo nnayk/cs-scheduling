@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { Tooltip } from "react-tooltip";
 import { AiFillQuestionCircle } from "react-icons/ai";
 import Link from "next/link";
+import { isAuthenticated } from "./auth";
 import Error from "next/error";
 
 const Register = () => {
@@ -184,5 +185,25 @@ const Register = () => {
     </div>
   );
 };
+
+export async function getServerSideProps(context) {
+  const { req } = context;
+  const token = req.cookies["token"]; // Replace "your_cookie_name" with your actual cookie name
+
+  if (await isAuthenticated(token)) {
+    // If the user is authenticated, redirect them to the Create page
+    return {
+      redirect: {
+        destination: "/availability",
+        permanent: false,
+      },
+    };
+  }
+
+  // If the user is authenticated, render the Index page
+  return {
+    props: {}, // Will be passed to the page component as props
+  };
+}
 
 export default Register;

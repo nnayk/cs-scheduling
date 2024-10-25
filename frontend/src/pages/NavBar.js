@@ -21,7 +21,7 @@ const NavBar = () => {
           <div className="flex">
             <Link href="/availability">
               <span className="flex items-center py-4 px-2 cursor-pointer font-semibold text-yellow-500 text-lg">
-                Poly Preferences
+                Poly Proferences
               </span>
             </Link>
           </div>
