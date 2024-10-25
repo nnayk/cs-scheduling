@@ -1,5 +1,4 @@
 import { useState } from "react";
-// import styles from "./availability.module.css"; // Import the CSS styles
 import axios from "axios";
 import { isAuthenticated } from "./auth";
 import { useUser } from "./UserContext";

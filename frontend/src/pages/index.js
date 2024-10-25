@@ -48,7 +48,7 @@ export async function getServerSideProps(context) {
     };
   }
 
-  // If the user is authenticated, render the Index page
+  // If the user is authenticated, render the availability page
   return {
     props: {}, // Will be passed to the page component as props
   };

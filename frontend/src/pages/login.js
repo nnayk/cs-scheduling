@@ -1,8 +1,6 @@
-// pages/register.js
 import React, { useState } from "react";
 import axios from "axios";
-// pages/register.js
-import "tailwindcss/tailwind.css"; // Import Tailwind CSS
+import "tailwindcss/tailwind.css";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Cookies from "js-cookie";
@@ -43,7 +41,7 @@ const Login = () => {
       );
       console.log("response", response);
 
-      //Store the token in cookie
+      //Store the token in cookies
       Cookies.set("token", response.data.access_token, {
         expires: 7,
         path: "/",

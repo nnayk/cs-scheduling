@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import styles from "./availability.module.css"; // Import the CSS styles
+import styles from "./availability.module.css";
 import axios from "axios";
 import { isAuthenticated } from "./auth";
 import { useUser } from "./UserContext";
@@ -27,6 +27,8 @@ export default function Availability() {
   const { username, setUsername } = useUser();
 
   const [availability, setavailability] = useState(
+    // availabity is a 2d array where element 0 contains string preferences for MWF 9-5
+    // and element 1 for TR
     Array(days.length)
       .fill(null)
       .map(() => Array(times.length).fill("Unacceptable"))
@@ -66,7 +68,7 @@ export default function Availability() {
   };
 
   const getavailabilityStyle = (dayIndex, timeIndex) => {
-    // Apply special style for disabled cell (TR 11 AM - 12 PM)
+    // Apply special style for disabled cell due to UU hour conflict (TR 11 AM - 12 PM)
     if (dayIndex === 1 && timeIndex === 2) {
       return styles.disabled;
     }
@@ -211,7 +213,7 @@ export async function getServerSideProps(context) {
     };
   }
 
-  // If the user is authenticated, render the Portfolio page
+  // If the user is authenticated, render the availability page
   return {
     props: {}, // Will be passed to the page component as props
   };

@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "tailwindcss/tailwind.css"; // Import Tailwind CSS
+import "tailwindcss/tailwind.css";
 import { useRouter } from "next/router";
 import { Tooltip } from "react-tooltip";
 import { AiFillQuestionCircle } from "react-icons/ai";
 import Link from "next/link";
 import Error from "next/error";
-
-const MIN_PWD_LEN = 7;
 
 const Register = () => {
   const router = useRouter();
