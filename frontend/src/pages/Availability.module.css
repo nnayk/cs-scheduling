@@ -79,3 +79,9 @@
   color: white; /* Lighter color for text */
   cursor: not-allowed; /* Not-allowed cursor */
 }
+
+/* move this to preferences css file */
+.leftAlignedText {
+  text-align: left;
+  margin-left: 0; /* Ensure it's aligned to the left without extra margin */
+}

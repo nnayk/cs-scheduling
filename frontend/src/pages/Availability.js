@@ -24,6 +24,17 @@ const Preference = {
   ACCEPTABLE: "Acceptable",
 };
 export default function Availability() {
+  const [labPreference, setLabPreference] = useState({
+    MWF: null,
+    TR: null,
+  });
+  const handleLabPreferenceChange = (schedule, preference) => {
+    setLabPreference((prev) => ({
+      ...prev,
+      [schedule]: preference,
+    }));
+  };
+
   const { username, setUsername } = useUser();
 
   const [saveMessage, setSaveMessage] = useState("");
@@ -154,8 +165,8 @@ export default function Availability() {
         },
       }
     );
-    if (response.status == 200) setSaveMessage("Preferences saved!");
-    else setSaveMessage("Failed to save preferences");
+    if (response.status == 200) setSaveMessage("Availabilitys saved!");
+    else setSaveMessage("Failed to save availability");
     console.log(prefs);
   };
 
@@ -199,11 +210,44 @@ export default function Availability() {
         </tbody>
       </table>
       <button onClick={processPrefs} className={styles.submitButton}>
-        Save Preferences
+        Save Availability
       </button>
       <h2 className={styles.subtitle}>{saveMessage && <p>{saveMessage}</p>}</h2>
       <br></br>
       <h1 className={styles.title}>Preferences</h1>
+      <h2 className={`${styles.subtitle} ${styles.leftAligned}`}>
+        If teaching 1 class with a lab, I would prefer
+      </h2>
+      <table className={styles.grid}>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Disagree</th>
+            <th>Neutral</th>
+            <th>Agree</th>
+          </tr>
+        </thead>
+        <tbody>
+          {["MWF", "TR"].map((schedule) => (
+            <tr key={schedule}>
+              <td>{schedule}</td>
+              {["Disagree", "Neutral", "Agree"].map((preference) => (
+                <td key={preference}>
+                  <input
+                    type="radio"
+                    name={`lab-preference-${schedule}`}
+                    value={preference}
+                    checked={labPreference[schedule] === preference}
+                    onChange={() =>
+                      handleLabPreferenceChange(schedule, preference)
+                    }
+                  />
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
