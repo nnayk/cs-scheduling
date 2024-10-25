@@ -1,6 +1,4 @@
-import sys
-print(sys.executable)
-
+import logging
 import psycopg2 as pg
 
 conn = pg.connect(host="localhost",dbname="postgres",user="postgres",password="lillu178!",port=5432)
@@ -78,16 +76,13 @@ def get_preferences(user_id):
     JOIN tr_preferences ON mwf_preferences.user_id = tr_preferences.user_id
     WHERE mwf_preferences.user_id = {user_id}
     """
-    print('sttarty')
     cur.execute(sql)
     data = cur.fetchall()
-    print(f'returning {data}')
     # The query response is provided in a rather ugly form: 
     # [(user_id,<mwf 9 am pref>,<mwf 10 am pref>,...user_id,<tr 9 am pref>,...)].
     # Clean this up and return a 2d array where:
     # element 0 = list of mwf preferences
     # element 1 = list of tr preferences
-    print(f'looking for {user_id} in {data},{type(data)},{len(data)}')
     data = data[0]
     split_index = data.index(int(user_id),1)
     mwf_prefs = list(data[1:split_index])
