@@ -63,7 +63,7 @@ export default function Availability() {
         // Assuming `fetchedData` is an array of the same shape as `availability`
         setavailability(fetchedData);
       } catch (error) {
-        console.error("Error fetching availability:", error);
+        console.errorp("Error fetching availability:", error);
       }
     };
 
@@ -155,19 +155,25 @@ export default function Availability() {
         }
       }
     }
-    const response = await axios.post(
-      "http://127.0.0.1:5000/availability",
-      prefs,
-      {
-        headers: {
-          Authorization: `Bearer ${Cookie.get("token")}`,
-          "Content-Type": "application/json", // Ensure content type is JSON
-        },
-      }
-    );
-    if (response.status == 200) setSaveMessage("Availabilitys saved!");
-    else setSaveMessage("Failed to save availability");
-    console.log(prefs);
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:5000/availability",
+        prefs,
+        {
+          headers: {
+            Authorization: `Bearer ${Cookie.get("token")}`,
+            "Content-Type": "application/json", // Ensure content type is JSON
+          },
+        }
+      );
+      if (response.status == 200) setSaveMessage("Availability saved!");
+      else setSaveMessage("Failed to save availability");
+      console.log(prefs);
+    } catch (error) {
+      console.error("Error saving availability:", error);
+      setSaveMessage("Failed to save availability");
+      //TODO: redirect to error page
+    }
   };
 
   return (
@@ -212,42 +218,11 @@ export default function Availability() {
       <button onClick={processPrefs} className={styles.submitButton}>
         Save Availability
       </button>
-      <h2 className={styles.subtitle}>{saveMessage && <p>{saveMessage}</p>}</h2>
-      <br></br>
-      <h1 className={styles.title}>Preferences</h1>
-      <h2 className={`${styles.subtitle} ${styles.leftAligned}`}>
-        If teaching 1 class with a lab, I would prefer
+      <h2 className={styles.subtitle}>
+        {(saveMessage && <p>{saveMessage}</p>) || (
+          <p>placeholder to avoid bottom stuff moving</p>
+        )}
       </h2>
-      <table className={styles.grid}>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Disagree</th>
-            <th>Neutral</th>
-            <th>Agree</th>
-          </tr>
-        </thead>
-        <tbody>
-          {["MWF", "TR"].map((schedule) => (
-            <tr key={schedule}>
-              <td>{schedule}</td>
-              {["Disagree", "Neutral", "Agree"].map((preference) => (
-                <td key={preference}>
-                  <input
-                    type="radio"
-                    name={`lab-preference-${schedule}`}
-                    value={preference}
-                    checked={labPreference[schedule] === preference}
-                    onChange={() =>
-                      handleLabPreferenceChange(schedule, preference)
-                    }
-                  />
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </div>
   );
 }

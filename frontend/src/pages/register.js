@@ -83,6 +83,7 @@ const Register = () => {
       return response;
     } catch (error) {
       console.log("err", error);
+      //TODO: redirect to error page
       return false;
     }
   };

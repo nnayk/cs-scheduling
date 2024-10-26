@@ -21,6 +21,7 @@ export async function isAuthenticated(token) {
     return response.data.authenticated;
   } catch (error) {
     console.error("Error during user verification:", error);
+    // TODO: redirect to error page
     return false;
   }
 }
