@@ -1,6 +1,6 @@
 // import { Availability } from "./availability";
 // import styles from "./availability.module.css";
-import Test_avail from "./test_avail";
+// import Test_avail from "./test_avail";
 
 const days = ["MWF Schedule", "TR Schedule"];
 const times = [
@@ -19,7 +19,7 @@ export default function Preferences() {
   return (
     <div>
       <h1>Preference</h1>
-      <Test_avail />
+      {/* <Test_avail /> */}
     </div>
   );
 }

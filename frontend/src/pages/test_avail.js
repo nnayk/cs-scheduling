@@ -1,3 +1,5 @@
+import Preferences from "./preferences";
+import Availability from "./availability";
 const exp = require("constants");
 
 const days = ["MWF Schedule", "TR Schedule"];
@@ -17,7 +19,9 @@ const Test_avail = () => {
   console.log("foolo");
   return (
     <div>
-      <h1>Test Availability</h1>
+      {/* <h1>Test Availability</h1> */}
+      {/* <Preferences></Preferences> */}
+      <Availability></Availability>
     </div>
   );
 };
