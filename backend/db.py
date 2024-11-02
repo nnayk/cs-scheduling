@@ -4,6 +4,12 @@ import psycopg2 as pg
 conn = pg.connect(host="localhost",dbname="postgres",user="postgres",password="lillu178!",port=5432)
 cur = conn.cursor()
 
+MWF_TABLE = "mwf_availability"
+TR_TABLE = "tr_availability"
+PROFILES_TABLE = "profiles"
+USERS_TABLE = "users"
+QUESTIONS_TABLE = "questions"
+
 def addUser(email,password):
     passed = True
     try:
@@ -65,22 +71,42 @@ def createPreferencesTables():
     logging.debug(f"Created preferences table")
     conn.commit()
 
+def clear_table(table):
+    cur.execute(f"DELETE FROM {table}")
+    conn.commit()
+    logging.debug(f"Cleared table {table}")
+    
+def delete_table(table):
+    cur.execute(f"DROP TABLE {table}")
+    conn.commit()
+    logging.debug(f"Deleted table {table}")
+
+
 def get_preferences(user_id):
     sql = f"""
     SELECT * 
     FROM mwf_preferences
-    JOIN tr_preferences ON mwf_preferences.user_id = tr_preferences.user_id
-    WHERE mwf_preferences.user_id = {user_id}
+    WHERE user_id = {user_id}
+    
+    UNION ALL
+    
+    SELECT * 
+    FROM tr_preferences
+    WHERE user_id = {user_id}
     """
+ 
     cur.execute(sql)
     data = cur.fetchall()
+    logging.debug(f"Data = {data}")
+    if not data:
+        return [[],[]]
     # The query response is provided in a rather ugly form: 
     # [(user_id,<mwf 9 am pref>,<mwf 10 am pref>,...user_id,<tr 9 am pref>,...)].
     # Clean this up and return a 2d array where:
     # element 0 = list of mwf preferences
     # element 1 = list of tr preferences
     data = data[0]
-    split_index = data.index(int(user_id),1)
+    split_index = data.index(int(user_id),1) if int(user_id) in data[1:] else len(data)
     mwf_prefs = list(data[1:split_index])
     tr_prefs = list(data[split_index+1:])
     return [mwf_prefs,tr_prefs]
