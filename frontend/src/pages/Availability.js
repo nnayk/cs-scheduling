@@ -50,8 +50,14 @@ export default function Availability() {
   useEffect(() => {
     const fetchAvailability = async () => {
       try {
+        const storedData = localStorage.getItem("availabilityData");
+        if (storedData) {
+          console.log("Using stored data = ", storedData);
+          setavailability(JSON.parse(storedData));
+          return;
+        }
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/get_availability`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/availability`,
           {
             headers: {
               Authorization: `Bearer ${Cookie.get("token")}`, // Use token if required for authorization
@@ -60,10 +66,11 @@ export default function Availability() {
         );
         const fetchedData = response.data;
         console.log(`fetchedData = ${fetchedData}`);
+        localStorage.setItem("availabilityData", JSON.stringify(fetchedData));
         // Assuming `fetchedData` is an array of the same shape as `availability`
         setavailability(fetchedData);
       } catch (error) {
-        console.errorp("Error fetching availability:", error);
+        console.error("Error fetching availability:", error);
       }
     };
 
@@ -155,6 +162,7 @@ export default function Availability() {
         }
       }
     }
+    localStorage.setItem("availabilityData", JSON.stringify(availability));
     try {
       const response = await axios.post(
         "http://127.0.0.1:5000/availability",

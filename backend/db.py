@@ -13,7 +13,8 @@ QUESTIONS_TABLE = "questions"
 def addUser(email,password):
     passed = True
     try:
-        cur.execute("INSERT INTO users (email, password) VALUES (%s, %s)", (email, password))
+        sql = f"INSERT INTO {USERS_TABLE} (email, password) VALUES (%s, %s)"
+        cur.execute(sql, (email, password))
         conn.commit()
         logging.debug(f"Inserted user {email} into DB")
     except pg.DatabaseError as error:
@@ -25,23 +26,22 @@ def addUser(email,password):
     return passed
 
 def get_user_by_email(email):
-    query = "SELECT * FROM users WHERE email = %s"
-    cur.execute(query, (email,))
+    sql = f"SELECT * FROM {USERS_TABLE} WHERE email = %s"
+    cur.execute(sql, (email,))
     user = cur.fetchone()  # Retrieves the first row from the result set
     logging.debug(f"Selected user {email} from DB")
     return user
 
 def createUsersTable():
-    cur.execute("""CREATE TABLE IF NOT EXISTS Users(
+    sql = f"""CREATE TABLE IF NOT EXISTS {USERS_TABLE} (
         id SERIAL PRIMARY KEY,
         email VARCHAR(255) NOT NULL,
-        password VARCHAR(255) NOT NULL
-    );
-    """)
+        password VARCHAR(255) NOT NULL);"""
+    cur.execute(sql)
     conn.commit()
     logging.debug(f"Created users table")
 
-def createPreferencesTables():
+def createAvailabilityTables():
     print("Creating preferences table")
     times = ", ".join([
             '"9 AM" VARCHAR(255)',
@@ -54,21 +54,23 @@ def createPreferencesTables():
             '"4 PM" VARCHAR(255)',
             '"5 PM" VARCHAR(255)',
             ]);
-    cur.execute(f"""
-    CREATE TABLE IF NOT EXISTS mwf_preferences (
+    sql_mwf = f"""
+    CREATE TABLE IF NOT EXISTS {MWF_TABLE} (
         user_id INT PRIMARY KEY,
-        {times},
+        %s,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     );
-    """)
-    cur.execute(f"""
-    CREATE TABLE IF NOT EXISTS tr_preferences (
+    """
+    cur.execute(sql_mwf,(times))
+    sql_tr = f"""
+    CREATE TABLE IF NOT EXISTS {TR_TABLE} (
         user_id INT PRIMARY KEY,
-        {times},
+        %s,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     );
-    """)
-    logging.debug(f"Created preferences table")
+    """
+    cur.execute(sql_tr,(times))
+    logging.debug(f"Created availability tables")
     conn.commit()
 
 def clear_table(table):
@@ -82,33 +84,37 @@ def delete_table(table):
     logging.debug(f"Deleted table {table}")
 
 
-def get_preferences(user_id):
+def get_availability(user_id):
+    # TODO: don't hardcode table names + don't add the vars here due to sql injection vulenrability (use %s instead for cur.execute). Do this for all queries
     sql = f"""
     SELECT * 
-    FROM mwf_preferences
-    WHERE user_id = {user_id}
+    FROM {MWF_TABLE}
+    WHERE user_id = %s
     
     UNION ALL
     
     SELECT * 
-    FROM tr_preferences
-    WHERE user_id = {user_id}
+    FROM {TR_TABLE}
+    WHERE user_id = %s
     """
  
-    cur.execute(sql)
+    cur.execute(sql,(user_id,user_id))
     data = cur.fetchall()
     logging.debug(f"Data = {data}")
     if not data:
-        return [[],[]]
+        return [["Unacceptable"]*10,["Unacceptable"]*10]
     # The query response is provided in a rather ugly form: 
     # [(user_id,<mwf 9 am pref>,<mwf 10 am pref>,...user_id,<tr 9 am pref>,...)].
     # Clean this up and return a 2d array where:
     # element 0 = list of mwf preferences
     # element 1 = list of tr preferences
-    data = data[0]
-    split_index = data.index(int(user_id),1) if int(user_id) in data[1:] else len(data)
-    mwf_prefs = list(data[1:split_index])
-    tr_prefs = list(data[split_index+1:])
+    assert len(data) == 2 and len(data[0]) == 10 and len(data[1]) == 10
+    mwf_prefs = list(data[0][1:])
+    mwf_prefs = [x if x else "Unacceptable" for x in mwf_prefs]
+    tr_prefs = list(data[1][1:])
+    tr_prefs = [x if x else "Unacceptable" for x in tr_prefs]
+    logging.debug(f"mwf_prefs = {mwf_prefs}")
+    logging.debug(f"tr_prefs = {tr_prefs}")
     return [mwf_prefs,tr_prefs]
 
 def save_preferences(user_id,data):
@@ -120,9 +126,9 @@ def save_preferences(user_id,data):
         
         # Choose the correct table based on the schedule
         if schedule == 'MWF Schedule':
-            table = "mwf_preferences"
+            table = MWF_TABLE 
         elif schedule == 'TR Schedule':
-            table = "tr_preferences"
+            table = TR_TABLE
         else:
             print(f"Schedule not recognized: {schedule}")
             continue  # Skip if schedule is not recognized
@@ -138,8 +144,4 @@ def save_preferences(user_id,data):
     logging.info("Saved preferences")
     
 if __name__ == "__main__":
-    print("calling function to create users table")
-    createUsersTable()
-    print("calling function to create preferences table")
-    createPreferencesTables()
     cur.close()

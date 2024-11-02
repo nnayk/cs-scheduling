@@ -25,6 +25,8 @@ def create_app(config_class=Config):
     def set_availability():
         user = get_jwt_identity()
         data = request.get_json()
+        app.logger.debug(f"User = {user}")
+        app.logger.debug(f"Data = {data}")
         db.save_preferences(user,data)
         return jsonify("Saved preferences"),200
     
@@ -35,7 +37,7 @@ def create_app(config_class=Config):
         app.logger.debug("inside get_availability")
         app.logger.debug(f"User = {user}") 
         try:
-            preferences = db.get_preferences(user)
+            preferences = db.get_availability(user)
             app.logger.debug(f"Preferences = {preferences}")
             return jsonify(preferences), 200
         except Exception as e:
