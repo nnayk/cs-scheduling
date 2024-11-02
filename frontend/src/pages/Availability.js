@@ -23,7 +23,7 @@ const Preference = {
   PREFERRED: "Preferred",
   ACCEPTABLE: "Acceptable",
 };
-export default function Availability({ quarter }) {
+export default function Quarter_Availability({ quarter }) {
   const [labPreference, setLabPreference] = useState({
     MWF: null,
     TR: null,
