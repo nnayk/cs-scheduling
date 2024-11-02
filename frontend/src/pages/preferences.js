@@ -1,4 +1,4 @@
-// import { Availability } from "./availability";
+import Availability from "./availability";
 // import styles from "./availability.module.css";
 // import Test_avail from "./test_avail";
 
@@ -15,11 +15,14 @@ const times = [
   "5 PM",
 ];
 
-export default function Preferences() {
+const Preferences = () => {
   return (
     <div>
       <h1>Preference</h1>
+      <Availability quarter="spring 2025" />
       {/* <Test_avail /> */}
     </div>
   );
-}
+};
+
+export default Preferences;

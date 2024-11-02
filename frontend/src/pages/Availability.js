@@ -23,7 +23,7 @@ const Preference = {
   PREFERRED: "Preferred",
   ACCEPTABLE: "Acceptable",
 };
-export default function Availability() {
+export default function Availability({ quarter }) {
   const [labPreference, setLabPreference] = useState({
     MWF: null,
     TR: null,
@@ -166,7 +166,7 @@ export default function Availability() {
     try {
       const response = await axios.post(
         "http://127.0.0.1:5000/availability",
-        prefs,
+        { prefs: prefs, quarter: quarter },
         {
           headers: {
             Authorization: `Bearer ${Cookie.get("token")}`,

@@ -56,20 +56,22 @@ def createAvailabilityTables():
             ]);
     sql_mwf = f"""
     CREATE TABLE IF NOT EXISTS {MWF_TABLE} (
-        user_id INT PRIMARY KEY,
-        %s,
-        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        user_id INT REFERENCES users(id) ON DELETE CASCADE,
+        quarter VARCHAR(255),
+        {times},
+        PRIMARY KEY (user_id,quarter)
     );
     """
-    cur.execute(sql_mwf,(times))
+    cur.execute(sql_mwf)
     sql_tr = f"""
     CREATE TABLE IF NOT EXISTS {TR_TABLE} (
-        user_id INT PRIMARY KEY,
-        %s,
-        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        user_id INT REFERENCES users(id) ON DELETE CASCADE,
+        quarter VARCHAR(255),
+        {times},
+        PRIMARY KEY (user_id,quarter)
     );
     """
-    cur.execute(sql_tr,(times))
+    cur.execute(sql_tr)
     logging.debug(f"Created availability tables")
     conn.commit()
 
@@ -117,7 +119,7 @@ def get_availability(user_id):
     logging.debug(f"tr_prefs = {tr_prefs}")
     return [mwf_prefs,tr_prefs]
 
-def save_preferences(user_id,data):
+def save_preferences(user_id,quarter,data):
     print(f"Saving preferences for user {user_id}, data = {data}")
     for entry in data:
         schedule = entry['schedule']
@@ -133,13 +135,14 @@ def save_preferences(user_id,data):
             print(f"Schedule not recognized: {schedule}")
             continue  # Skip if schedule is not recognized
         print(f"table = {table}")
+        logging.debug(f"Inserting pref {preference} for time {time} for user {user_id} in quarter {quarter}")
         sql = f"""
-        INSERT INTO {table} (user_id, "{time}")
-        VALUES (%s, %s)
-        ON CONFLICT (user_id) DO UPDATE
+        INSERT INTO {table} (user_id, quarter, "{time}")
+        VALUES (%s, %s, %s)
+        ON CONFLICT (user_id,quarter) DO UPDATE
         SET "{time}" = EXCLUDED."{time}";
         """
-        cur.execute(sql,(user_id,preference))    
+        cur.execute(sql,(user_id,quarter,preference))    
     conn.commit()
     logging.info("Saved preferences")
     
