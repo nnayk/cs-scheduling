@@ -49,7 +49,7 @@ const Login = () => {
       console.log("using user");
       console.log("username", username);
       setUsername(email);
-      router.push("/availability");
+      router.push("/preferences");
       return response;
     } catch (error) {
       console.log(`error=${error},${error.response}`);
