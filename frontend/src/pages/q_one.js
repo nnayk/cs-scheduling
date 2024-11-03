@@ -1,5 +1,6 @@
-
-      <br></br>
+const Questions = () => {
+  return (
+    <div className={styles.container}>
       <h1 className={styles.title}>Select your preferences</h1>
       <h2 className={`${styles.subtitle} ${styles.leftAligned}`}>
         1. If teaching 1 class with a lab, I would prefer
@@ -34,3 +35,8 @@
           ))}
         </tbody>
       </table>
+    </div>
+  );
+};
+
+export default Questions;
