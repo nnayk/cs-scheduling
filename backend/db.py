@@ -78,7 +78,7 @@ def createAvailabilityTables():
     sql_mwf = f"""
     CREATE TABLE IF NOT EXISTS {MWF_TABLE} (
         user_id INT REFERENCES users(id) ON DELETE CASCADE,
-        quarter VARCHAR(255),
+        quarter VARCHAR(15) REFERENCES quarters(quarter) ON DELETE CASCADE, 
         {times},
         PRIMARY KEY (user_id,quarter)
     );
@@ -112,7 +112,7 @@ def createQuestionsTable():
 
 def createQuartersTable():
     sql = f"""CREATE TABLE IF NOT EXISTS {QUARTERS_TABLE} (
-        quarter VARCHAR(255) PRIMARY KEY
+        quarter VARCHAR(15) PRIMARY KEY
         );
         """
     cur.execute(sql)
@@ -126,18 +126,36 @@ def insertQuarters(quarters):
     conn.commit()
     logging.debug(f"Inserted quarters")
 
-def createQuarter_QuestionsTable():
+def deleteQuarters(quarters):
+    if quarters:
+        sql = f"DELETE FROM {QUARTERS_TABLE} WHERE quarter = ANY(%s)"
+        cur.execute(sql, (quarters,))
+        conn.commit()
+    else:
+        cur.execute(f"DELETE FROM {QUARTERS_TABLE}")
+        conn.commit()
+        logging.debug(f"Deleted quarters")
+
+def createQuarter_AnswersTable():
+    # Note: TEXT can store up to 65,535 characters
     sql = f"""CREATE TABLE IF NOT EXISTS {QUARTER_ANSWERS_TABLE} (
         user_id INT REFERENCES users(id) ON DELETE CASCADE,
-        quarter VARCHAR(255) NOT NULL,
-        question INT REFERENCES questions(id), # 
-        answer VARCHAR(255),
+        quarter VARCHAR(15) REFERENCES quarters(quarter) ON DELETE CASCADE, 
+        question INT REFERENCES questions(id), 
+        answer TEXT, 
         PRIMARY KEY (user_id,quarter,question)
         );
         """
     cur.execute(sql)
     conn.commit()
     logging.debug(f"Created questions table")
+
+def insertQuarter_Answers(user_id,quarter,answers):
+    for question_id,answer in answers.items():
+        sql = f"INSERT INTO {QUARTER_ANSWERS_TABLE} (user_id,quarter,question,answer) VALUES (%s, %s, %s, %s)"
+        cur.execute(sql, (user_id,quarter,question_id,answer))
+    conn.commit()
+    logging.debug(f"Inserted quarter answers")
 
 def clear_table(table):
     cur.execute(f"DELETE FROM {table}")
@@ -186,8 +204,8 @@ def get_availability(user_id, quarter):
     logging.debug(f"tr_prefs = {tr_prefs}")
     return [mwf_prefs,tr_prefs]
 
-def save_preferences(user_id,quarter,data):
-    print(f"Saving preferences for user {user_id}, data = {data}")
+def save_availability(user_id,quarter,data):
+    print(f"Saving availability for user {user_id}, data = {data}")
     for entry in data:
         schedule = entry['schedule']
         time = entry['time'].upper()  

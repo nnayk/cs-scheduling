@@ -28,7 +28,7 @@ def create_app(config_class=Config):
         app.logger.debug(f"User = {user}")
         app.logger.debug(f"Data = {data}")
         print(f'QUARTER={data["quarter"]}')
-        db.save_preferences(user,data["quarter"],data["prefs"])
+        db.save_availability(user,data["quarter"],data["prefs"])
         return jsonify("Saved preferences"),200
     
     @app.route("/availability",methods=['GET'])
