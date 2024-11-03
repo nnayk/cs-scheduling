@@ -59,8 +59,10 @@ export default function Quarter_Availability({ quarter }) {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/availability`,
           {
+            params: { quarter: quarter },
             headers: {
               Authorization: `Bearer ${Cookie.get("token")}`, // Use token if required for authorization
+              // "Content-Type": "application/json", // Ensure content type is JSON
             },
           }
         );

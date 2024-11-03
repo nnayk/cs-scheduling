@@ -9,6 +9,7 @@ TR_TABLE = "tr_availability"
 PROFILES_TABLE = "profiles"
 USERS_TABLE = "users"
 QUESTIONS_TABLE = "questions"
+NUM_TIMESLOTS = 9
 
 def addUser(email,password):
     passed = True
@@ -86,21 +87,23 @@ def delete_table(table):
     logging.debug(f"Deleted table {table}")
 
 
-def get_availability(user_id):
+def get_availability(user_id, quarter):
     # TODO: don't hardcode table names + don't add the vars here due to sql injection vulenrability (use %s instead for cur.execute). Do this for all queries
     sql = f"""
     SELECT * 
     FROM {MWF_TABLE}
     WHERE user_id = %s
+    AND quarter = %s
     
     UNION ALL
     
     SELECT * 
     FROM {TR_TABLE}
     WHERE user_id = %s
+    AND quarter = %s;
     """
  
-    cur.execute(sql,(user_id,user_id))
+    cur.execute(sql,(user_id,quarter,user_id,quarter))
     data = cur.fetchall()
     logging.debug(f"Data = {data}")
     if not data:
@@ -110,12 +113,13 @@ def get_availability(user_id):
     # Clean this up and return a 2d array where:
     # element 0 = list of mwf preferences
     # element 1 = list of tr preferences
-    assert len(data) == 2 and len(data[0]) == 10 and len(data[1]) == 10
-    mwf_prefs = list(data[0][1:])
+    TOTAL_COLS = NUM_TIMESLOTS + 2  # 2 for user_id and quarter 
+    assert len(data) == 2 and len(data[0]) == TOTAL_COLS and len(data[1]) == TOTAL_COLS, f"Unexpected data format for data: length = {len(data)}, data[0] = {data[0]}, data[1] = {data[1]}"
+    mwf_prefs = list(data[0][2:])
     mwf_prefs = [x if x else "Unacceptable" for x in mwf_prefs]
-    tr_prefs = list(data[1][1:])
-    tr_prefs = [x if x else "Unacceptable" for x in tr_prefs]
     logging.debug(f"mwf_prefs = {mwf_prefs}")
+    tr_prefs = list(data[1][2:])
+    tr_prefs = [x if x else "Unacceptable" for x in tr_prefs]
     logging.debug(f"tr_prefs = {tr_prefs}")
     return [mwf_prefs,tr_prefs]
 
