@@ -10,6 +10,7 @@ TR_TABLE = "tr_availability"
 PROFILES_TABLE = "profiles"
 USERS_TABLE = "users"
 QUESTIONS_TABLE = "questions"
+QUARTERS_TABLE = "quarters"
 QUARTER_ANSWERS_TABLE = "quarter_answers"
 
 # Data
@@ -108,6 +109,22 @@ def createQuestionsTable():
         cur.execute(sql_insert, (question,))
     conn.commit()
     logging.debug(f"Created questions table")
+
+def createQuartersTable():
+    sql = f"""CREATE TABLE IF NOT EXISTS {QUARTERS_TABLE} (
+        quarter VARCHAR(255) PRIMARY KEY
+        );
+        """
+    cur.execute(sql)
+    conn.commit()
+    logging.debug(f"Created questions table")
+
+def insertQuarters(quarters):
+    for quarter in quarters:
+        sql = f"INSERT INTO {QUARTERS_TABLE} (quarter) VALUES (%s)"
+        cur.execute(sql, (quarter,))
+    conn.commit()
+    logging.debug(f"Inserted quarters")
 
 def createQuarter_QuestionsTable():
     sql = f"""CREATE TABLE IF NOT EXISTS {QUARTER_ANSWERS_TABLE} (
