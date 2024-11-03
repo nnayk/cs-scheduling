@@ -4,11 +4,30 @@ import psycopg2 as pg
 conn = pg.connect(host="localhost",dbname="postgres",user="postgres",password="lillu178!",port=5432)
 cur = conn.cursor()
 
+# Table names
 MWF_TABLE = "mwf_availability"
 TR_TABLE = "tr_availability"
 PROFILES_TABLE = "profiles"
 USERS_TABLE = "users"
 QUESTIONS_TABLE = "questions"
+QUARTER_ANSWERS_TABLE = "quarter_answers"
+
+# Data
+QUESTIONS = [
+    "If teaching 1 class with a lab, I would prefer",
+    "If teaching 2 classes with labs, I would prefer",
+    "If teaching 3 classes with labs, I would prefer",
+    "If teaching lecture only classes (4 lecture units, e.g. 248/445/grad courses), I prefer",
+    "Given the choice, I would prefer",
+    "Are there constraints you have that don't fit this format?",
+    "For each of the courses you are teaching in the specified quarter, do you have a room requirement? I.e. the course must be taught in the room due to equipment concerns? (Note that we do not have much control over lecture rooms and scheduling lectures in lab rooms for CSSE from 8am to 3pm is very difficult due to space constraints).",
+    "For the courses you are teaching in the specified quarter, do you have a room preference? (Note that we do not have much control over lecture rooms and scheduling lectures in lab rooms from 8am to 3pm is very difficult due to space constraints). You can include whiteboard vs blackboard preference here, the university registrar tries to respect those requests.",
+    "Any other thoughts/questions/comments/concerns?",
+    "This survey is"
+]
+
+# Constants
+QUESTIONS_OFFSET = 3 + 1 # 3 for the first 3 questions, 1 for Python's 0-based indexing
 NUM_TIMESLOTS = 9
 
 def addUser(email,password):
@@ -75,6 +94,33 @@ def createAvailabilityTables():
     cur.execute(sql_tr)
     logging.debug(f"Created availability tables")
     conn.commit()
+
+def createQuestionsTable():
+    sql_create = f"""CREATE TABLE IF NOT EXISTS {QUESTIONS_TABLE} (
+        id SERIAL PRIMARY KEY,
+        question VARCHAR(400) NOT NULL
+        );
+        ALTER SEQUENCE {QUESTIONS_TABLE}_id_seq RESTART WITH {QUESTIONS_OFFSET};
+        """
+    cur.execute(sql_create)
+    for question in QUESTIONS:
+        sql_insert = f"INSERT INTO {QUESTIONS_TABLE} (question) VALUES (%s)"
+        cur.execute(sql_insert, (question,))
+    conn.commit()
+    logging.debug(f"Created questions table")
+
+def createQuarter_QuestionsTable():
+    sql = f"""CREATE TABLE IF NOT EXISTS {QUARTER_ANSWERS_TABLE} (
+        user_id INT REFERENCES users(id) ON DELETE CASCADE,
+        quarter VARCHAR(255) NOT NULL,
+        question INT REFERENCES questions(id), # 
+        answer VARCHAR(255),
+        PRIMARY KEY (user_id,quarter,question)
+        );
+        """
+    cur.execute(sql)
+    conn.commit()
+    logging.debug(f"Created questions table")
 
 def clear_table(table):
     cur.execute(f"DELETE FROM {table}")
