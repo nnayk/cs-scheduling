@@ -23,8 +23,8 @@
   
   .grid td {
     /* background-color: #fff; */
-    background-color: lightcoral;
-    /* background-color: #4caf50; Green for selected availability */
+    /* background-color: lightcoral; */
+    background-color: #4caf50; /*Green for selected availability*/
   }
   
 .submitButton {
@@ -84,6 +84,8 @@
   text-align: center;
 }
 
+/*
 .clickableCell:hover {
-  background-color: wheat; /* Optional: Add a hover effect */
+  background-color: wheat; /* Optional: Add a hover effect *
 }
+*/
