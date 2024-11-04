@@ -1,31 +1,3 @@
-.grid {
-    border-collapse: collapse;
-    width: 100%;
-    margin: 20px auto;
-    max-width: 90%;     /* Add some space on the sides by reducing the width */
-    border-radius: 10px; /* Round the edges of the table */
-    overflow: hidden;    /* Ensure content stays within the rounded corners */
-  }
-  
-  .grid th, .grid td {
-    border: 1px solid #ccc;
-    padding: 10px;
-    text-align: center;
-    cursor: pointer;
-  }
-  
-  .grid th {
-    /* background-color: #f0f0f0; */
-    background-color: green;
-    color: goldenrod;
-  }
-  
-  
-  .grid td {
-    /* background-color: #fff; */
-    /* background-color: lightcoral; */
-    background-color: #4caf50; /*Green for selected availability*/
-  }
   
 .submitButton {
   background-color: green;  /* Green background */
@@ -84,8 +56,43 @@
   text-align: center;
 }
 
-/*
+
 .clickableCell:hover {
-  background-color: wheat; /* Optional: Add a hover effect *
+  background-color: goldenrod; /* Optional: Add a hover effect */
 }
-*/
+
+.wrappedHeader {
+  max-width: 80px; /* Adjust width as needed */
+  white-space: normal; /* Allows text to wrap */
+  /* word-wrap: break-word; Ensures words break if too long */
+  word-break: break-all;
+  text-align: left; /* Optional: align text for readability */
+}
+
+.container {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.myTextarea {
+  width: 100%;
+  max-width: 90%;
+  padding: 15px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  resize: vertical;
+  min-height: 120px;
+  font-size: 16px;
+  color: #333;
+  background-color: #f9f9f9;
+}
+
+.myTextarea:focus {
+  outline: none;
+  border-color: green;
+  box-shadow: 0 0 5px rgba(0, 128, 0, 0.5);
+}
