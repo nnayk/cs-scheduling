@@ -1,4 +1,4 @@
-import styles from "./written_question.module.css";
+import styles from "./written_questions.module.css";
 import { useState } from "react";
 
 const Written_Question = ({ question, id, handleInputChange }) => {
