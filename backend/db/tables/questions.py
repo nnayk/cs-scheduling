@@ -1,4 +1,5 @@
 import logging
+import backend.db.db_config as db_config
 
 QUESTIONS_TABLE = "questions"
 QUESTIONS_OFFSET = 3 + 1 # 3 for the first 3 questions, 1 for Python's 0-based indexing
@@ -17,7 +18,9 @@ QUESTIONS = [
     "This survey is"
 ]
 
-def createQuestionsTable(cur,conn):
+conn,cur = db_config.connect()
+
+def createQuestionsTable():
     sql_create = f"""CREATE TABLE IF NOT EXISTS {QUESTIONS_TABLE} (
         id SERIAL PRIMARY KEY,
         question VARCHAR(400) NOT NULL

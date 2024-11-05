@@ -1,6 +1,11 @@
+import logging
+import backend.db.db_config as db_config
+
 QUARTERS_TABLE = "quarters"
 
-def createQuartersTable(cur,conn):
+conn,cur = db_config.connect()
+
+def createQuartersTable():
     sql = f"""CREATE TABLE IF NOT EXISTS {QUARTERS_TABLE} (
         quarter VARCHAR(15) PRIMARY KEY
         );

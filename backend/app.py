@@ -3,7 +3,8 @@ from flask import Flask, Config, request
 from constants import Resources
 from flask import jsonify, make_response
 from flask_cors import CORS 
-import db
+# import db
+from db.tables import users
 from auth import hash_password, check_password
 import logging
 
@@ -28,7 +29,8 @@ def create_app(config_class=Config):
         app.logger.debug(f"User = {user}")
         app.logger.debug(f"Data = {data}")
         print(f'QUARTER={data["quarter"]}')
-        db.save_availability(user,data["quarter"],data["prefs"])
+        tables.availability.save_availability(user,data["quarter"],data["prefs"])
+        # db.save_availability(user,data["quarter"],data["prefs"])
         return jsonify("Saved preferences"),200
     
     @app.route("/availability",methods=['GET'])
@@ -40,7 +42,8 @@ def create_app(config_class=Config):
         quarter = request.args.get("quarter") 
         app.logger.debug(f"User = {user}, quarter = {quarter}") 
         try:
-            preferences = db.get_availability(user,quarter)
+            # preferences = db.get_availability(user,quarter)
+            preferences = tables.availability.get_availability(user,quarter) 
             app.logger.debug(f"Preferences for {quarter} for user {user} = {preferences}")
             return jsonify(preferences), 200
         except Exception as e:
@@ -58,7 +61,8 @@ def create_app(config_class=Config):
             return response
         data = request.get_json()
         app.logger.info(f"login data = {data}")
-        user = db.get_user_by_email(data["email"])
+        # user = db.get_user_by_email(data["email"])
+        user = users.get_user_by_email(data["email"]) 
         if not user:
             return {"message":"Email doesn't exist"},401
         user_id, email, expected_pwd_hash = user 
@@ -91,7 +95,8 @@ def create_app(config_class=Config):
         # Hash the password
         hashed_password = hash_password(plain_text_password)
         email = data["email"] or "bobby@gmail.com"
-        response = db.addUser(email,hashed_password)
+        # response = db.addUser(email,hashed_password)
+        response = users.addUser(email,hashed_password)
         if response:
             return {"message":"User added successfully"}
         else:

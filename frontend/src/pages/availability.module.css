@@ -1,0 +1,87 @@
+.grid {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px auto;
+    max-width: 90%;     /* Add some space on the sides by reducing the width */
+    border-radius: 10px; /* Round the edges of the table */
+    overflow: hidden;    /* Ensure content stays within the rounded corners */
+  }
+  
+  .grid th, .grid td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .grid th {
+    /* background-color: #f0f0f0; */
+    background-color: green;
+    color: goldenrod;
+  }
+  
+  .grid td {
+    /* background-color: #fff; */
+    background-color: lightcoral;
+  }
+  
+  .grid th.foo {
+    background-color: yellow;
+  }
+  
+  .grid td.preferred {
+    background-color: #4caf50; /* Green for selected availability */
+    color: white;
+  }
+  .grid td.unacceptable {
+    background-color: lightcoral; /* Green for selected availability */
+    color: white;
+  }
+  .grid td.acceptable {
+    background-color: lightblue; /* Green for selected availability */
+    color: white;
+  }
+
+.submitButton {
+  background-color: green;  /* Green background */
+  color: gold;              /* Gold text */
+  border: none;             /* Remove default border */
+  padding: 10px 20px;       /* Add some padding */
+  font-size: 16px;          /* Font size */
+  border-radius: 10px;      /* Rounded edges */
+  cursor: pointer;          /* Pointer cursor on hover */
+  transition: background-color 0.3s ease;  /* Smooth transition for hover */
+  display: block;       /* Make the button a block element */
+  margin: 20px auto;    /* Center the button horizontally and add vertical margin */
+}
+
+.submitButton:hover {
+  background-color: darkgreen; /* Slightly darker green on hover */
+}
+
+.title {
+  margin-top: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 30px;
+  color: green; 
+}
+
+.subtitle {
+  font-size: 16px;
+  color: #555;    /* Subtle color for the subtitle */
+  margin-bottom: 20px;  /* Space below the subtitle */
+  text-align: center;   /* Center the subtitle */
+}
+
+.disabled {
+  background-color: gray !important; /* Gray background for disabled cell */
+  color: white; /* Lighter color for text */
+  cursor: not-allowed; /* Not-allowed cursor */
+}
+
+/* move this to preferences css file */
+.leftAlignedText {
+  text-align: left;
+  margin-left: 0; /* Ensure it's aligned to the left without extra margin */
+}
