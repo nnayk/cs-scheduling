@@ -1,8 +1,7 @@
 import styles from "./agreement_questions.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const Agreement_Questions = () => {
-  // Initialize a single state object to handle all preferences
+const Agreement_Questions = ({ onChange }) => {
   const [preferences, setPreferences] = useState({
     oneLabPreference: { MWF: null, TR: null },
     twoLabPreference: { "2 MWF": null, "1 MWF, 1 TR": null, "2 TR": null },
@@ -20,11 +19,7 @@ const Agreement_Questions = () => {
     },
   });
 
-  // Generalized handler for all preference changes
   const handlePreferenceChange = (category, schedule, preference) => {
-    console.log(
-      `handlePreferenceChange: category: ${category}, schedule: ${schedule}, preference: ${preference}`
-    );
     setPreferences((prevPreferences) => ({
       ...prevPreferences,
       [category]: {
@@ -33,6 +28,13 @@ const Agreement_Questions = () => {
       },
     }));
   };
+
+  // Use useEffect to trigger the onChange callback after preferences are updated
+  useEffect(() => {
+    onChange(preferences);
+  }, [preferences, onChange]);
+
+  // ... (renderPreferenceTable and return statement here)
 
   // Render function for each table of questions
   const renderPreferenceTable = (category, schedules) => (
@@ -104,8 +106,6 @@ const Agreement_Questions = () => {
         5. Given the choice, I would prefer
       </h2>
       {renderPreferenceTable("breakPreference", preferences.breakPreference)}
-
-      <button onClick={() => console.log(preferences)}>Submit</button>
     </div>
   );
 };

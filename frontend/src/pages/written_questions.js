@@ -1,50 +1,44 @@
+import { useState, useEffect } from "react";
 import styles from "./written_questions.module.css";
-import { useState } from "react";
 
-const Written_Question = ({ question, id, handleInputChange }) => {
-  return (
-    <div className={styles.container}>
-      <h2 className={`${styles.subtitle} ${styles.leftAligned}`}>{question}</h2>
-      <textarea
-        className={styles.myTextarea}
-        onChange={(e) => handleInputChange(id, e.target.value)}
-      ></textarea>
-    </div>
-  );
-};
+const Written_Questions = ({ onChange }) => {
+  const [answers, setAnswers] = useState({
+    question1: "",
+    question2: "",
+  });
 
-const Written_Questions = () => {
-  // State to keep track of each text box's input
-  const [responses, setResponses] = useState({});
-
-  // Handler to update the response for each question
-  const handleInputChange = (id, value) => {
-    console.log(`handleInputChange: id: ${id}, value: ${value}`);
-    setResponses((prevResponses) => ({
-      ...prevResponses,
-      [id]: value,
+  const handleAnswerChange = (key, answer) => {
+    setAnswers((prevAnswers) => ({
+      ...prevAnswers,
+      [key]: answer,
     }));
   };
 
-  // Sample questions
-  const questions = [
-    "Are there constraints you have that don't fit this format?",
-    "For each of the courses you are teaching in the specified quarter, do you have a room requirement? I.e. the course must be taught in the room due to equipment concerns? (Note that we do not have much control over lecture rooms and scheduling lectures in lab rooms for CSSE from 8am to 3pm is very difficult due to space constraints).",
-    "For the courses you are teaching in the specified quarter, do you have a room preference? (Note that we do not have much control over lecture rooms and scheduling lectures in lab rooms from 8am to 3pm is very difficult due to space constraints). You can include whiteboard vs blackboard preference here, the university registrar tries to respect those requests.",
-    "Any other thoughts/questions/comments/concerns?",
-  ];
+  // Use useEffect to trigger onChange after answers are updated
+  useEffect(() => {
+    onChange(answers);
+  }, [answers, onChange]);
 
   return (
     <div>
-      {questions.map((question, index) => (
-        <Written_Question
-          key={index}
-          id={index}
-          question={question}
-          handleInputChange={handleInputChange}
-        />
-      ))}
-      <button onClick={() => console.log(responses)}>Submit</button>
+      <h2 className={styles.subtitle}>
+        Are there constraints you have that don't fit this format?
+      </h2>
+      <textarea
+        className={styles.myTextarea}
+        value={answers.question1}
+        onChange={(e) => handleAnswerChange("question1", e.target.value)}
+      />
+
+      <h2 className={styles.subtitle}>
+        For each of the courses you are teaching in the specified quarter, do
+        you have a room requirement?
+      </h2>
+      <textarea
+        className={styles.myTextarea}
+        value={answers.question2}
+        onChange={(e) => handleAnswerChange("question2", e.target.value)}
+      />
     </div>
   );
 };
