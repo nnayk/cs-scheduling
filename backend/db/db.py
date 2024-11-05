@@ -1,35 +1,27 @@
 import logging
 import psycopg2 as pg
 
-conn = pg.connect(host="localhost",dbname="postgres",user="postgres",password="lillu178!",port=5432)
-cur = conn.cursor()
+conn = None
+cur = None
 
 # Table names
 MWF_TABLE = "mwf_availability"
 TR_TABLE = "tr_availability"
-PROFILES_TABLE = "profiles"
-USERS_TABLE = "users"
-QUESTIONS_TABLE = "questions"
-QUARTERS_TABLE = "quarters"
 QUARTER_ANSWERS_TABLE = "quarter_answers"
 
-# Data
-QUESTIONS = [
-    "If teaching 1 class with a lab, I would prefer",
-    "If teaching 2 classes with labs, I would prefer",
-    "If teaching 3 classes with labs, I would prefer",
-    "If teaching lecture only classes (4 lecture units, e.g. 248/445/grad courses), I prefer",
-    "Given the choice, I would prefer",
-    "Are there constraints you have that don't fit this format?",
-    "For each of the courses you are teaching in the specified quarter, do you have a room requirement? I.e. the course must be taught in the room due to equipment concerns? (Note that we do not have much control over lecture rooms and scheduling lectures in lab rooms for CSSE from 8am to 3pm is very difficult due to space constraints).",
-    "For the courses you are teaching in the specified quarter, do you have a room preference? (Note that we do not have much control over lecture rooms and scheduling lectures in lab rooms from 8am to 3pm is very difficult due to space constraints). You can include whiteboard vs blackboard preference here, the university registrar tries to respect those requests.",
-    "Any other thoughts/questions/comments/concerns?",
-    "This survey is"
-]
-
 # Constants
-QUESTIONS_OFFSET = 3 + 1 # 3 for the first 3 questions, 1 for Python's 0-based indexing
 NUM_TIMESLOTS = 9
+
+# Connect to the database
+def connect():
+    global conn, cur
+    if conn and cur:
+        logging.debug("Already connected to DB")
+        return conn, cur
+    conn = pg.connect(host="localhost",dbname="postgres",user="postgres",password="lillu178!",port=5432)
+    cur = conn.cursor() 
+    logging.debug("Connected to DB")
+    return conn, cur
 
 def addUser(email,password):
     passed = True
@@ -53,88 +45,7 @@ def get_user_by_email(email):
     logging.debug(f"Selected user {email} from DB")
     return user
 
-def createUsersTable():
-    sql = f"""CREATE TABLE IF NOT EXISTS {USERS_TABLE} (
-        id SERIAL PRIMARY KEY,
-        email VARCHAR(255) NOT NULL,
-        password VARCHAR(255) NOT NULL);"""
-    cur.execute(sql)
-    conn.commit()
-    logging.debug(f"Created users table")
 
-def createAvailabilityTables():
-    print("Creating preferences table")
-    times = ", ".join([
-            '"9 AM" VARCHAR(255)',
-            '"10 AM" VARCHAR(255)',
-            '"11 AM" VARCHAR(255)',
-            '"12 PM" VARCHAR(255)',
-            '"1 PM" VARCHAR(255)',
-            '"2 PM" VARCHAR(255)',
-            '"3 PM" VARCHAR(255)',
-            '"4 PM" VARCHAR(255)',
-            '"5 PM" VARCHAR(255)',
-            ]);
-    sql_mwf = f"""
-    CREATE TABLE IF NOT EXISTS {MWF_TABLE} (
-        user_id INT REFERENCES users(id) ON DELETE CASCADE,
-        quarter VARCHAR(15) REFERENCES quarters(quarter) ON DELETE CASCADE, 
-        {times},
-        PRIMARY KEY (user_id,quarter)
-    );
-    """
-    cur.execute(sql_mwf)
-    sql_tr = f"""
-    CREATE TABLE IF NOT EXISTS {TR_TABLE} (
-        user_id INT REFERENCES users(id) ON DELETE CASCADE,
-        quarter VARCHAR(255),
-        {times},
-        PRIMARY KEY (user_id,quarter)
-    );
-    """
-    cur.execute(sql_tr)
-    logging.debug(f"Created availability tables")
-    conn.commit()
-
-def createQuestionsTable():
-    sql_create = f"""CREATE TABLE IF NOT EXISTS {QUESTIONS_TABLE} (
-        id SERIAL PRIMARY KEY,
-        question VARCHAR(400) NOT NULL
-        );
-        ALTER SEQUENCE {QUESTIONS_TABLE}_id_seq RESTART WITH {QUESTIONS_OFFSET};
-        """
-    cur.execute(sql_create)
-    for question in QUESTIONS:
-        sql_insert = f"INSERT INTO {QUESTIONS_TABLE} (question) VALUES (%s)"
-        cur.execute(sql_insert, (question,))
-    conn.commit()
-    logging.debug(f"Created questions table")
-
-def createQuartersTable():
-    sql = f"""CREATE TABLE IF NOT EXISTS {QUARTERS_TABLE} (
-        quarter VARCHAR(15) PRIMARY KEY
-        );
-        """
-    cur.execute(sql)
-    conn.commit()
-    logging.debug(f"Created questions table")
-
-def insertQuarters(quarters):
-    for quarter in quarters:
-        sql = f"INSERT INTO {QUARTERS_TABLE} (quarter) VALUES (%s)"
-        cur.execute(sql, (quarter,))
-    conn.commit()
-    logging.debug(f"Inserted quarters")
-
-def deleteQuarters(quarters):
-    if quarters:
-        sql = f"DELETE FROM {QUARTERS_TABLE} WHERE quarter = ANY(%s)"
-        cur.execute(sql, (quarters,))
-        conn.commit()
-    else:
-        cur.execute(f"DELETE FROM {QUARTERS_TABLE}")
-        conn.commit()
-        logging.debug(f"Deleted quarters")
 
 def createQuarter_AnswersTable():
     # Note: TEXT can store up to 65,535 characters
