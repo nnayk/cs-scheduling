@@ -4,7 +4,7 @@ from constants import Resources
 from flask import jsonify, make_response
 from flask_cors import CORS 
 # import db
-from db.tables import users
+from db.tables import users, availability
 from auth import hash_password, check_password
 import logging
 
@@ -29,7 +29,7 @@ def create_app(config_class=Config):
         app.logger.debug(f"User = {user}")
         app.logger.debug(f"Data = {data}")
         print(f'QUARTER={data["quarter"]}')
-        tables.availability.save_availability(user,data["quarter"],data["prefs"])
+        availability.save_availability(user,data["quarter"],data["prefs"])
         # db.save_availability(user,data["quarter"],data["prefs"])
         return jsonify("Saved preferences"),200
     
@@ -43,7 +43,7 @@ def create_app(config_class=Config):
         app.logger.debug(f"User = {user}, quarter = {quarter}") 
         try:
             # preferences = db.get_availability(user,quarter)
-            preferences = tables.availability.get_availability(user,quarter) 
+            preferences = availability.get_availability(user,quarter) 
             app.logger.debug(f"Preferences for {quarter} for user {user} = {preferences}")
             return jsonify(preferences), 200
         except Exception as e:

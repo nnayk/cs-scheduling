@@ -7,6 +7,8 @@ cur = None
 # Table names
 QUARTER_ANSWERS_TABLE = "quarter_answers"
 
+# Constants
+NUM_TIMESLOTS = 9
 
 # Connect to the database
 def connect():

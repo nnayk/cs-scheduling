@@ -1,6 +1,8 @@
-import backend.db.db_config as db_config
+import db.db_config as db_config
 import logging
 
+# Constants
+NUM_TIMESLOTS = 9
 MWF_TABLE = "mwf_availability"
 TR_TABLE = "tr_availability"
 
