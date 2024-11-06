@@ -23,7 +23,7 @@ conn,cur = db_config.connect()
 def createQuestionsTable():
     sql_create = f"""CREATE TABLE IF NOT EXISTS {QUESTIONS_TABLE} (
         id SERIAL PRIMARY KEY,
-        question VARCHAR(400) NOT NULL
+        question VARCHAR(400) NOT NULL UNIQUE
         );
         ALTER SEQUENCE {QUESTIONS_TABLE}_id_seq RESTART WITH {QUESTIONS_OFFSET};
         """
