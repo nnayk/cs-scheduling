@@ -1,5 +1,5 @@
 import logging
-import backend.db.db_config as db_config
+import db.db_config as db_config
 
 QUARTERS_TABLE = "quarters"
 

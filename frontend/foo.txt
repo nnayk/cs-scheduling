@@ -1,0 +1,16 @@
+Written_Answers table:
+Key = (prof id, quarter,question id)
+Cols:
+Prof id
+quarter
+Question <number/id> 
+Response (string)
+
+4. Agreement_Answers table:
+Key = (prof id, quarter,question,category)
+Cols:
+Prof id
+Question <number/id> 
+Category (string) -- ex. 3 MWF, 2 MWF + 1 TR
+Agreement -- either disagree, agree, or neutral (string)
+

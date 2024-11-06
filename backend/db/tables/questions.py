@@ -1,5 +1,5 @@
 import logging
-import backend.db.db_config as db_config
+import db.db_config as db_config
 
 QUESTIONS_TABLE = "questions"
 QUESTIONS_OFFSET = 3 + 1 # 3 for the first 3 questions, 1 for Python's 0-based indexing
