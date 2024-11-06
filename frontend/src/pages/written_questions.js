@@ -20,7 +20,7 @@ const Written_Questions = ({ onChange }) => {
   }, [answers, onChange]);
 
   return (
-    <div>
+    <div className={styles.container}>
       <h2 className={styles.subtitle}>
         Are there constraints you have that don't fit this format?
       </h2>
