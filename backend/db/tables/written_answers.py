@@ -48,8 +48,8 @@ def get_written_answer(user_id, quarter,question_text):
     else:
         return None
 
-def save_written_answer(user_id,quarter,question_text,response):
-    question_id = get_question_id(question_text)
+def save_written_answer(user_id,quarter,question_id,response):
+    # question_id = get_question_id(question_text)
     sql = f"""
     INSERT INTO {WRITTEN_ANSWERS_TABLE} (user_id,quarter,question,response)
     VALUES (%s,%s,%s,%s)

@@ -2,21 +2,32 @@ import Agreement_Questions from "./agreement_questions";
 import Written_Questions from "./written_questions";
 import styles from "./questions.module.css";
 import { useState } from "react";
+import axios from "axios";
+import Cookie from "js-cookie";
 
-const Questions = () => {
+const Quarter_Questions = ({ quarter }) => {
   const [agreementAnswers, setAgreementAnswers] = useState({});
   const [writtenAnswers, setWrittenAnswers] = useState({});
 
   const processAnswers = async () => {
-    // Combine data from both components
-    const allAnswers = {
-      agreementPreferences: agreementAnswers,
-      writtenResponses: writtenAnswers,
-    };
-
     // Example: Sending data to an API
-    console.log("All Answers:", allAnswers);
-
+    console.log("Agreement Answers:", agreementAnswers);
+    console.log("Written Answers:", writtenAnswers);
+    const response = axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/questions`,
+      {
+        agreementAnswers: agreementAnswers,
+        writtenAnswers: writtenAnswers,
+        // quarter: quarter,
+        quarter: "Fall 2024",
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${Cookie.get("token")}`,
+          "Content-Type": "application/json", // Ensure content type is JSON
+        },
+      }
+    );
     // try {
     //   const response = await fetch("/api/savePreferences", {
     //     method: "POST",
@@ -42,4 +53,4 @@ const Questions = () => {
   );
 };
 
-export default Questions;
+export default Quarter_Questions;

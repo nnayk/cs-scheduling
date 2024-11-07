@@ -29,7 +29,7 @@ const Written_Questions = ({ onChange }) => {
         className={styles.myTextarea}
         value={answers.question1}
         maxLength={500}
-        onChange={(e) => handleAnswerChange("question1", e.target.value)}
+        onChange={(e) => handleAnswerChange("1", e.target.value)}
       />
 
       <h2 className={styles.subtitle}>
@@ -40,7 +40,7 @@ const Written_Questions = ({ onChange }) => {
         className={styles.myTextarea}
         value={answers.question2}
         maxLength={500}
-        onChange={(e) => handleAnswerChange("question2", e.target.value)}
+        onChange={(e) => handleAnswerChange("2", e.target.value)}
       />
     </div>
   );

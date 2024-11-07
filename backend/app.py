@@ -4,7 +4,7 @@ from constants import Resources
 from flask import jsonify, make_response
 from flask_cors import CORS 
 # import db
-from db.tables import users, availability
+from db.tables import users, availability, written_answers
 from auth import hash_password, check_password
 import logging
 
@@ -20,6 +20,21 @@ def create_app(config_class=Config):
         "allow_headers": ["Content-Type", "Authorization","Access-Control-Allow-Origin"]
     }})
     app.config["CORS_HEADERS"] = "Content-Type"
+
+    @app.route("/questions",methods=['POST'])
+    @jwt_required()
+    def save_answers():
+        user = get_jwt_identity()
+        data = request.get_json()
+        app.logger.debug(f"User = {user}")
+        app.logger.debug(f"Data = {data}")
+        responses = data["writtenAnswers"]
+        print('responses=',responses)
+        # print(answers)
+        for question_id,answer in responses.items():
+            written_answers.save_written_answer(user,data["quarter"],question_id,answer)
+        # save_written_answers(user,data["quarter"],data["answers"])
+        return jsonify("Saved answers"),200
 
     @app.route("/availability",methods=['POST'])
     @jwt_required()
