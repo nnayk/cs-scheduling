@@ -33,6 +33,8 @@ def create_app(config_class=Config):
         # print(answers)
         for question_id,answer in responses.items():
             quarter = data["quarter"].lower()
+            question_id = int(question_id)
+            question_id += 3 # Question IDs start at 4
             written_answers.save_written_answer(user,quarter,question_id,answer)
         # save_written_answers(user,data["quarter"],data["answers"])
         return jsonify("Saved answers"),200

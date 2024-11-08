@@ -53,6 +53,7 @@
 }
 
 .subtitle {
+  margin-top: 50px; /* Add space above each question */
   font-size: 16px;
   color: #555;    /* Subtle color for the subtitle */
   margin-bottom: 20px;  /* Space below the subtitle */
@@ -67,7 +68,7 @@
 
 /* move this to preferences css file */
 .leftAlignedText {
-  text-align: left;
+  text-align: center;
   margin-left: 0; /* Ensure it's aligned to the left without extra margin */
 }
 
@@ -96,4 +97,3 @@
   word-break: break-all;
   text-align: left; /* Optional: align text for readability */
 }
-
