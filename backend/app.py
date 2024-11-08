@@ -4,7 +4,7 @@ from constants import Resources
 from flask import jsonify, make_response
 from flask_cors import CORS 
 # import db
-from db.tables import users, availability, written_answers
+from db.tables import users, availability, written_answers, agreement_answers
 from auth import hash_password, check_password
 import logging
 
@@ -28,11 +28,21 @@ def create_app(config_class=Config):
         data = request.get_json()
         app.logger.debug(f"User = {user}")
         app.logger.debug(f"Data = {data}")
-        responses = data["writtenAnswers"]
-        print('responses=',responses)
+        quarter = data["quarter"].lower()
+        agreement_responses = data["agreementAnswers"]
+        print('agreement_responses=',agreement_responses)
+        for question_id,agreement_data in enumerate(agreement_responses.items()):
+            question_id = int(question_id) + 1
+            category,agreement_level = agreement_data
+            print(f'agreement_data={agreement_data}')
+            for category, agreement_level in agreement_data[1].items(): #TODO: Fix frontend to just not pass the oneLab preference...uselsss+dont wanna deal with a 2-tuple
+                print('category=',category)
+                print('agreement_level=',agreement_level)
+                agreement_answers.save_agreement_answer(user,quarter,question_id,category,agreement_level.lower())
+        written_responses = data["writtenAnswers"]
+        print('written_responses=',written_responses)
         # print(answers)
-        for question_id,answer in responses.items():
-            quarter = data["quarter"].lower()
+        for question_id,answer in written_responses.items():
             written_answers.save_written_answer(user,quarter,question_id,answer)
         # save_written_answers(user,data["quarter"],data["answers"])
         return jsonify("Saved answers"),200
