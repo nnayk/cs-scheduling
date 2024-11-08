@@ -4,18 +4,18 @@ import styles from "./written_questions.module.css";
 // Define questions with IDs and text
 const questions = [
   {
-    id: 6,
+    id: 1,
     text: "6. Are there constraints you have that don't fit this format?",
   },
   {
-    id: 7,
+    id: 2,
     text: "7. For each of the courses you are teaching in the specified quarter, do you have a room requirement? (Note: scheduling lectures in lab rooms for CSSE from 8am to 3pm is very difficult due to space constraints).",
   },
   {
-    id: 8,
+    id: 3,
     text: "8. For the courses you are teaching in the specified quarter, do you have a room preference? You can include whiteboard vs blackboard preference here.",
   },
-  { id: 9, text: "9. Any other thoughts/questions/comments/concerns?" },
+  { id: 4, text: "9. Any other thoughts/questions/comments/concerns?" },
 ];
 
 const Written_Questions = ({ onChange }) => {

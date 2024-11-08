@@ -12,7 +12,7 @@ def createWrittenAnswersTable():
     CREATE TABLE IF NOT EXISTS {WRITTEN_ANSWERS_TABLE} (
         user_id INT REFERENCES users(id) ON DELETE CASCADE,
         quarter VARCHAR(15) REFERENCES quarters(quarter) ON DELETE CASCADE, 
-        question INT REFERENCES questions(id) ON DELETE CASCADE,
+        question INT REFERENCES written_questions(id) ON DELETE CASCADE,
         response VARCHAR(500),
         PRIMARY KEY (user_id,quarter,question)
     );
@@ -24,7 +24,7 @@ def createWrittenAnswersTable():
 def get_question_id(question_text):
     sql = f"""
     SELECT id
-    FROM questions
+    FROM written_questions
     WHERE question = %s;
     """
     cur.execute(sql,(question_text,))
