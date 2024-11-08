@@ -13,21 +13,26 @@ const Quarter_Questions = ({ quarter }) => {
     // Example: Sending data to an API
     console.log("Agreement Answers:", agreementAnswers);
     console.log("Written Answers:", writtenAnswers);
-    const response = axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/questions`,
-      {
-        agreementAnswers: agreementAnswers,
-        writtenAnswers: writtenAnswers,
-        // quarter: quarter,
-        quarter: "Fall 2024",
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${Cookie.get("token")}`,
-          "Content-Type": "application/json", // Ensure content type is JSON
+    try {
+      console.log("Saving answers...");
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/questions`,
+        {
+          agreementAnswers: agreementAnswers,
+          writtenAnswers: writtenAnswers,
+          // quarter: quarter,
+          quarter: "Fall 2024",
         },
-      }
-    );
+        {
+          headers: {
+            Authorization: `Bearer ${Cookie.get("token")}`,
+            "Content-Type": "application/json", // Ensure content type is JSON
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error saving preferences:", error);
+    }
     // try {
     //   const response = await fetch("/api/savePreferences", {
     //     method: "POST",

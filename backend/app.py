@@ -32,7 +32,8 @@ def create_app(config_class=Config):
         print('responses=',responses)
         # print(answers)
         for question_id,answer in responses.items():
-            written_answers.save_written_answer(user,data["quarter"],question_id,answer)
+            quarter = data["quarter"].lower()
+            written_answers.save_written_answer(user,quarter,question_id,answer)
         # save_written_answers(user,data["quarter"],data["answers"])
         return jsonify("Saved answers"),200
 

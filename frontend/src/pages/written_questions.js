@@ -3,8 +3,8 @@ import styles from "./written_questions.module.css";
 
 const Written_Questions = ({ onChange }) => {
   const [answers, setAnswers] = useState({
-    question1: "",
-    question2: "",
+    4: "",
+    5: "",
   });
 
   const handleAnswerChange = (key, answer) => {
@@ -29,7 +29,7 @@ const Written_Questions = ({ onChange }) => {
         className={styles.myTextarea}
         value={answers.question1}
         maxLength={500}
-        onChange={(e) => handleAnswerChange("1", e.target.value)}
+        onChange={(e) => handleAnswerChange("4", e.target.value)}
       />
 
       <h2 className={styles.subtitle}>
@@ -40,7 +40,7 @@ const Written_Questions = ({ onChange }) => {
         className={styles.myTextarea}
         value={answers.question2}
         maxLength={500}
-        onChange={(e) => handleAnswerChange("2", e.target.value)}
+        onChange={(e) => handleAnswerChange("5", e.target.value)}
       />
     </div>
   );

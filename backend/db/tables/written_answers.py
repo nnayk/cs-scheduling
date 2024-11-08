@@ -58,4 +58,4 @@ def save_written_answer(user_id,quarter,question_id,response):
     """
     cur.execute(sql,(user_id,quarter,question_id,response,response))
     conn.commit()
-    logging.debug(f"Saved written answer {response} for user {user_id}, quarter {quarter}, question {question_text}")
+    logging.debug(f"Saved written answer {response} for user {user_id}, quarter {quarter}, question {question_id}")
