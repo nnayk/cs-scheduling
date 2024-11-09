@@ -38,7 +38,9 @@ def create_app(config_class=Config):
             for category, agreement_level in agreement_data[1].items(): #TODO: Fix frontend to just not pass the oneLab preference...uselsss+dont wanna deal with a 2-tuple
                 print('category=',category)
                 print('agreement_level=',agreement_level)
-                agreement_answers.save_agreement_answer(user,quarter,question_id,category,agreement_level.lower())
+                if(agreement_level):
+                    agreement_level = agreement_level.lower()
+                agreement_answers.save_agreement_answer(user,quarter,question_id,category,agreement_level)
         written_responses = data["writtenAnswers"]
         print('written_responses=',written_responses)
         # print(answers)
@@ -54,6 +56,7 @@ def create_app(config_class=Config):
         data = request.get_json()
         app.logger.debug(f"User = {user}")
         app.logger.debug(f"Data = {data}")
+        print(f'data keys={data.keys()}')
         print(f'QUARTER={data["quarter"]}')
         availability.save_availability(user,data["quarter"],data["prefs"])
         # db.save_availability(user,data["quarter"],data["prefs"])

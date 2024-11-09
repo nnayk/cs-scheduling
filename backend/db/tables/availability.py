@@ -43,7 +43,6 @@ def createAvailabilityTables():
     conn.commit()
 
 def get_availability(user_id, quarter):
-    # TODO: don't hardcode table names + don't add the vars here due to sql injection vulenrability (use %s instead for cur.execute). Do this for all queries
     sql = f"""
     SELECT * 
     FROM {MWF_TABLE}

@@ -8,9 +8,14 @@ import Cookie from "js-cookie";
 const Quarter_Questions = ({ quarter }) => {
   const [agreementAnswers, setAgreementAnswers] = useState({});
   const [writtenAnswers, setWrittenAnswers] = useState({});
+  const [saveMessage, setSaveMessage] = useState("");
 
   const processAnswers = async () => {
     // Example: Sending data to an API
+    setTimeout(() => {
+      console.log("setting saveMessage");
+      setSaveMessage("");
+    }, 5000); // Message disappears after 3 seconds
     console.log("Agreement Answers:", agreementAnswers);
     console.log("Written Answers:", writtenAnswers);
     try {
@@ -30,8 +35,11 @@ const Quarter_Questions = ({ quarter }) => {
           },
         }
       );
+      if (response.status == 200) setSaveMessage("Availability saved!");
+      else setSaveMessage("Failed to save availability");
     } catch (error) {
       console.error("Error saving preferences:", error);
+      setSaveMessage("Failed to save availability");
     }
     // try {
     //   const response = await fetch("/api/savePreferences", {
@@ -52,8 +60,13 @@ const Quarter_Questions = ({ quarter }) => {
       <Agreement_Questions onChange={setAgreementAnswers} />
       <Written_Questions onChange={setWrittenAnswers} />
       <button onClick={processAnswers} className={styles.submitButton}>
-        Save Availability
+        Save Answers
       </button>
+      <h2 className={styles.subtitle}>
+        {(saveMessage && <p>{saveMessage}</p>) || (
+          <p>placeholder to avoid bottom stuff moving</p>
+        )}
+      </h2>
     </div>
   );
 };
