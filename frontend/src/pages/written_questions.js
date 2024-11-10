@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import styles from "./written_questions.module.css";
+import Cookie from "js-cookie";
+import axios from "axios";
 
 // Define questions with IDs and text
 const questions = [
@@ -32,7 +34,37 @@ const Written_Questions = ({ onChange }) => {
       [id]: answer,
     }));
   };
+  useEffect(() => {
+    const fetchAnswers = async () => {
+      try {
+        // const storedData = localStorage.getItem("availabilityData");
+        // if (storedData) {
+        //   console.log("Using stored data = ", storedData);
+        //   setavailability(JSON.parse(storedData));
+        //   return;
+        // }
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/questions`,
+          {
+            params: { quarter: "Fall 2024" },
+            headers: {
+              Authorization: `Bearer ${Cookie.get("token")}`, // Use token if required for authorization
+              // "Content-Type": "application/json", // Ensure content type is JSON
+            },
+          }
+        );
+        const fetchedData = response.data;
+        console.log(`fetchedData = ${fetchedData}`);
+        // localStorage.setItem("availabilityData", JSON.stringify(fetchedData));
+        // Assuming `fetchedData` is an array of the same shape as `availability`
+        setAnswers(fetchedData);
+      } catch (error) {
+        console.error("Error fetching availability:", error);
+      }
+    };
 
+    fetchAnswers();
+  }, []);
   useEffect(() => {
     onChange(answers);
   }, [answers, onChange]);

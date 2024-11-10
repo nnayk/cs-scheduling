@@ -33,7 +33,18 @@ def get_question_id(question_text):
         return question_id[0]
     else:
         return None
-
+def get_written_answers(user_id, quarter):
+    sql = f"""
+    SELECT question,response
+    FROM {WRITTEN_ANSWERS_TABLE}
+    WHERE user_id = %s AND quarter = %s;
+    """
+    cur.execute(sql,(user_id,quarter))
+    response = cur.fetchall()
+    if response:
+        return {question:response for question,response in response}
+    else:
+        return None
 def get_written_answer(user_id, quarter,question_text):
     question_id = get_question_id(question_text)
     sql = f"""

@@ -10,7 +10,10 @@ import logging
 
 def create_app(config_class=Config):
     app = Flask(__name__)
+    # app.debug = True  # Add this line in create_app function
     app.config["JWT_SECRET_KEY"] = "CHANGE_TO_SECURE_KEY"
+    app.config["DEBUG"] = True
+    app.logger.setLevel(logging.DEBUG)
     logging.basicConfig(level=logging.DEBUG)  # Change to INFO or ERROR as needed
     jwt = JWTManager(app)
     # Configure CORS for all routes
@@ -48,6 +51,25 @@ def create_app(config_class=Config):
             written_answers.save_written_answer(user,quarter,question_id,answer)
         # save_written_answers(user,data["quarter"],data["answers"])
         return jsonify("Saved answers"),200
+
+    # write a similar function as above to get answers
+    @app.route("/questions",methods=['GET'])
+    @jwt_required()
+    def get_answers():
+        user = get_jwt_identity()
+        app.logger.debug("inside get_answers")
+        app.logger.debug(f"User = {user}")
+        quarter = request.args.get("quarter").lower() 
+        app.logger.debug(f"User = {user}, quarter = {quarter}") 
+        try:
+            # answers = db.get_answers(user,quarter)
+            answers = written_answers.get_written_answers(user,quarter)
+            # agreement_answers = agreement_answers.get_agreement_answers(user,quarter)
+            app.logger.debug(f"Answers for {quarter} for user {user} = {answers}")
+            return jsonify(answers), 200
+        except Exception as e:
+            print("Exception",e)
+            return jsonify("Error reading from DB"), 500
 
     @app.route("/availability",methods=['POST'])
     @jwt_required()

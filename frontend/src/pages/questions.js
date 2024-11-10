@@ -35,11 +35,11 @@ const Quarter_Questions = ({ quarter }) => {
           },
         }
       );
-      if (response.status == 200) setSaveMessage("Availability saved!");
-      else setSaveMessage("Failed to save availability");
+      if (response.status == 200) setSaveMessage("Preferences saved!");
+      else setSaveMessage("Failed to save answers");
     } catch (error) {
       console.error("Error saving preferences:", error);
-      setSaveMessage("Failed to save availability");
+      setSaveMessage("Failed to save answers. Try again later.");
     }
     // try {
     //   const response = await fetch("/api/savePreferences", {
@@ -60,7 +60,7 @@ const Quarter_Questions = ({ quarter }) => {
       <Agreement_Questions onChange={setAgreementAnswers} />
       <Written_Questions onChange={setWrittenAnswers} />
       <button onClick={processAnswers} className={styles.submitButton}>
-        Save Answers
+        Save Preferences
       </button>
       <h2 className={styles.subtitle}>
         {(saveMessage && <p>{saveMessage}</p>) || (

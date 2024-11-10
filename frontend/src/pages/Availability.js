@@ -51,7 +51,7 @@ export default function Quarter_Availability({ quarter }) {
     const fetchAvailability = async () => {
       try {
         const storedData = localStorage.getItem("availabilityData");
-        if (storedData) {
+        if (storedData && storedData.length > 0) {
           console.log("Using stored data = ", storedData);
           setavailability(JSON.parse(storedData));
           return;
@@ -181,8 +181,7 @@ export default function Quarter_Availability({ quarter }) {
       console.log(prefs);
     } catch (error) {
       console.error("Error saving availability:", error);
-      setSaveMessage("Failed to save availability");
-      //TODO: redirect to error page
+      setSaveMessage("Failed to save availability. Try again later.");
     }
   };
 

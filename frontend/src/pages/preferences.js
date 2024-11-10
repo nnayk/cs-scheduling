@@ -1,4 +1,5 @@
 import Quarter_Availability from "./availability";
+import Quarter_Questions from "./questions";
 // Import questions component
 // import styles from "./availability.module.css";
 // import Test_avail from "./test_avail";
@@ -20,6 +21,7 @@ const Preferences = () => {
   return (
     <div>
       <Quarter_Availability quarter="winter 2025" />
+      <Quarter_Questions quarter="winter 2025" />
       // TODO: add questions here
       {/* <Test_avail /> */}
     </div>
