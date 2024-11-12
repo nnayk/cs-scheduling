@@ -20,7 +20,7 @@ const questions = [
   { id: 4, text: "9. Any other thoughts/questions/comments/concerns?" },
 ];
 
-const Written_Questions = ({ onChange }) => {
+const Written_Questions = ({ onChange, quarter }) => {
   const [answers, setAnswers] = useState(
     questions.reduce((acc, question) => {
       acc[question.id] = "";
@@ -44,9 +44,9 @@ const Written_Questions = ({ onChange }) => {
         //   return;
         // }
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/questions`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/questions?scope=written`,
           {
-            params: { quarter: "Fall 2024" },
+            params: { quarter: quarter },
             headers: {
               Authorization: `Bearer ${Cookie.get("token")}`, // Use token if required for authorization
               // "Content-Type": "application/json", // Ensure content type is JSON
@@ -54,10 +54,16 @@ const Written_Questions = ({ onChange }) => {
           }
         );
         const fetchedData = response.data;
-        console.log(`fetchedData = ${fetchedData}`);
-        // localStorage.setItem("availabilityData", JSON.stringify(fetchedData));
-        // Assuming `fetchedData` is an array of the same shape as `availability`
-        setAnswers(fetchedData);
+        console.log(`fetchedData written answers = ${fetchedData}`);
+        console.log(JSON.stringify(response.data, null, 2));
+        if (Object.keys(response.data).length > 0) {
+          console.log(`fetchedData written answers = ${fetchedData}`);
+          // localStorage.setItem("availabilityData", JSON.stringify(fetchedData));
+          // Assuming `fetchedData` is an array of the same shape as `availability`
+          setAnswers(fetchedData);
+        } else {
+          console.log("No written answers found");
+        }
       } catch (error) {
         console.error("Error fetching availability:", error);
       }

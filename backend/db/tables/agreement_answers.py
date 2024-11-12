@@ -34,7 +34,29 @@ def get_question_id(question_text):
         return question_id[0]
     else:
         return None
-
+def get_agreement_answers(user_id, quarter):
+    logging.debug("inside get_agreement_answers")
+    sql = f"""
+    SELECT question,category,agreement
+    FROM {AGREEMENT_ANSWERS_TABLE}
+    WHERE user_id = %s AND quarter = %s;
+    """
+    cur.execute(sql,(user_id,quarter))
+    response = cur.fetchall()
+    logging.debug(f"response={response}")
+    print(f'response (print)={response}')
+    if response:
+        data = {}
+        for question,category,agreement in response:
+            print(f'question={question}, category={category}, agreement={agreement}')
+            if question not in data:
+                data[question] = {}
+            data[question][category] = agreement
+        print(f'returning data={data}')
+        return data
+    else:
+        return None
+    
 def get_agreement_answer(user_id, quarter,question_text):
     question_id = get_question_id(question_text)
     sql = f"""

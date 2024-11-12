@@ -59,6 +59,7 @@ def get_availability(user_id, quarter):
  
     cur.execute(sql,(user_id,quarter,user_id,quarter))
     data = cur.fetchall()
+    print(f"Feteched data = {data}")
     logging.debug(f"Data = {data}")
     if not data:
         return [["Unacceptable"]*10,["Unacceptable"]*10]

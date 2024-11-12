@@ -25,8 +25,7 @@ const Quarter_Questions = ({ quarter }) => {
         {
           agreementAnswers: agreementAnswers,
           writtenAnswers: writtenAnswers,
-          // quarter: quarter,
-          quarter: "Fall 2024",
+          quarter: quarter,
         },
         {
           headers: {
@@ -57,14 +56,14 @@ const Quarter_Questions = ({ quarter }) => {
 
   return (
     <div>
-      <Agreement_Questions onChange={setAgreementAnswers} />
-      <Written_Questions onChange={setWrittenAnswers} />
+      <Agreement_Questions onChange={setAgreementAnswers} quarter={quarter} />
+      <Written_Questions onChange={setWrittenAnswers} quarter={quarter} />
       <button onClick={processAnswers} className={styles.submitButton}>
         Save Preferences
       </button>
       <h2 className={styles.subtitle}>
         {(saveMessage && <p>{saveMessage}</p>) || (
-          <p>placeholder to avoid bottom stuff moving</p>
+          <p className={styles.transparent_text}>This text is transparent.</p>
         )}
       </h2>
     </div>

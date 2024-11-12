@@ -21,3 +21,7 @@
   margin-bottom: 20px;  /* Space below the subtitle */
   text-align: center;   /* Center the subtitle */
 }
+
+.transparent_text {
+  color: transparent;
+}

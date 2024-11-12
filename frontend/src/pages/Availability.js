@@ -50,12 +50,12 @@ export default function Quarter_Availability({ quarter }) {
   useEffect(() => {
     const fetchAvailability = async () => {
       try {
-        const storedData = localStorage.getItem("availabilityData");
-        if (storedData && storedData.length > 0) {
-          console.log("Using stored data = ", storedData);
-          setavailability(JSON.parse(storedData));
-          return;
-        }
+        // const storedData = localStorage.getItem("availabilityData");
+        // if (storedData && storedData.length > 0) {
+        //   console.log("Using stored data = ", storedData);
+        //   setavailability(JSON.parse(storedData));
+        //   return;
+        // }
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/availability`,
           {
@@ -187,8 +187,8 @@ export default function Quarter_Availability({ quarter }) {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Welcome {username}</h1>
-      <h1 className={styles.title}>Select Your Availability</h1>
+      {/* <h1 className={styles.title}>Welcome {username}</h1> */}
+      <h1 className={styles.title}>Select your availability</h1>
       <p className={styles.subtitle}>
         <strong>Note:</strong> If you are tenure track, please select
         "Unacceptable" on 1-2 pm for MWF schedule ONLY (due to committee meeting
@@ -229,7 +229,7 @@ export default function Quarter_Availability({ quarter }) {
       </button>
       <h2 className={styles.subtitle}>
         {(saveMessage && <p>{saveMessage}</p>) || (
-          <p>placeholder to avoid bottom stuff moving</p>
+          <p className={styles.transparent_text}>This text is transparent.</p>
         )}
       </h2>
     </div>

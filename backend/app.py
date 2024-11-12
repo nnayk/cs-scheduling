@@ -1,3 +1,4 @@
+import inspect
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask import Flask, Config, request
 from constants import Resources
@@ -59,16 +60,26 @@ def create_app(config_class=Config):
         user = get_jwt_identity()
         app.logger.debug("inside get_answers")
         app.logger.debug(f"User = {user}")
-        quarter = request.args.get("quarter").lower() 
+        quarter = request.args.get("quarter").lower()
+        scope = request.args.get("scope",default=None)
+        if scope:
+            app.logger.debug(f"Scope = {scope}")
+            if scope != "agreement" and scope != "written":
+                return jsonify("Invalid scope"),400
         app.logger.debug(f"User = {user}, quarter = {quarter}") 
         try:
             # answers = db.get_answers(user,quarter)
-            answers = written_answers.get_written_answers(user,quarter)
-            # agreement_answers = agreement_answers.get_agreement_answers(user,quarter)
+            answers = {}
+            if not scope or scope == "written":
+                answers = written_answers.get_written_answers(user,quarter)
+            if not scope or scope == "agreement":
+                agreement = agreement_answers.get_agreement_answers(user,quarter)
+                if agreement:
+                    answers.update(agreement)
             app.logger.debug(f"Answers for {quarter} for user {user} = {answers}")
             return jsonify(answers), 200
         except Exception as e:
-            print("Exception",e)
+            print(f"{inspect.currentframe().f_code.co_name} Exception",e)
             return jsonify("Error reading from DB"), 500
 
     @app.route("/availability",methods=['POST'])
@@ -98,7 +109,7 @@ def create_app(config_class=Config):
             app.logger.debug(f"Preferences for {quarter} for user {user} = {preferences}")
             return jsonify(preferences), 200
         except Exception as e:
-            print("Exception",e)
+            print(f"{inspect.currentframe().f_code.co_name} Exception",e)
             return jsonify("Error reading from DB"), 500
     
     @app.route("/login",methods=['POST','OPTIONS'])
