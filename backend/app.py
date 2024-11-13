@@ -76,7 +76,7 @@ def create_app(config_class=Config):
                 agreement = agreement_answers.get_agreement_answers(user,quarter)
                 if agreement:
                     answers.update(agreement)
-            app.logger.debug(f"Answers for {quarter} for user {user} = {answers}")
+            app.logger.debug(f"{scope} Answers for {quarter} for user {user} = {answers}")
             return jsonify(answers), 200
         except Exception as e:
             print(f"{inspect.currentframe().f_code.co_name} Exception",e)

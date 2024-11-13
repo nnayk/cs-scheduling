@@ -35,6 +35,7 @@ const Written_Questions = ({ onChange, quarter }) => {
     }));
   };
   useEffect(() => {
+    console.log("fetching written answers");
     const fetchAnswers = async () => {
       try {
         // const storedData = localStorage.getItem("availabilityData");
@@ -70,7 +71,7 @@ const Written_Questions = ({ onChange, quarter }) => {
     };
 
     fetchAnswers();
-  }, []);
+  }, [quarter]);
   useEffect(() => {
     onChange(answers);
   }, [answers, onChange]);

@@ -33,6 +33,7 @@ const Agreement_Questions = ({ onChange, quarter }) => {
   };
 
   useEffect(() => {
+    console.log("fetching agreement answers");
     const fetchAnswers = async () => {
       try {
         // const storedData = localStorage.getItem("availabilityData");
@@ -106,7 +107,7 @@ const Agreement_Questions = ({ onChange, quarter }) => {
     };
 
     fetchAnswers();
-  }, []);
+  }, [quarter]);
 
   // Use useEffect to trigger the onChange callback after preferences are updated
   useEffect(() => {

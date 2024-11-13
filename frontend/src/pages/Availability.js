@@ -24,6 +24,7 @@ const Preference = {
   ACCEPTABLE: "Acceptable",
 };
 export default function Quarter_Availability({ quarter }) {
+  console.log("Quarter = ", quarter);
   const [labPreference, setLabPreference] = useState({
     MWF: null,
     TR: null,
@@ -46,6 +47,8 @@ export default function Quarter_Availability({ quarter }) {
       .fill(null)
       .map(() => Array(times.length).fill("Unacceptable"))
   );
+
+  console.log("TESTTTT!");
 
   useEffect(() => {
     const fetchAvailability = async () => {
@@ -77,7 +80,7 @@ export default function Quarter_Availability({ quarter }) {
     };
 
     fetchAvailability();
-  }, []);
+  }, [quarter]);
 
   const getNewAvailability = (availability) => {
     if (availability == Preference.UNACCEPTABLE) {
