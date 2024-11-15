@@ -20,14 +20,14 @@ const questions = [
   { id: 4, text: "9. Any other thoughts/questions/comments/concerns?" },
 ];
 
-const Written_Questions = ({ onChange, quarter }) => {
-  const [answers, setAnswers] = useState(
-    questions.reduce((acc, question) => {
-      acc[question.id] = "";
-      return acc;
-    }, {})
-  );
+// Initial structure for answers
+const initialAnswers = questions.reduce((acc, question) => {
+  acc[question.id] = ""; // Initialize each answer with an empty string
+  return acc;
+}, {});
 
+const Written_Questions = ({ onChange, quarter }) => {
+  const [answers, setAnswers] = useState(initialAnswers);
   const handleAnswerChange = (id, answer) => {
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
@@ -57,13 +57,14 @@ const Written_Questions = ({ onChange, quarter }) => {
         const fetchedData = response.data;
         console.log(`fetchedData written answers = ${fetchedData}`);
         console.log(JSON.stringify(response.data, null, 2));
-        if (Object.keys(response.data).length > 0) {
+        if (fetchedData && Object.keys(response.data).length > 0) {
           console.log(`fetchedData written answers = ${fetchedData}`);
           // localStorage.setItem("availabilityData", JSON.stringify(fetchedData));
           // Assuming `fetchedData` is an array of the same shape as `availability`
           setAnswers(fetchedData);
         } else {
           console.log("No written answers found");
+          setAnswers(initialAnswers);
         }
       } catch (error) {
         console.error("Error fetching availability:", error);

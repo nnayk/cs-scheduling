@@ -4,6 +4,22 @@ import Cookie from "js-cookie";
 import axios from "axios";
 import assert from "assert";
 
+const initialPreferences = {
+  oneLabPreference: { MWF: null, TR: null },
+  twoLabPreference: { "2 MWF": null, "1 MWF, 1 TR": null, "2 TR": null },
+  threeLabPreference: {
+    "3 on MWF": null,
+    "2 on MWF, 1 on TR": null,
+    "1 on MWF, 2 on TR": null,
+    "3 on TR": null,
+  },
+  lectureOnlyPreference: { MTRF: null, MTWF: null, MW: null, TR: null },
+  breakPreference: {
+    "Courses back-to-back, e.g. 8-10 and 10-12": null,
+    "At least some gap between courses, e.g. at least 1 hour between courses":
+      null,
+  },
+};
 const Agreement_Questions = ({ onChange, quarter }) => {
   const [preferences, setPreferences] = useState({
     oneLabPreference: { MWF: null, TR: null },
@@ -98,6 +114,7 @@ const Agreement_Questions = ({ onChange, quarter }) => {
           // setPreferences(fetchedData);
         } else {
           console.log("No agreement answers found");
+          setPreferences(initialPreferences); // set to empty object
         }
         // localStorage.setItem("availabilityData", JSON.stringify(fetchedData));
         // Assuming `fetchedData` is an array of the same shape as `availability`

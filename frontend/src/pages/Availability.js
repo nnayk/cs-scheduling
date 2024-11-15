@@ -23,18 +23,14 @@ const Preference = {
   PREFERRED: "Preferred",
   ACCEPTABLE: "Acceptable",
 };
+
+// Initial structure for availability
+const initialAvailability = Array(days.length)
+  .fill(null)
+  .map(() => Array(times.length).fill("Unacceptable"));
+
 export default function Quarter_Availability({ quarter }) {
   console.log("Quarter = ", quarter);
-  const [labPreference, setLabPreference] = useState({
-    MWF: null,
-    TR: null,
-  });
-  const handleLabPreferenceChange = (schedule, preference) => {
-    setLabPreference((prev) => ({
-      ...prev,
-      [schedule]: preference,
-    }));
-  };
 
   const { username, setUsername } = useUser();
 
@@ -43,9 +39,7 @@ export default function Quarter_Availability({ quarter }) {
   const [availability, setavailability] = useState(
     // availabity is a 2d array where element 0 contains string preferences for MWF 9-5
     // and element 1 for TR
-    Array(days.length)
-      .fill(null)
-      .map(() => Array(times.length).fill("Unacceptable"))
+    initialAvailability
   );
 
   console.log("TESTTTT!");
@@ -70,10 +64,15 @@ export default function Quarter_Availability({ quarter }) {
           }
         );
         const fetchedData = response.data;
-        console.log(`fetchedData = ${fetchedData}`);
-        localStorage.setItem("availabilityData", JSON.stringify(fetchedData));
-        // Assuming `fetchedData` is an array of the same shape as `availability`
-        setavailability(fetchedData);
+        if (fetchedData) {
+          console.log(`fetchedData = ${fetchedData}`);
+          localStorage.setItem("availabilityData", JSON.stringify(fetchedData));
+          // Assuming `fetchedData` is an array of the same shape as `availability`
+          setavailability(fetchedData);
+        } else {
+          console.log("No availability found");
+          setavailability(initialAvailability);
+        }
       } catch (error) {
         console.error("Error fetching availability:", error);
       }
