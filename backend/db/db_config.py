@@ -1,8 +1,8 @@
 import logging
 import psycopg2 as pg
 
-conn = None
-cur = None
+# conn = None
+# cur = None
 
 # Table names
 QUARTER_ANSWERS_TABLE = "quarter_answers"
@@ -10,12 +10,12 @@ QUARTER_ANSWERS_TABLE = "quarter_answers"
 
 # Connect to the database
 def connect():
-    global conn, cur
+    # global conn, cur
     print("Connecting to DB")
-    print(f"beginning: conn={conn}, cur={cur}")
-    if conn and cur:
-        logging.debug("Already connected to DB")
-        return conn, cur
+    # print(f"beginning: conn={conn}, cur={cur}")
+    # if conn and cur:
+    #     logging.debug("Already connected to DB")
+    #     return conn, cur
     conn = pg.connect(host="localhost",dbname="postgres",user="postgres",password="lillu178!",port=5432)
     cur = conn.cursor() 
     print(f"end: conn={conn}, cur={cur}")
@@ -57,7 +57,12 @@ def delete_table(table):
     conn.commit()
     logging.debug(f"Deleted table {table}")
 
+def close_connection(conn,cur):
+    cur.close()
+    conn.close()
+    logging.debug("Closed connection to DB")
+
 
     
-if __name__ == "__main__":
-    cur.close()
+# if __name__ == "__main__":
+    # cur.close()

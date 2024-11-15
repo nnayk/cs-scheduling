@@ -16,14 +16,18 @@ QUESTIONS = [
 conn,cur = db_config.connect()
 
 def createQuestionsTable():
-    sql_create = f"""CREATE TABLE IF NOT EXISTS {QUESTIONS_TABLE} (
-        id SERIAL PRIMARY KEY,
-        question VARCHAR(400) NOT NULL UNIQUE
-        );
-        """
-    cur.execute(sql_create)
-    for question in QUESTIONS:
-        sql_insert = f"INSERT INTO {QUESTIONS_TABLE} (question) VALUES (%s)"
-        cur.execute(sql_insert, (question,))
-    conn.commit()
-    logging.debug(f"Created questions table")
+    print("Creating questions table")
+    try:
+        sql_create = f"""CREATE TABLE IF NOT EXISTS {QUESTIONS_TABLE} (
+            id SERIAL PRIMARY KEY,
+            question VARCHAR(400) NOT NULL UNIQUE
+            );
+            """
+        cur.execute(sql_create)
+        for question in QUESTIONS:
+            sql_insert = f"INSERT INTO {QUESTIONS_TABLE} (question) VALUES (%s)"
+            cur.execute(sql_insert, (question,))
+        conn.commit()
+        logging.debug(f"Created questions table")
+    finally:
+        db_config.close_connection(conn, cur)
