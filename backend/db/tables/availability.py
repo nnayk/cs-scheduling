@@ -3,10 +3,11 @@ import logging
 
 # Constants
 NUM_TIMESLOTS = 9
+AVAILABILITY = "availability"
 MWF_TABLE = "mwf_availability"
 TR_TABLE = "tr_availability"
 
-def createAvailabilityTables():
+def createAvailabilityTable():
     conn, cur = db_config.connect()
     try:
         print("Creating preferences table")
@@ -22,7 +23,7 @@ def createAvailabilityTables():
             '"5 PM" VARCHAR(255)',
         ])
         
-        sql_mwf = f"""
+        sql = f"""
         CREATE TABLE IF NOT EXISTS {MWF_TABLE} (
             user_id INT REFERENCES users(id) ON DELETE CASCADE,
             quarter VARCHAR(15) REFERENCES quarters(quarter) ON DELETE CASCADE, 
@@ -30,19 +31,41 @@ def createAvailabilityTables():
             PRIMARY KEY (user_id,quarter)
         );
         """
-        cur.execute(sql_mwf)
+        cur.execute(sql)
+        # print("Creating preferences table")
+        # times = ", ".join([
+        #     '"9 AM" VARCHAR(255)',
+        #     '"10 AM" VARCHAR(255)',
+        #     '"11 AM" VARCHAR(255)',
+        #     '"12 PM" VARCHAR(255)',
+        #     '"1 PM" VARCHAR(255)',
+        #     '"2 PM" VARCHAR(255)',
+        #     '"3 PM" VARCHAR(255)',
+        #     '"4 PM" VARCHAR(255)',
+        #     '"5 PM" VARCHAR(255)',
+        # ])
         
-        sql_tr = f"""
-        CREATE TABLE IF NOT EXISTS {TR_TABLE} (
-            user_id INT REFERENCES users(id) ON DELETE CASCADE,
-            quarter VARCHAR(255),
-            {times},
-            PRIMARY KEY (user_id,quarter)
-        );
-        """
-        cur.execute(sql_tr)
+        # sql_mwf = f"""
+        # CREATE TABLE IF NOT EXISTS {MWF_TABLE} (
+        #     user_id INT REFERENCES users(id) ON DELETE CASCADE,
+        #     quarter VARCHAR(15) REFERENCES quarters(quarter) ON DELETE CASCADE, 
+        #     {times},
+        #     PRIMARY KEY (user_id,quarter)
+        # );
+        # """
+        # cur.execute(sql_mwf)
         
-        logging.debug("Created availability tables")
+        # sql_tr = f"""
+        # CREATE TABLE IF NOT EXISTS {TR_TABLE} (
+        #     user_id INT REFERENCES users(id) ON DELETE CASCADE,
+        #     quarter VARCHAR(255),
+        #     {times},
+        #     PRIMARY KEY (user_id,quarter)
+        # );
+        # """
+        # cur.execute(sql_tr)
+        
+        logging.debug("Created availability table")
         conn.commit()
     finally:
         db_config.close_connection(conn, cur)
