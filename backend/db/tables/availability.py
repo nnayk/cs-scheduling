@@ -89,24 +89,18 @@ def save_availability(user_id, quarter, data):
     try:
         print(f"Saving availability for user {user_id}, data = {data}")
         for entry in data:
-            schedule = entry['schedule']
             time = entry['time'].upper()  
             preference = entry['preference']
+            day = entry['day'] 
             
-            # Choose the correct table based on the schedule
-            table = MWF_TABLE if schedule == 'MWF Schedule' else TR_TABLE if schedule == 'TR Schedule' else None
-            if table is None:
-                print(f"Schedule not recognized: {schedule}")
-                continue
-            
-            logging.debug(f"Inserting pref {preference} for time {time} for user {user_id} in quarter {quarter}")
+            logging.debug(f"Inserting pref {preference} for time {time} for user {user_id} in quarter {quarter} for day {day}")
             sql = f"""
-            INSERT INTO {table} (user_id, quarter, "{time}")
-            VALUES (%s, %s, %s)
-            ON CONFLICT (user_id, quarter) DO UPDATE
+            INSERT INTO {AVAILABILITY} (user_id, quarter,day, "{time}")
+            VALUES (%s, %s, %s, %s)
+            ON CONFLICT (user_id, quarter,day) DO UPDATE
             SET "{time}" = EXCLUDED."{time}";
             """
-            cur.execute(sql, (user_id, quarter, preference))    
+            cur.execute(sql, (user_id, quarter, day, preference))    
 
         conn.commit()
         logging.info("Saved preferences")

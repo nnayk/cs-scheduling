@@ -5,17 +5,37 @@ import { isAuthenticated } from "./auth";
 import { useUser } from "./UserContext";
 import Cookie from "js-cookie";
 
-const days = ["MWF Schedule", "TR Schedule"];
+// const days = ["MWF Schedule", "TR Schedule"];
+// const times = [
+//   "9 AM",
+//   "10 AM",
+//   "11 AM",
+//   "12 PM",
+//   "1 PM",
+//   "2 PM",
+//   "3 PM",
+//   "4 PM",
+//   "5 PM",
+// ];
+
+const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 const times = [
-  "9 AM",
-  "10 AM",
-  "11 AM",
-  "12 PM",
-  "1 PM",
-  "2 PM",
-  "3 PM",
-  "4 PM",
-  "5 PM",
+  "9:00 AM",
+  "9:30 AM",
+  "10:00 AM",
+  "10:30 AM",
+  "11:00 AM",
+  "11:30 AM",
+  "12:00 PM",
+  "12:30 PM",
+  "1:00 PM",
+  "1:30 PM",
+  "2:00 PM",
+  "2:30 PM",
+  "3:00 PM",
+  "3:30 PM",
+  "4:00 PM",
+  "4:30 PM",
 ];
 
 const Preference = {
@@ -145,7 +165,7 @@ export default function Quarter_Availability({ quarter }) {
       for (let timeIndex = 0; timeIndex < times.length; timeIndex++) {
         if (availability[dayIndex][timeIndex] === Preference.PREFERRED) {
           prefs.push({
-            schedule: days[dayIndex],
+            day: days[dayIndex],
             time: times[timeIndex],
             preference: "Preferred",
           });
@@ -153,19 +173,20 @@ export default function Quarter_Availability({ quarter }) {
           availability[dayIndex][timeIndex] === Preference.ACCEPTABLE
         ) {
           prefs.push({
-            schedule: days[dayIndex],
+            day: days[dayIndex],
             time: times[timeIndex],
             preference: "Acceptable",
           });
         } else {
           prefs.push({
-            schedule: days[dayIndex],
+            day: days[dayIndex],
             time: times[timeIndex],
             preference: "Unacceptable",
           });
         }
       }
     }
+    console.log("prefs = ", prefs);
     localStorage.setItem("availabilityData", JSON.stringify(availability));
     try {
       const response = await axios.post(
@@ -193,8 +214,8 @@ export default function Quarter_Availability({ quarter }) {
       <h1 className={styles.title}>Select your availability</h1>
       <p className={styles.subtitle}>
         <strong>Note:</strong> If you are tenure track, please select
-        "Unacceptable" on 1-2 pm for MWF schedule ONLY (due to committee meeting
-        conflict).
+        "Unacceptable" on 1-2 pm for **ASK BEARD WHICH DAY** ONLY (due to
+        committee meeting conflict).
       </p>
       <table className={styles.grid}>
         <thead>
@@ -211,7 +232,7 @@ export default function Quarter_Availability({ quarter }) {
               <th>
                 {timeIndex < times.length - 1
                   ? time + "-" + times[timeIndex + 1]
-                  : time + "-6 PM"}
+                  : time + "-5 PM"}
               </th>
               {days.map((day, dayIndex) => (
                 <td
