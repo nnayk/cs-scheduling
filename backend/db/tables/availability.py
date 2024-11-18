@@ -2,7 +2,7 @@ import db.db_config as db_config
 import logging
 
 # Constants
-NUM_TIMESLOTS = 9
+NUM_TIMESLOTS = 16
 AVAILABILITY = "availability"
 MWF_TABLE = "mwf_availability"
 TR_TABLE = "tr_availability"
@@ -45,42 +45,44 @@ def createAvailabilityTable():
     finally:
         db_config.close_connection(conn, cur)
 
-def get_availability(user_id, quarter,day):
+def get_availability(user_id, quarter,day=None):
     conn, cur = db_config.connect()
     try:
         sql = f"""
         SELECT * 
-        FROM {MWF_TABLE}
+        FROM {AVAILABILITY}
         WHERE user_id = %s
         AND quarter = %s
-        
-        UNION ALL
-        
-        SELECT * 
-        FROM {TR_TABLE}
-        WHERE user_id = %s
-        AND quarter = %s;
         """
     
-        cur.execute(sql, (user_id, quarter, user_id, quarter))
+        if day:
+            sql += "AND day = %s"
+            cur.execute(sql, (user_id, quarter, day))
+        else:
+            cur.execute(sql, (user_id, quarter))
         data = cur.fetchall()
         print(f"Fetched data = {data}")
+        print(f'data={data}')
         logging.debug(f"Data = {data}")
         
         if not data:
-            return [["Unacceptable"] * 10, ["Unacceptable"] * 10]
+            return [["Unacceptable"] * 16]*5
 
-        TOTAL_COLS = NUM_TIMESLOTS + 2  # 2 for user_id and quarter 
-        assert len(data) == 2 and len(data[0]) == TOTAL_COLS and len(data[1]) == TOTAL_COLS, \
+        TOTAL_COLS = NUM_TIMESLOTS + 3  # 3 for user_id and quarter and day
+        assert len(data) == 5 and len(data[0]) == TOTAL_COLS and len(data[1]) == TOTAL_COLS, \
             f"Unexpected data format for data: length = {len(data)}, data[0] = {data[0]}, data[1] = {data[1]}"
 
-        mwf_prefs = [x if x else "Unacceptable" for x in data[0][2:]]
-        logging.debug(f"mwf_prefs = {mwf_prefs}")
+        prefs = [data[i][3:] for i in range(5)]
+        logging.debug(f"prefs = {prefs}")
+        print(f'prefs={prefs}')
+        return prefs
+        # mwf_prefs = [x if x else "Unacceptable" for x in data[0][2:]]
+        # logging.debug(f"mwf_prefs = {mwf_prefs}")
         
-        tr_prefs = [x if x else "Unacceptable" for x in data[1][2:]]
-        logging.debug(f"tr_prefs = {tr_prefs}")
+        # tr_prefs = [x if x else "Unacceptable" for x in data[1][2:]]
+        # logging.debug(f"tr_prefs = {tr_prefs}")
         
-        return [mwf_prefs, tr_prefs]
+        # return [mwf_prefs, tr_prefs]
     finally:
         db_config.close_connection(conn, cur)
 
