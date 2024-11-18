@@ -10,67 +10,42 @@ TR_TABLE = "tr_availability"
 def createAvailabilityTable():
     conn, cur = db_config.connect()
     try:
-        print("Creating preferences table")
-        times = ", ".join([
-            '"9 AM" VARCHAR(255)',
-            '"10 AM" VARCHAR(255)',
-            '"11 AM" VARCHAR(255)',
-            '"12 PM" VARCHAR(255)',
-            '"1 PM" VARCHAR(255)',
-            '"2 PM" VARCHAR(255)',
-            '"3 PM" VARCHAR(255)',
-            '"4 PM" VARCHAR(255)',
-            '"5 PM" VARCHAR(255)',
-        ])
+        print("Creating availability table")
+        
+        # Generate time slots in 30-minute increments from 9:00 AM to 5:00 PM
+        time_slots = [
+            f'"{hour}:{minute:02d} {"AM" if hour < 12 else "PM"}" VARCHAR(255)' 
+            for hour in range(9, 12)  # 9 AM to 11 AM
+            for minute in (0, 30)
+        ] + [
+            f'"{hour - 12 if hour > 12 else hour}:{minute:02d} {"AM" if hour < 12 else "PM"}" VARCHAR(255)'
+            for hour in range(12, 17)  # 12 PM to 5 PM
+            for minute in (0, 30)
+        ]
+
+        
+        
+        times = ", ".join(time_slots)
         
         sql = f"""
-        CREATE TABLE IF NOT EXISTS {MWF_TABLE} (
+        CREATE TABLE IF NOT EXISTS {AVAILABILITY} (
             user_id INT REFERENCES users(id) ON DELETE CASCADE,
-            quarter VARCHAR(15) REFERENCES quarters(quarter) ON DELETE CASCADE, 
+            quarter VARCHAR(15) REFERENCES quarters(quarter) ON DELETE CASCADE,
+            day VARCHAR(10) CHECK (day IN ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')),
             {times},
-            PRIMARY KEY (user_id,quarter)
+            PRIMARY KEY (user_id, quarter, day)
         );
         """
         cur.execute(sql)
-        # print("Creating preferences table")
-        # times = ", ".join([
-        #     '"9 AM" VARCHAR(255)',
-        #     '"10 AM" VARCHAR(255)',
-        #     '"11 AM" VARCHAR(255)',
-        #     '"12 PM" VARCHAR(255)',
-        #     '"1 PM" VARCHAR(255)',
-        #     '"2 PM" VARCHAR(255)',
-        #     '"3 PM" VARCHAR(255)',
-        #     '"4 PM" VARCHAR(255)',
-        #     '"5 PM" VARCHAR(255)',
-        # ])
-        
-        # sql_mwf = f"""
-        # CREATE TABLE IF NOT EXISTS {MWF_TABLE} (
-        #     user_id INT REFERENCES users(id) ON DELETE CASCADE,
-        #     quarter VARCHAR(15) REFERENCES quarters(quarter) ON DELETE CASCADE, 
-        #     {times},
-        #     PRIMARY KEY (user_id,quarter)
-        # );
-        # """
-        # cur.execute(sql_mwf)
-        
-        # sql_tr = f"""
-        # CREATE TABLE IF NOT EXISTS {TR_TABLE} (
-        #     user_id INT REFERENCES users(id) ON DELETE CASCADE,
-        #     quarter VARCHAR(255),
-        #     {times},
-        #     PRIMARY KEY (user_id,quarter)
-        # );
-        # """
-        # cur.execute(sql_tr)
-        
-        logging.debug("Created availability table")
         conn.commit()
+        print("Availability table created successfully.")
+    except Exception as e:
+        print(f"Error creating availability table: {e}")
+ 
     finally:
         db_config.close_connection(conn, cur)
 
-def get_availability(user_id, quarter):
+def get_availability(user_id, quarter,day):
     conn, cur = db_config.connect()
     try:
         sql = f"""
