@@ -21,7 +21,7 @@ const Preferences = () => {
         handleQuarterChange={handleQuarterChange}
       />
       <Quarter_Availability quarter={selectedQuarter} />
-      {/* <Quarter_Questions quarter={selectedQuarter} /> */}
+      <Quarter_Questions quarter={selectedQuarter} />
     </div>
   );
 };
