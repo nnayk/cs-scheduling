@@ -1,69 +1,70 @@
 .container {
-  max-width: 500px;
-  margin: 100px auto;
   padding: 20px;
   text-align: center;
-  background-color: #f8f9fa;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .title {
-  font-size: 28px;
-  font-weight: bold;
+  font-size: 32px;
   color: green;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: #555;
   margin-bottom: 20px;
 }
 
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+.subSubtitle {
+  font-size: 16px;
+  color: #777;
 }
 
-.label {
-  font-size: 16px;
+.cardContainer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columns */
+  gap: 90px 10px; /* 30px vertical gap, 20px horizontal gap */
+  justify-items: center;
+  margin-top: 40px;
+}
+
+.card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 30px; /* Increase padding for larger profiles */
+  /* width: 450px; Make the profiles wider */
+  width: 80%;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.05); /* Slight scale effect on hover */
+}
+
+.cardTitle {
+  font-size: 24px; /* Larger font size */
   color: #333;
-  text-align: left;
 }
 
-.input {
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  width: 100%;
-  box-sizing: border-box;
+.cardDescription {
+  font-size: 16px; /* Adjusted font size for better readability */
+  color: #777;
+  margin: 15px 0; /* Increased space between description and button */
 }
 
-.error {
-  color: red;
-  font-size: 14px;
-}
-
-.success {
-  color: green;
-  font-size: 14px;
-}
-
-.submitButton {
+.cardButton {
   background-color: green;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 24px; /* Larger button for better appearance */
   font-size: 16px;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-.submitButton:hover {
+.cardButton:hover {
   background-color: darkgreen;
 }
-
-.submitButton:disabled {
-  background-color: gray;
-  cursor: not-allowed;
-}
-
