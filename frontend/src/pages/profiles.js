@@ -38,21 +38,21 @@ export default function Profiles() {
       </p>
       <div className={styles.cardContainer}>
         <div className={styles.card}>
-          <h2 className={styles.cardTitle}>Edit Profile</h2>
-          <p className={styles.cardDescription}>
-            Modify an existing profile to update your preferences.
-          </p>
-          <button className={styles.cardButton} onClick={handleEditProfile}>
-            Edit Profile
-          </button>
-        </div>
-        <div className={styles.card}>
           <h2 className={styles.cardTitle}>Create Profile</h2>
           <p className={styles.cardDescription}>
             Start fresh by creating a brand-new profile.
           </p>
           <button className={styles.cardButton} onClick={handleCreateProfile}>
             Create Profile
+          </button>
+        </div>
+        <div className={styles.card}>
+          <h2 className={styles.cardTitle}>Edit Profile</h2>
+          <p className={styles.cardDescription}>
+            Modify an existing profile to update your preferences.
+          </p>
+          <button className={styles.cardButton} onClick={handleEditProfile}>
+            Edit Profile
           </button>
         </div>
         <div className={styles.card}>

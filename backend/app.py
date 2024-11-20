@@ -5,7 +5,8 @@ from constants import Resources
 from flask import jsonify, make_response
 from flask_cors import CORS 
 # import db
-from db.tables import users, availability, written_answers, agreement_answers
+from db.tables import users, availability, written_answers, agreement_answers, \
+profiles,profile_availability
 from auth import hash_password, check_password
 import logging
 
@@ -24,6 +25,32 @@ def create_app(config_class=Config):
         "allow_headers": ["Content-Type", "Authorization","Access-Control-Allow-Origin"]
     }})
     app.config["CORS_HEADERS"] = "Content-Type"
+
+    @app.route("/profile_create",methods=['POST'])
+    @jwt_required()
+    def create_profile():
+        user = get_jwt_identity()
+        data = request.get_json()
+        profile = data["profile"]
+        # profile = request.args.get("profile")
+        print(f'User {user} is creating profile {profile}')
+        # TODO: check if profile exists
+        if profiles.profile_exists(user,profile):
+            return jsonify("Profile already exists"),400
+        app.logger.debug(f"User = {user}")
+        profile_id = profiles.create_profile(user,profile)
+        app.logger.debug(f"Created profile {profile_id}")
+        return jsonify("Created profile"),200
+
+    @app.route("/profiles",methods=['GET'])
+    @jwt_required()
+    def get_profile():
+        user = get_jwt_identity()
+        app.logger.debug(f"User = {user}")
+        profile = request.args.get("profile")
+        app.logger.debug(f"Profile = {profile}")
+        availability = profile_availability.get_profile_availability(user,profile)
+        app.logger.debug(f"Availability for {profile} for user {user} = {availability}")
 
     @app.route("/questions",methods=['POST'])
     @jwt_required()

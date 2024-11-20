@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import styles from "./profile_create.module.css";
 import Preferences from "./preferences";
+import Cookie from "js-cookie";
 
 export default function CreateProfile() {
   const [profileName, setProfileName] = useState("");
@@ -22,9 +23,20 @@ export default function CreateProfile() {
     setSuccess("");
 
     try {
-      const response = await axios.post("/api/checkProfileName", {
-        name: profileName,
-      });
+      console.log(`Profile name: ${profileName}`);
+      // const response = await axios.post("/api/checkProfileName", {
+      //   name: profileName,
+      // });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/profile_create`,
+        { profile: profileName },
+        {
+          headers: {
+            Authorization: `Bearer ${Cookie.get("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       if (response.data.exists) {
         setError(
           "Profile name already exists. Please choose a different name."
@@ -68,8 +80,8 @@ export default function CreateProfile() {
           </button>
         </form>
       </div>
-      <h1 className={styles.title}>Provide the profile preferences</h1>
-      <Preferences />
+      {/* <h1 className={styles.title}>Provide the profile preferences</h1> */}
+      {/* <Preferences /> */}
     </div>
   );
 }
