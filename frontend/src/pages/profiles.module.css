@@ -16,6 +16,7 @@
 
 .subSubtitle {
   font-size: 16px;
+  /* color: wheat; */
   color: #777;
 }
 
@@ -28,7 +29,10 @@
 }
 
 .card {
-  background-color: #fff;
+  /* background-color: #fff; */
+  /* background-color: #cbf392; Lighter background color */
+  /* background-color: #a6cc71; */
+  background: darkgreen;
   border: 1px solid #ddd;
   padding: 30px; /* Increase padding for larger profiles */
   /* width: 450px; Make the profiles wider */
@@ -45,18 +49,20 @@
 
 .cardTitle {
   font-size: 24px; /* Larger font size */
-  color: #333;
+  /* color: #333; */
+  color: goldenrod;
 }
 
 .cardDescription {
   font-size: 16px; /* Adjusted font size for better readability */
-  color: #777;
+  /* color: #777; */
+  color: goldenrod;
   margin: 15px 0; /* Increased space between description and button */
 }
 
 .cardButton {
   background-color: green;
-  color: white;
+  color: goldenrod;
   border: none;
   padding: 12px 24px; /* Larger button for better appearance */
   font-size: 16px;

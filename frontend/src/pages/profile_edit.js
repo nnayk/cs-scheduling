@@ -1,62 +1,79 @@
-import styles from "./profiles.module.css";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import styles from "./profile_create.module.css"; // Reuse styles
+import Cookie from "js-cookie";
+import { useRouter } from "next/router";
 
-export default function Profiles() {
-  const handleEditProfile = () => {
-    console.log("Edit an existing profile clicked.");
-    // Add logic for editing a profile
+export default function EditProfile() {
+  const [profiles, setProfiles] = useState([]); // List of profiles
+  const [selectedProfile, setSelectedProfile] = useState(""); // Selected profile
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  // Fetch profiles from the backend
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/get_profiles`,
+          {
+            headers: {
+              Authorization: `Bearer ${Cookie.get("token")}`,
+            },
+          }
+        );
+        setProfiles(response.data.profiles); // Assume the response is { profiles: [...] }
+        setLoading(false);
+      } catch (err) {
+        setError("Failed to load profiles");
+        setLoading(false);
+      }
+    };
+
+    fetchProfiles();
+  }, []);
+
+  const handleProfileChange = (e) => {
+    setSelectedProfile(e.target.value);
   };
 
-  const handleCreateProfile = () => {
-    console.log("Create a new profile clicked.");
-    // Add logic for creating a new profile
-  };
-
-  const handleCloneProfile = () => {
-    console.log("Clone an existing profile clicked.");
-    // Add logic for cloning a profile
+  const handleEdit = () => {
+    if (selectedProfile) {
+      router.push(`/profile_details?name=${selectedProfile}`);
+    } else {
+      setError("Please select a profile to edit");
+    }
   };
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Profile Management</h1>
-      <h2 className={styles.subtitle}>
-        Profiles are used to store specific preferences you have. You can easily
-        re-use data from a profile when filling out your preferences for a given
-        quarter.
-      </h2>
-      <p className={styles.subSubtitle}>
-        Select an option below to manage your profiles.
-      </p>
-      <div className={styles.cardContainer}>
-        <div className={styles.card}>
-          <h2 className={styles.cardTitle}>Edit Profile</h2>
-          <p className={styles.cardDescription}>
-            Modify an existing profile to update your preferences.
-          </p>
-          <button className={styles.cardButton} onClick={handleEditProfile}>
-            Edit Profile
-          </button>
-        </div>
-        <div className={styles.card}>
-          <h2 className={styles.cardTitle}>Create Profile</h2>
-          <p className={styles.cardDescription}>
-            Start fresh by creating a brand-new profile. For example if you have
-            roughly the same availability during the fall it may be helpful to
-            create a reusable "Fall" profile
-          </p>
-          <button className={styles.cardButton} onClick={handleCreateProfile}>
-            Create Profile
-          </button>
-        </div>
-        <div className={styles.card}>
-          <h2 className={styles.cardTitle}>Clone Profile</h2>
-          <p className={styles.cardDescription}>
-            Duplicate an existing profile and make adjustments as needed.
-          </p>
-          <button className={styles.cardButton} onClick={handleCloneProfile}>
-            Clone Profile
-          </button>
-        </div>
+    <div>
+      <div className={styles.container}>
+        <h1 className={styles.title}>Choose a Profile to Edit</h1>
+        {loading ? (
+          <p>Loading profiles...</p>
+        ) : (
+          <>
+            <select
+              value={selectedProfile}
+              onChange={handleProfileChange}
+              className={styles.input}
+            >
+              <option value="" disabled>
+                Select a profile
+              </option>
+              {profiles.map((profile) => (
+                <option key={profile} value={profile}>
+                  {profile}
+                </option>
+              ))}
+            </select>
+            {error && <p className={styles.error}>{error}</p>}
+            <button onClick={handleEdit} className={styles.submitButton}>
+              Edit Profile
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
