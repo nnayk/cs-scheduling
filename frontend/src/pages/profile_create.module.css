@@ -67,3 +67,7 @@
   background-color: gray;
   cursor: not-allowed;
 }
+
+.input {
+  color: black;
+}

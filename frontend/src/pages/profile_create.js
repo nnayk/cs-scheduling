@@ -3,8 +3,10 @@ import axios from "axios";
 import styles from "./profile_create.module.css";
 import Preferences from "./preferences";
 import Cookie from "js-cookie";
+import { useRouter } from "next/router";
 
 export default function CreateProfile() {
+  const router = useRouter();
   const [profileName, setProfileName] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -37,16 +39,17 @@ export default function CreateProfile() {
           },
         }
       );
-      if (response.data.exists) {
-        setError(
-          "Profile name already exists. Please choose a different name."
-        );
-      } else {
-        setSuccess("Profile created successfully!");
-        setProfileName("");
-      }
+      console.log("Got the response");
+      setSuccess(`Profile ${profileName} created successfully!`);
+      setProfileName("");
+      router.push("/profile_edit");
     } catch (err) {
-      setError("An error occurred while checking the profile name.");
+      console.log(`err.response.status = ${err.response.status}`);
+      if (err.response.status === 400) {
+        setError(`Profile ${profileName} already exists`);
+      } else {
+        setError(`Error creating profile ${profileName}`);
+      }
     } finally {
       setLoading(false);
     }
