@@ -26,6 +26,7 @@ def create_app(config_class=Config):
     }})
     app.config["CORS_HEADERS"] = "Content-Type"
 
+    # Profile routes
     @app.route("/profile_create",methods=['POST'])
     @jwt_required()
     def create_profile():
@@ -42,15 +43,26 @@ def create_app(config_class=Config):
         app.logger.debug(f"Created profile {profile_id}")
         return jsonify("Created profile"),200
 
-    @app.route("/profiles",methods=['GET'])
+    @app.route("/profiles/availability",methods=['GET'])
     @jwt_required()
-    def get_profile():
+    def get_profile_availability():
         user = get_jwt_identity()
         app.logger.debug(f"User = {user}")
         profile = request.args.get("profile")
-        app.logger.debug(f"Profile = {profile}")
-        availability = profile_availability.get_profile_availability(user,profile)
-        app.logger.debug(f"Availability for {profile} for user {user} = {availability}")
+        if profile:
+            app.logger.debug(f"Profile = {profile}")
+            availability = profile_availability.get_profile_availability(user,profile)
+            app.logger.debug(f"Availability for {profile} for user {user} = {availability}")
+
+    
+    @app.route("/profiles",methods=['GET'])
+    @jwt_required()
+    def get_profiles():
+        user = get_jwt_identity()
+        app.logger.debug(f"User = {user}")
+        data = profiles.get_profiles(user)
+        app.logger.debug(f"Profiles for user {user} = {data}")
+        return jsonify(data),200
 
     @app.route("/questions",methods=['POST'])
     @jwt_required()

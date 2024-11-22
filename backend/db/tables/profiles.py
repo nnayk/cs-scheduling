@@ -27,7 +27,17 @@ def profile_exists(user_id, name):
         return data is not None
     finally:
         db_config.close_connection(conn, cur)
-        
+
+def get_profiles(user_id):
+    conn, cur = db_config.connect()
+    try:
+        sql = f"SELECT name FROM {PROFILES_TABLE} WHERE user_id = %s"
+        cur.execute(sql, (user_id,))
+        data = cur.fetchall()
+        return [x[0] for x in data]
+    finally:
+        db_config.close_connection(conn, cur)
+         
 def create_profile(user_id, name):
     conn, cur = db_config.connect()
     try:

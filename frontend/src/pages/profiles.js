@@ -1,16 +1,18 @@
 import styles from "./profiles.module.css";
 import { useRouter } from "next/router";
+import { PROFILES } from "../constants/routes.js";
 
 export default function Profiles() {
   const router = useRouter();
   const handleEditProfile = () => {
     console.log("Edit an existing profile clicked.");
+    router.push(PROFILES.EDIT_DROPDOWN);
     // Add logic for editing a profile
   };
 
   const handleCreateProfile = () => {
     console.log("Create a new profile clicked.");
-    router.push("/profile_create");
+    router.push(PROFILES.CREATE);
     // Add logic for creating a new profile
   };
 
