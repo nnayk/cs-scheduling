@@ -48,9 +48,8 @@ const Preference = {
 const initialAvailability = Array(days.length)
   .fill(null)
   .map(() => Array(times.length).fill("Unacceptable"));
-
-export default function Quarter_Availability({ quarter }) {
-  console.log("Quarter = ", quarter);
+export default function Profile_Availability({ profile }) {
+  console.log("Profile = ", profile);
 
   const { username, setUsername } = useUser();
 
@@ -74,9 +73,9 @@ export default function Quarter_Availability({ quarter }) {
         //   return;
         // }
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/availability`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/profile_availability`,
           {
-            params: { quarter: quarter },
+            params: { profile: profile },
             headers: {
               Authorization: `Bearer ${Cookie.get("token")}`, // Use token if required for authorization
               // "Content-Type": "application/json", // Ensure content type is JSON
@@ -99,7 +98,7 @@ export default function Quarter_Availability({ quarter }) {
     };
 
     fetchAvailability();
-  }, [quarter]);
+  }, [profile]);
 
   const getNewAvailability = (availability) => {
     if (availability == Preference.UNACCEPTABLE) {
@@ -190,8 +189,8 @@ export default function Quarter_Availability({ quarter }) {
     localStorage.setItem("availabilityData", JSON.stringify(availability));
     try {
       const response = await axios.post(
-        "http://127.0.0.1:5000/availability",
-        { prefs: prefs, quarter: quarter },
+        "http://127.0.0.1:5000/profile_availability",
+        { prefs: prefs, profile: profile },
         {
           headers: {
             Authorization: `Bearer ${Cookie.get("token")}`,
@@ -211,7 +210,9 @@ export default function Quarter_Availability({ quarter }) {
   return (
     <div className={styles.container}>
       {/* <h1 className={styles.title}>Welcome {username}</h1> */}
-      <h1 className={styles.title}>Select your availability</h1>
+      <h1 className={styles.title}>
+        Select your availability for profile "{profile}"
+      </h1>
       <p className={styles.subtitle}>
         <strong>Note:</strong> If you are tenure track, please select
         "Unacceptable" on 1-2 pm for **ASK BEARD WHICH DAY** ONLY (due to

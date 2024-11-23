@@ -1,5 +1,6 @@
 import db.db_config as db_config
 import logging
+import profiles
 
 # Constants
 NUM_TIMESLOTS = 16
@@ -44,22 +45,25 @@ def createProfileAvailabilityTable():
     finally:
         db_config.close_connection(conn, cur)
 
-#TODO: fix, this is copied from availability.py
-def get_availability(user_id, quarter,profile=None):
+def get_availability(user_id, profile,day=None):
+    logging.debug(f"Getting availability for user {user_id} in profile {profile}")
+    profile_id = profiles.get_profile_id(user_id, profile)
+    if not profile_id:
+        raise ValueError(f"Profile {profile} does not exist for user {user_id}")
     conn, cur = db_config.connect()
     try:
         sql = f"""
         SELECT * 
         FROM {AVAILABILITY}
         WHERE user_id = %s
-        AND quarter = %s
+        AND profile = %s
         """
     
-        if profile:
-            sql += "AND profile = %s"
-            cur.execute(sql, (user_id, quarter, profile))
+        if day:
+            sql += "AND day = %s"
+            cur.execute(sql, (user_id, profile_id, day))
         else:
-            cur.execute(sql, (user_id, quarter))
+            cur.execute(sql, (user_id, profile_id))
         data = cur.fetchall()
         print(f"Fetched data = {data}")
         print(f'data={data}')
@@ -68,7 +72,7 @@ def get_availability(user_id, quarter,profile=None):
         if not data:
             return [["Unacceptable"] * 16]*5
 
-        TOTAL_COLS = NUM_TIMESLOTS + 3  # 3 for user_id and quarter and profile 
+        TOTAL_COLS = NUM_TIMESLOTS + 3  # 3 for user_id and profile and day
         assert len(data) == 5 and len(data[0]) == TOTAL_COLS and len(data[1]) == TOTAL_COLS, \
             f"Unexpected data format for data: length = {len(data)}, data[0] = {data[0]}, data[1] = {data[1]}"
 
@@ -76,26 +80,37 @@ def get_availability(user_id, quarter,profile=None):
         logging.debug(f"prefs = {prefs}")
         print(f'prefs={prefs}')
         return prefs
+        # mwf_prefs = [x if x else "Unacceptable" for x in data[0][2:]]
+        # logging.debug(f"mwf_prefs = {mwf_prefs}")
+        
+        # tr_prefs = [x if x else "Unacceptable" for x in data[1][2:]]
+        # logging.debug(f"tr_prefs = {tr_prefs}")
+        
+        # return [mwf_prefs, tr_prefs]
     finally:
         db_config.close_connection(conn, cur)
 
-def save_availability(user_id, quarter, data):
+def save_availability(user_id, profile, data):
+    profile_id = profiles.get_profile_id(user_id, profile)
+    logging.debug(f"Profile id = {profile_id}")
+    if not profile_id:
+        raise ValueError(f"Profile {profile} does not exist for user {user_id}")
     conn, cur = db_config.connect()
     try:
         print(f"Saving availability for user {user_id}, data = {data}")
         for entry in data:
             time = entry['time'].upper()  
             preference = entry['preference']
-            profile = entry['profile'] 
+            day = entry['day'] 
             
-            logging.debug(f"Inserting pref {preference} for time {time} for user {user_id} in quarter {quarter} for profile {profile}")
+            logging.debug(f"Inserting pref {preference} for time {time} for user {user_id} in profile {profile} for day {day}")
             sql = f"""
-            INSERT INTO {AVAILABILITY} (user_id, quarter,profile, "{time}")
+            INSERT INTO {AVAILABILITY} (user_id, profile,day, "{time}")
             VALUES (%s, %s, %s, %s)
-            ON CONFLICT (user_id, quarter,profile) DO UPDATE
+            ON CONFLICT (user_id, profile,day) DO UPDATE
             SET "{time}" = EXCLUDED."{time}";
             """
-            cur.execute(sql, (user_id, quarter, profile, preference))    
+            cur.execute(sql, (user_id, profile_id, day, preference))    
 
         conn.commit()
         logging.info("Saved preferences")

@@ -18,6 +18,17 @@ def createProfilesTable():
     finally:
         db_config.close_connection(conn, cur)
 
+def get_profile_id(user_id, name):
+    conn, cur = db_config.connect()
+    try:
+        sql = f"SELECT id FROM {PROFILES_TABLE} WHERE user_id = %s AND name = %s"
+        cur.execute(sql, (user_id, name))
+        data = cur.fetchone()
+        logging.debug(f"data = {data}")
+        return data[0] if data else None
+    finally:
+        db_config.close_connection(conn, cur)
+
 def profile_exists(user_id, name):
     conn, cur = db_config.connect()
     try:

@@ -5,7 +5,7 @@ import Cookie from "js-cookie";
 import { useRouter } from "next/router";
 import { PROFILES } from "../constants/routes.js";
 
-export default function EditProfile() {
+export default function EditProfileDropdown() {
   const [profiles, setProfiles] = useState([]); // List of profiles
   const [selectedProfile, setSelectedProfile] = useState(""); // Selected profile
   const [error, setError] = useState("");

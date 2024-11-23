@@ -43,18 +43,6 @@ def create_app(config_class=Config):
         app.logger.debug(f"Created profile {profile_id}")
         return jsonify("Created profile"),200
 
-    @app.route("/profiles/availability",methods=['GET'])
-    @jwt_required()
-    def get_profile_availability():
-        user = get_jwt_identity()
-        app.logger.debug(f"User = {user}")
-        profile = request.args.get("profile")
-        if profile:
-            app.logger.debug(f"Profile = {profile}")
-            availability = profile_availability.get_profile_availability(user,profile)
-            app.logger.debug(f"Availability for {profile} for user {user} = {availability}")
-
-    
     @app.route("/profiles",methods=['GET'])
     @jwt_required()
     def get_profiles():
@@ -117,6 +105,36 @@ def create_app(config_class=Config):
                     answers.update(agreement)
             app.logger.debug(f"{scope} Answers for {quarter} for user {user} = {answers}")
             return jsonify(answers), 200
+        except Exception as e:
+            print(f"{inspect.currentframe().f_code.co_name} Exception",e)
+            return jsonify("Error reading from DB"), 500
+    
+    @app.route("/profile_availability",methods=['POST'])
+    @jwt_required()
+    def set_profile_availability():
+        user = get_jwt_identity()
+        data = request.get_json()
+        app.logger.debug(f"User = {user}")
+        app.logger.debug(f"Data = {data}")
+        print(f'data keys={data.keys()}')
+        print(f'profile={data["profile"]}')
+        profile_availability.save_availability(user,data["profile"],data["prefs"])
+        # db.save_profile_availability(user,data["profile"],data["prefs"])
+        return jsonify("Saved preferences"),200
+        
+    @app.route("/profile_availability",methods=['GET'])
+    @jwt_required()
+    def get_profile_availability():
+        user = get_jwt_identity()
+        app.logger.debug("inside get_profile_availability")
+        app.logger.debug(f"User = {user}")
+        profile = request.args.get("profile") 
+        app.logger.debug(f"User = {user}, profile = {profile}") 
+        try:
+            # preferences = db.get_profile_availability(user,profile)
+            preferences = profile_availability.get_availability(user,profile) 
+            app.logger.debug(f"Preferences for {profile} for user {user} = {preferences}")
+            return jsonify(preferences), 200
         except Exception as e:
             print(f"{inspect.currentframe().f_code.co_name} Exception",e)
             return jsonify("Error reading from DB"), 500
