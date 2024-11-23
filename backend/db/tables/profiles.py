@@ -69,12 +69,12 @@ def editProfile(profile):
 def cloneProfile(original,clone):
     pass
 
-def deleteProfile(profile):
+def deleteProfile(profile_id):
     conn, cur = db_config.connect()
     try:
-        sql = f"DELETE FROM {PROFILES_TABLE} WHERE quarter = ANY(%s)"
-        cur.execute(sql, (profile))
+        sql = f"DELETE FROM {PROFILES_TABLE} WHERE profile = ANY(%s)"
+        cur.execute(sql, (profile_id))
         conn.commit()
-        logging.debug(f"Deleted profile {profile}")
+        logging.debug(f"Deleted profile id = {profile_id}")
     finally:
         db_config.close_connection(conn, cur)

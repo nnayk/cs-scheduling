@@ -52,6 +52,20 @@ def create_app(config_class=Config):
         app.logger.debug(f"Profiles for user {user} = {data}")
         return jsonify(data),200
 
+    @app.route("/profiles",methods=['DELETE'])
+    @jwt_required()
+    def delete_profile(profile_name):
+        user = get_jwt_identity()
+        app.logger.debug(f"User = {user}")
+        # profile_name = request.args.get("profile")
+        app.logger.debug(f"Profile to delete = {profile_name}")
+        profile_id = profiles.get_profile_id(user,profile_name)
+        app.logger.debug(f"Profile ID = {profile_id}")
+        profile_agreement_answers.deleteProfile(profile_id)
+        profile_written_answers.deleteProfile(profile_id)
+        profiles.deleteProfile(profile_id)
+        return jsonify(f"Successfully deleted profile {profile_name}"),200
+    
     @app.route("/questions",methods=['POST'])
     @jwt_required()
     def save_answers():

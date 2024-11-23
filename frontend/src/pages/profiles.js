@@ -23,6 +23,7 @@ export default function Profiles() {
 
   const handleDeleteProfile = () => {
     console.log("Delete an existing profile clicked.");
+    router.push(PROFILES.DELETE);
     // Add logic for deleting a profile
   };
 
@@ -71,7 +72,7 @@ export default function Profiles() {
           <p className={styles.cardDescription}>
             Delete a profile that's no longer useful.
           </p>
-          <button className={styles.cardButton} onClick={handleCloneProfile}>
+          <button className={styles.cardButton} onClick={handleDeleteProfile}>
             Delete Profile
           </button>
         </div>

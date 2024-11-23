@@ -106,3 +106,13 @@ def save_agreement_answer(user_id, profile, question_id, category, agreement):
         logging.debug(f"Saved agreement answer {agreement} for user {user_id}, profile {profile}, question {question_id}, category {category}")
     finally:
         db_config.close_connection(conn, cur)
+
+def deleteProfile(profile_id):
+    logging.debug(f"Deleting profile {profile_id}")
+    conn, cur = db_config.connect()
+    try:
+        sql = f"DELETE FROM {AGREEMENT_ANSWERS_TABLE} WHERE profile = %s"
+        cur.execute(sql, (profile_id,))
+        conn.commit()
+    finally:
+        db_config.close_connection(conn, cur)
