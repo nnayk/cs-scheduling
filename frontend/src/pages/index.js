@@ -42,7 +42,7 @@ export async function getServerSideProps(context) {
     // If the user is authenticated, redirect them to the Create page
     return {
       redirect: {
-        destination: "/availability",
+        destination: "/preferences",
         permanent: false,
       },
     };

@@ -4,6 +4,7 @@ import styles from "./profile_create.module.css";
 import Preferences from "./preferences";
 import Cookie from "js-cookie";
 import { useRouter } from "next/router";
+import { PROFILES } from "../constants/routes.js";
 
 export default function CreateProfile() {
   const router = useRouter();
@@ -42,7 +43,10 @@ export default function CreateProfile() {
       console.log("Got the response");
       setSuccess(`Profile ${profileName} created successfully!`);
       setProfileName("");
-      router.push("/profile_edit");
+      router.push({
+        pathname: "/profile_edit",
+        query: { profile: profileName },
+      });
     } catch (err) {
       console.log(`err.response.status = ${err.response.status}`);
       if (err.response.status === 400) {
