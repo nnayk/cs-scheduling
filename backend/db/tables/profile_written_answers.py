@@ -1,5 +1,6 @@
 import db.db_config as db_config
 import logging
+import profiles
 
 # Constants
 WRITTEN_ANSWERS_TABLE = "PROFILE_WRITTEN_ANSWERS"
@@ -11,7 +12,7 @@ def createProfileWrittenAnswersTable():
         sql_mwf = f"""
         CREATE TABLE IF NOT EXISTS {WRITTEN_ANSWERS_TABLE} (
             user_id INT REFERENCES users(id) ON DELETE CASCADE,
-            profile VARCHAR(15) REFERENCES profiles(profile) ON DELETE CASCADE, 
+            profile INT REFERENCES profiles(id) ON DELETE CASCADE, 
             question INT REFERENCES written_questions(id) ON DELETE CASCADE,
             response VARCHAR(500),
             PRIMARY KEY (user_id, profile, question)
@@ -38,6 +39,9 @@ def get_question_id(question_text):
         db_config.close_connection(conn, cur)
 
 def get_written_answers(user_id, profile):
+    profile_id = profiles.get_profile_id(user_id, profile)
+    if not profile_id:
+        raise ValueError(f"Profile {profile} does not exist for user {user_id}")
     conn, cur = db_config.connect()
     try:
         sql = f"""
@@ -45,13 +49,16 @@ def get_written_answers(user_id, profile):
         FROM {WRITTEN_ANSWERS_TABLE}
         WHERE user_id = %s AND profile = %s;
         """
-        cur.execute(sql, (user_id, profile))
+        cur.execute(sql, (user_id, profile_id))
         responses = cur.fetchall()
         return {question: response for question, response in responses} if responses else None
     finally:
         db_config.close_connection(conn, cur)
 
 def get_written_answer(user_id, profile, question_text):
+    profile_id = profiles.get_profile_id(user_id, profile)
+    if not profile_id:
+        raise ValueError(f"Profile {profile} does not exist for user {user_id}")
     question_id = get_question_id(question_text)
     if question_id is None:
         logging.debug(f"Question not found: {question_text}")
@@ -64,13 +71,16 @@ def get_written_answer(user_id, profile, question_text):
         FROM {WRITTEN_ANSWERS_TABLE}
         WHERE user_id = %s AND profile = %s AND question = %s;
         """
-        cur.execute(sql, (user_id, profile, question_id))
+        cur.execute(sql, (user_id, profile_id, question_id))
         response = cur.fetchone()
         return response[0] if response else None
     finally:
         db_config.close_connection(conn, cur)
 
 def save_written_answer(user_id, profile, question_id, response):
+    profile_id = profiles.get_profile_id(user_id, profile)
+    if not profile_id:
+        raise ValueError(f"Profile {profile} does not exist for user {user_id}")
     conn, cur = db_config.connect()
     try:
         sql = f"""
@@ -79,7 +89,7 @@ def save_written_answer(user_id, profile, question_id, response):
         ON CONFLICT (user_id, profile, question) DO UPDATE
         SET response = EXCLUDED.response;
         """
-        cur.execute(sql, (user_id, profile, question_id, response))
+        cur.execute(sql, (user_id, profile_id, question_id, response))
         conn.commit()
         logging.debug(f"Saved written answer '{response}' for user {user_id}, profile {profile}, question {question_id}")
     except Exception as e:

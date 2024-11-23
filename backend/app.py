@@ -6,7 +6,7 @@ from flask import jsonify, make_response
 from flask_cors import CORS 
 # import db
 from db.tables import users, availability, written_answers, agreement_answers, \
-profiles,profile_availability
+profiles,profile_availability, profile_agreement_answers, profile_written_answers
 from auth import hash_password, check_password
 import logging
 
@@ -127,12 +127,12 @@ def create_app(config_class=Config):
                 print('agreement_level=',agreement_level)
                 if(agreement_level):
                     agreement_level = agreement_level.lower()
-                agreement_answers.save_agreement_answer(user,profile,question_id,category,agreement_level)
+                profile_agreement_answers.save_agreement_answer(user,profile,question_id,category,agreement_level)
         written_responses = data["writtenAnswers"]
         print('written_responses=',written_responses)
         # print(answers)
         for question_id,answer in written_responses.items():
-            written_answers.save_written_answer(user,profile,question_id,answer)
+            profile_written_answers.save_written_answer(user,profile,question_id,answer)
         # save_written_answers(user,data["profile"],data["answers"])
         return jsonify("Saved answers"),200
 
@@ -153,9 +153,9 @@ def create_app(config_class=Config):
             # answers = db.get_answers(user,profile)
             answers = {}
             if not scope or scope == "written":
-                answers = written_answers.get_written_answers(user,profile)
+                answers = profile_written_answers.get_written_answers(user,profile)
             if not scope or scope == "agreement":
-                agreement = agreement_answers.get_agreement_answers(user,profile)
+                agreement = profile_agreement_answers.get_agreement_answers(user,profile)
                 if agreement:
                     answers.update(agreement)
             app.logger.debug(f"{scope} Answers for {profile} for user {user} = {answers}")

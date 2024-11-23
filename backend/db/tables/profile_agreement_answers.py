@@ -1,5 +1,6 @@
 import db.db_config as db_config
 import logging
+import profiles
 
 # Constants
 AGREEMENT_ANSWERS_TABLE = "PROFILE_AGREEMENT_ANSWERS"
@@ -11,7 +12,7 @@ def createAgreementAnswersTable():
         sql = f"""
         CREATE TABLE IF NOT EXISTS {AGREEMENT_ANSWERS_TABLE} (
             user_id INT REFERENCES users(id) ON DELETE CASCADE,
-            profile INT REFERENCES profiles(id) ON DELETE CASCADE,
+            profile INT REFERENCES profiles(id) ON DELETE CASCADE, 
             question INT REFERENCES agreement_questions(id) ON DELETE CASCADE,
             category VARCHAR(100) NOT NULL,
             agreement VARCHAR(20) REFERENCES agreement_levels(category) ON DELETE CASCADE,
@@ -39,6 +40,9 @@ def get_question_id(question_text):
         db_config.close_connection(conn, cur)
 
 def get_agreement_answers(user_id, profile):
+    profile_id = profiles.get_profile_id(user_id, profile)
+    if not profile_id:
+        raise ValueError(f"Profile {profile} does not exist for user {user_id}")
     conn, cur = db_config.connect()
     try:
         logging.debug("inside get_agreement_answers")
@@ -47,7 +51,7 @@ def get_agreement_answers(user_id, profile):
         FROM {AGREEMENT_ANSWERS_TABLE}
         WHERE user_id = %s AND profile = %s;
         """
-        cur.execute(sql, (user_id, profile))
+        cur.execute(sql, (user_id, profile_id))
         response = cur.fetchall()
         logging.debug(f"response={response}")
         print(f'response (print)={response}')
@@ -67,6 +71,9 @@ def get_agreement_answers(user_id, profile):
         db_config.close_connection(conn, cur)
 
 def get_agreement_answer(user_id, profile, question_text):
+    profile_id = profiles.get_profile_id(user_id, profile)
+    if not profile_id:
+        raise ValueError(f"Profile {profile} does not exist for user {user_id}")
     conn, cur = db_config.connect()
     try:
         question_id = get_question_id(question_text)
@@ -75,23 +82,26 @@ def get_agreement_answer(user_id, profile, question_text):
         FROM {AGREEMENT_ANSWERS_TABLE}
         WHERE user_id = %s AND profile = %s AND question = %s;
         """
-        cur.execute(sql, (user_id, profile, question_id))
+        cur.execute(sql, (user_id, profile_id, question_id))
         response = cur.fetchone()
         return response[0] if response else None
     finally:
         db_config.close_connection(conn, cur)
 
 def save_agreement_answer(user_id, profile, question_id, category, agreement):
+    profile_id = profiles.get_profile_id(user_id, profile)
+    if not profile_id:
+        raise ValueError(f"Profile {profile} does not exist for user {user_id}")
     conn, cur = db_config.connect()
     try:
-        print(f"question_id={question_id}, category={category}, agreement={agreement}, user_id={user_id}, profile={profile}")
+        print(f"question_id={question_id}, category={category}, agreement={agreement}, user_id={user_id}, profile={profile},profile_id={profile_id}")
         sql = f"""
         INSERT INTO {AGREEMENT_ANSWERS_TABLE} (user_id, profile, question, category, agreement)
         VALUES (%s, %s, %s, %s, %s)
         ON CONFLICT (user_id, profile, question, category) DO UPDATE
         SET agreement = %s;
         """
-        cur.execute(sql, (user_id, profile, question_id, category, agreement, agreement))
+        cur.execute(sql, (user_id, profile_id, question_id, category, agreement, agreement))
         conn.commit()
         logging.debug(f"Saved agreement answer {agreement} for user {user_id}, profile {profile}, question {question_id}, category {category}")
     finally:
