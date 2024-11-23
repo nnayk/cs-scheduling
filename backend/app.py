@@ -80,7 +80,6 @@ def create_app(config_class=Config):
         # save_written_answers(user,data["quarter"],data["answers"])
         return jsonify("Saved answers"),200
 
-    # write a similar function as above to get answers
     @app.route("/questions",methods=['GET'])
     @jwt_required()
     def get_answers():
@@ -109,6 +108,62 @@ def create_app(config_class=Config):
             print(f"{inspect.currentframe().f_code.co_name} Exception",e)
             return jsonify("Error reading from DB"), 500
     
+    @app.route("/profile_questions",methods=['POST'])
+    @jwt_required()
+    def save_profile_answers():
+        user = get_jwt_identity()
+        data = request.get_json()
+        app.logger.debug(f"User = {user}")
+        app.logger.debug(f"Data = {data}")
+        profile = data["profile"].lower()
+        agreement_responses = data["agreementAnswers"]
+        print('agreement_responses=',agreement_responses)
+        for question_id,agreement_data in enumerate(agreement_responses.items()):
+            question_id = int(question_id) + 1
+            category,agreement_level = agreement_data
+            print(f'agreement_data={agreement_data}')
+            for category, agreement_level in agreement_data[1].items(): #TODO: Fix frontend to just not pass the oneLab preference...uselsss+dont wanna deal with a 2-tuple
+                print('category=',category)
+                print('agreement_level=',agreement_level)
+                if(agreement_level):
+                    agreement_level = agreement_level.lower()
+                agreement_answers.save_agreement_answer(user,profile,question_id,category,agreement_level)
+        written_responses = data["writtenAnswers"]
+        print('written_responses=',written_responses)
+        # print(answers)
+        for question_id,answer in written_responses.items():
+            written_answers.save_written_answer(user,profile,question_id,answer)
+        # save_written_answers(user,data["profile"],data["answers"])
+        return jsonify("Saved answers"),200
+
+    @app.route("/profile_questions",methods=['GET'])
+    @jwt_required()
+    def get_profile_answers():
+        user = get_jwt_identity()
+        app.logger.debug("inside get_answers")
+        app.logger.debug(f"User = {user}")
+        profile = request.args.get("profile").lower()
+        scope = request.args.get("scope",default=None)
+        if scope:
+            app.logger.debug(f"Scope = {scope}")
+            if scope != "agreement" and scope != "written":
+                return jsonify("Invalid scope"),400
+        app.logger.debug(f"User = {user}, profile = {profile}") 
+        try:
+            # answers = db.get_answers(user,profile)
+            answers = {}
+            if not scope or scope == "written":
+                answers = written_answers.get_written_answers(user,profile)
+            if not scope or scope == "agreement":
+                agreement = agreement_answers.get_agreement_answers(user,profile)
+                if agreement:
+                    answers.update(agreement)
+            app.logger.debug(f"{scope} Answers for {profile} for user {user} = {answers}")
+            return jsonify(answers), 200
+        except Exception as e:
+            print(f"{inspect.currentframe().f_code.co_name} Exception",e)
+            return jsonify("Error reading from DB"), 500
+        
     @app.route("/profile_availability",methods=['POST'])
     @jwt_required()
     def set_profile_availability():

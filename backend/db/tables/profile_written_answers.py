@@ -4,14 +4,14 @@ import logging
 # Constants
 WRITTEN_ANSWERS_TABLE = "PROFILE_WRITTEN_ANSWERS"
 
-def createWrittenAnswersTable():
+def createProfileWrittenAnswersTable():
     conn, cur = db_config.connect()
     try:
-        print("Creating profile written answers table")
+        print("Creating written answers table")
         sql_mwf = f"""
         CREATE TABLE IF NOT EXISTS {WRITTEN_ANSWERS_TABLE} (
             user_id INT REFERENCES users(id) ON DELETE CASCADE,
-            profile INT REFERENCES profiles(id) ON DELETE CASCADE,
+            profile VARCHAR(15) REFERENCES profiles(profile) ON DELETE CASCADE, 
             question INT REFERENCES written_questions(id) ON DELETE CASCADE,
             response VARCHAR(500),
             PRIMARY KEY (user_id, profile, question)
@@ -19,7 +19,7 @@ def createWrittenAnswersTable():
         """
         cur.execute(sql_mwf)
         conn.commit()
-        logging.debug("Created profile written answers table")
+        logging.debug("Created written answers table")
     finally:
         db_config.close_connection(conn, cur)
 

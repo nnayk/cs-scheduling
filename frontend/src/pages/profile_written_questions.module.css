@@ -1,0 +1,50 @@
+.container {
+  /* margin-top: 50px; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.question {
+  width: 100%; /* Ensure full-width layout */
+  max-width: 800px; /* Optional: set a max width for question blocks */
+  text-align: center; /* Center the question text */
+  margin-top: 50px; /* Add space above each question */
+}
+
+.textareaWrapper {
+  width: 100%;
+  max-width: 600px; /* Fixed width for all text areas */
+  margin: 0 auto;    /* Center the text area wrapper */
+  margin-top: 10px;
+  display: flex;
+  justify-content: center; /* Center-aligns the textarea */
+}
+
+.myTextarea {
+  align-self: center;
+  width: 100%;
+  min-width: 1200px;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  resize: vertical;
+  min-height: 120px;
+  font-size: 16px;
+  color: #333;
+  background-color: #f9f9f9;
+}
+
+.myTextarea:focus {
+  outline: none;
+  border-color: green;
+  box-shadow: 0 0 5px rgba(0, 128, 0, 0.5);
+}
+
+
+.subtitle {
+  font-size: 16px;
+  color: #555;    /* Subtle color for the subtitle */
+  margin-bottom: 20px;  /* Space below the subtitle */
+  text-align: center;   /* Center the subtitle */
+}
