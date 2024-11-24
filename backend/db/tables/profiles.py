@@ -72,8 +72,9 @@ def cloneProfile(original,clone):
 def deleteProfile(profile_id):
     conn, cur = db_config.connect()
     try:
-        sql = f"DELETE FROM {PROFILES_TABLE} WHERE profile = ANY(%s)"
-        cur.execute(sql, (profile_id))
+        logging.debug(f"Deleting profile id = {profile_id}")
+        sql = f"DELETE FROM {PROFILES_TABLE} WHERE id = {profile_id}"
+        cur.execute(sql)
         conn.commit()
         logging.debug(f"Deleted profile id = {profile_id}")
     finally:

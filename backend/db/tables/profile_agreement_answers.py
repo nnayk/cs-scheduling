@@ -111,8 +111,8 @@ def deleteProfile(profile_id):
     logging.debug(f"Deleting profile {profile_id}")
     conn, cur = db_config.connect()
     try:
-        sql = f"DELETE FROM {AGREEMENT_ANSWERS_TABLE} WHERE profile = %s"
-        cur.execute(sql, (profile_id,))
+        sql = f"DELETE FROM {AGREEMENT_ANSWERS_TABLE} WHERE profile = {profile_id}"
+        cur.execute(sql)
         conn.commit()
     finally:
         db_config.close_connection(conn, cur)

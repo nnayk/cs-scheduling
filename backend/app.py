@@ -21,7 +21,7 @@ def create_app(config_class=Config):
     # Configure CORS for all routes
     cors = CORS(app, resources={r"/*": {
         "origins": "*",  # Allow all origins (for development only)
-        "methods": ["GET", "POST", "OPTIONS"],
+        "methods": ["GET", "POST", "DELETE","OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization","Access-Control-Allow-Origin"]
     }})
     app.config["CORS_HEADERS"] = "Content-Type"
@@ -52,7 +52,7 @@ def create_app(config_class=Config):
         app.logger.debug(f"Profiles for user {user} = {data}")
         return jsonify(data),200
 
-    @app.route("/profiles",methods=['DELETE'])
+    @app.route("/profiles/<path:profile_name>",methods=['DELETE'])
     @jwt_required()
     def delete_profile(profile_name):
         user = get_jwt_identity()
@@ -63,6 +63,7 @@ def create_app(config_class=Config):
         app.logger.debug(f"Profile ID = {profile_id}")
         profile_agreement_answers.deleteProfile(profile_id)
         profile_written_answers.deleteProfile(profile_id)
+        profile_availability.deleteProfile(profile_id)
         profiles.deleteProfile(profile_id)
         return jsonify(f"Successfully deleted profile {profile_name}"),200
     

@@ -116,3 +116,13 @@ def save_availability(user_id, profile, data):
         logging.info("Saved preferences")
     finally:
         db_config.close_connection(conn, cur)
+
+def deleteProfile(profile_id):
+    conn, cur = db_config.connect()
+    try:
+        sql = f"DELETE FROM {AVAILABILITY} WHERE profile = {profile_id}"
+        cur.execute(sql)
+        conn.commit()
+        logging.debug(f"Deleted availability for profile {profile_id}")
+    finally:
+        db_config.close_connection(conn, cur)

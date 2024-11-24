@@ -8,6 +8,7 @@ import { PROFILES } from "../constants/routes.js";
 export default function DeleteProfileDropdown() {
   const [profiles, setProfiles] = useState([]); // List of profiles
   const [selectedProfile, setSelectedProfile] = useState(""); // Selected profile
+  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function DeleteProfileDropdown() {
           {
             headers: {
               Authorization: `Bearer ${Cookie.get("token")}`,
+              "Content-Type": "application/json",
             },
           }
         );
@@ -45,14 +47,24 @@ export default function DeleteProfileDropdown() {
   const handleDelete = () => {
     if (selectedProfile) {
       const deleteProfile = async () => {
-        const response = await axios.delete(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/profiles/${selectedProfile}`,
-          {
-            headers: {
-              Authorization: `Bearer ${Cookie.get("token")}`,
-            },
+        try {
+          const response = await axios.delete(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/profiles/${selectedProfile}`,
+            {
+              headers: {
+                Authorization: `Bearer ${Cookie.get("token")}`,
+              },
+            }
+          );
+          if (response.status === 200) {
+            router.push(PROFILES.DELETE);
+            setMessage("Profile deleted successfully");
+          } else {
+            setError("Failed to delete profile");
           }
-        );
+        } catch (err) {
+          setError("Failed to delete profile");
+        }
       };
       deleteProfile();
     } else {
@@ -83,6 +95,7 @@ export default function DeleteProfileDropdown() {
               ))}
             </select>
             {error && <p className={styles.error}>{error}</p>}
+            {message && !error && <p className={styles.success}>{message}</p>}
             <button onClick={handleDelete} className={styles.submitButton}>
               Delete Profile
             </button>
