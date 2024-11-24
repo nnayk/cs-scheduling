@@ -18,6 +18,7 @@ export default function Profiles() {
 
   const handleCloneProfile = () => {
     console.log("Clone an existing profile clicked.");
+    router.push(PROFILES.CLONE);
     // Add logic for cloning a profile
   };
 

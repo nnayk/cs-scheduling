@@ -42,6 +42,24 @@ def create_app(config_class=Config):
         profile_id = profiles.create_profile(user,profile)
         app.logger.debug(f"Created profile {profile_id}")
         return jsonify("Created profile"),200
+    
+
+    @app.route("/profile_clone",methods=['POST'])
+    @jwt_required()
+    def clone_profile():
+        user = get_jwt_identity()
+        data = request.get_json()
+        profiles = data["profiles"]
+        app.logger.debug(f"User = {user}, profiles = {profiles}")
+        existing, new = profiles["existing"], profiles["new"]
+        app.logger.debug(f"Existing profile = {existing}, new profile = {new}")
+        # check if the clone profile already exists
+        if profiles.profile_exists(user, new):
+            return jsonify(f"Profile {new} already exists"), 400
+        if profiles.clone_profile(user,existing,new):
+            return jsonify("Cloned profile"),200
+        else:
+            return jsonify("Error cloning profile"),500
 
     @app.route("/profiles",methods=['GET'])
     @jwt_required()

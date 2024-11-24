@@ -66,8 +66,22 @@ def editProfile(profile):
     pass
 
 # TODO
-def cloneProfile(original,clone):
-    pass
+def cloneProfile(user_id,original,clone):
+    logging.debug(f"Cloning profile {original} to {clone}")
+    conn, cur = db_config.connect()
+    # create a profiles table entry
+    clone_id = create_profile(user_id, clone)
+    original_id = get_profile_id(user_id, original)
+    # clone the profile_availability table entry
+    sql_availability = """
+    INSERT INTO profile_availability (user_id,profile_id, day, start_time, end_time)
+    SELECT %s, %s, day, start_time, end_time
+    FROM profile_availability
+    WHERE profile_id = %s
+    """
+    cur.execute(sql_availability, (user_id,clone_id, original_id))
+   # clone the profile_written_questions table entry
+   # clone the profile_agreement_questions table entry
 
 def deleteProfile(profile_id):
     conn, cur = db_config.connect()
