@@ -1,31 +1,20 @@
 import db.db_config as db_config
 import logging
 import profiles
+from db_constants import time_slots_cols
 
 # Constants
 NUM_TIMESLOTS = 16
 AVAILABILITY = "profile_availability"
-
 
 def createProfileAvailabilityTable():
     conn, cur = db_config.connect()
     try:
         print("Creating availability table")
         
-        # Generate time slots in 30-minute increments from 9:00 AM to 5:00 PM
-        time_slots = [
-            f'"{hour}:{minute:02d} {"AM" if hour < 12 else "PM"}" VARCHAR(255)' 
-            for hour in range(9, 12)  # 9 AM to 11 AM
-            for minute in (0, 30)
-        ] + [
-            f'"{hour - 12 if hour > 12 else hour}:{minute:02d} {"AM" if hour < 12 else "PM"}" VARCHAR(255)'
-            for hour in range(12, 17)  # 12 PM to 5 PM
-            for minute in (0, 30)
-        ]
-
+               
         
-        
-        times = ", ".join(time_slots)
+        times = ", ".join(time_slots_cols)
         
         sql = f"""
         CREATE TABLE IF NOT EXISTS {AVAILABILITY} (

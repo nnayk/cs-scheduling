@@ -64,12 +64,15 @@ export default function CloneProfileDropdown() {
           const response = await axios.post(
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/profile_clone`,
             {
-              headers: {
-                Authorization: `Bearer ${Cookie.get("token")}`,
-              },
               profiles: {
                 existing: selectedProfile,
                 new: profileName,
+              },
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${Cookie.get("token")}`,
+                "Content-Type": "application/json",
               },
             }
           );
