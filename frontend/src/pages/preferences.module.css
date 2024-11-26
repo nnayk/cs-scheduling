@@ -89,3 +89,7 @@
 .transparent_text {
   color: transparent;
 }
+
+.select {
+  margin-bottom: 50px;
+}
