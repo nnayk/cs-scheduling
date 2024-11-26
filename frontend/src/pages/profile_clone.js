@@ -77,8 +77,11 @@ export default function CloneProfileDropdown() {
             }
           );
           if (response.status === 200) {
-            router.push(PROFILES.CLONE);
             setMessage("Profile cloned successfully");
+            router.push({
+              pathname: PROFILES.EDIT,
+              query: { profile: profileName },
+            });
           } else {
             setError("Failed to clone profile");
           }
