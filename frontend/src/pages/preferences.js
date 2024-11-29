@@ -5,6 +5,7 @@ import Quarter_Dropdown from "./quarter_dropdown";
 import styles from "./preferences.module.css";
 import Cookie from "js-cookie";
 import { useEffect } from "react";
+import axios from "axios";
 
 const Preferences = () => {
   // State to store the selected quarter
@@ -37,10 +38,10 @@ const Preferences = () => {
         const profile_names = response.data;
         console.log("test");
         console.log(`Got profiles ${profile_names}`);
-        throw new Error("Test error");
         setProfiles(profile_names); // Assume the response is { profiles: [...] }
         setLoading(false);
       } catch (err) {
+        console.log("Error fetching profiles", err);
         setError("Failed to load profiles");
         setLoading(false);
       }
@@ -54,33 +55,37 @@ const Preferences = () => {
 
   return (
     <div>
-      <Quarter_Dropdown
-        selectedQuarter={selectedQuarter}
-        handleQuarterChange={handleQuarterChange}
+      <div className={styles.container}>
+        <Quarter_Dropdown
+          selectedQuarter={selectedQuarter}
+          handleQuarterChange={handleQuarterChange}
+        />{" "}
+        <h1 className={styles.title}>Optional: Use a profile</h1>
+        {loading ? (
+          <p>Loading profiles...</p>
+        ) : (
+          <>
+            <select
+              value={selectedProfile}
+              onChange={handleProfileChange}
+              className={styles.input}
+            >
+              <option value="">Select a profile</option>
+              {profiles.map((profile) => (
+                <option key={profile} value={profile}>
+                  {profile}
+                </option>
+              ))}
+            </select>
+            {error && <p className={styles.error}>{error}</p>}
+          </>
+        )}
+      </div>
+      <Quarter_Availability
+        quarter={selectedQuarter}
+        profile={selectedProfile}
       />
-      <h1 className={styles.title}>Optional: Choose a profile</h1>
-      {loading ? (
-        <p>Loading profiles...</p>
-      ) : (
-        <>
-          <select
-            value={selectedProfile}
-            onChange={handleProfileChange}
-            className={styles.input}
-          >
-            <option value="" disabled>
-              Select a profile
-            </option>
-            {profiles.map((profile) => (
-              <option key={profile} value={profile}>
-                {profile}
-              </option>
-            ))}
-          </select>
-        </>
-      )}
-      <Quarter_Availability quarter={selectedQuarter} />
-      <Quarter_Questions quarter={selectedQuarter} />
+      <Quarter_Questions quarter={selectedQuarter} profile={selectedProfile} />
     </div>
   );
 };

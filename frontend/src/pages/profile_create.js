@@ -30,6 +30,16 @@ export default function CreateProfile() {
       // const response = await axios.post("/api/checkProfileName", {
       //   name: profileName,
       // });
+      if (profileName === "") {
+        setError("Profile name cannot be empty");
+        return;
+      } else if (profileName.length > 250) {
+        setError("Profile name is too long");
+        return;
+      } else if (profileName == "Select a profile") {
+        setError("Please enter a valid profile name");
+        return;
+      }
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/profile_create`,
         { profile: profileName },

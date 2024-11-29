@@ -90,6 +90,49 @@
   color: transparent;
 }
 
-.select {
-  margin-bottom: 50px;
+.container {
+  /* max-width: 500px; */
+  max-width: 40%;
+  margin: 100px auto;
+  padding: 20px;
+  text-align: center;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.label {
+  font-size: 16px;
+  color: #333;
+  text-align: left;
+}
+
+.input {
+  color: black;
+  /*padding: 10px;*/
+  margin-bottom: 10px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  width: 35%;
+  color: darkgreen;
+}
+
+
+
+.error {
+  color: red;
+  font-size: 14px;
+}
+
+.success {
+  color: green;
+  font-size: 14px;
 }

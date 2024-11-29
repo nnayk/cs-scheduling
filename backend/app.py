@@ -120,6 +120,7 @@ def create_app(config_class=Config):
         app.logger.debug("inside get_answers")
         app.logger.debug(f"User = {user}")
         quarter = request.args.get("quarter").lower()
+        profile = request.args.get("profile")
         scope = request.args.get("scope",default=None)
         if scope:
             app.logger.debug(f"Scope = {scope}")
@@ -130,9 +131,15 @@ def create_app(config_class=Config):
             # answers = db.get_answers(user,quarter)
             answers = {}
             if not scope or scope == "written":
-                answers = written_answers.get_written_answers(user,quarter)
+                if profile:
+                    answers = profile_written_answers.get_written_answers(user,profile)
+                else:
+                    answers = written_answers.get_written_answers(user,quarter)
             if not scope or scope == "agreement":
-                agreement = agreement_answers.get_agreement_answers(user,quarter)
+                if profile:
+                    agreement = profile_agreement_answers.get_agreement_answers(user,profile)
+                else:
+                    agreement = agreement_answers.get_agreement_answers(user,quarter)
                 if agreement:
                     answers.update(agreement)
             app.logger.debug(f"{scope} Answers for {quarter} for user {user} = {answers}")
@@ -148,7 +155,7 @@ def create_app(config_class=Config):
         data = request.get_json()
         app.logger.debug(f"User = {user}")
         app.logger.debug(f"Data = {data}")
-        profile = data["profile"].lower()
+        profile = data["profile"]
         agreement_responses = data["agreementAnswers"]
         print('agreement_responses=',agreement_responses)
         for question_id,agreement_data in enumerate(agreement_responses.items()):
@@ -175,7 +182,7 @@ def create_app(config_class=Config):
         user = get_jwt_identity()
         app.logger.debug("inside get_answers")
         app.logger.debug(f"User = {user}")
-        profile = request.args.get("profile").lower()
+        profile = request.args.get("profile")
         scope = request.args.get("scope",default=None)
         if scope:
             app.logger.debug(f"Scope = {scope}")
@@ -246,11 +253,15 @@ def create_app(config_class=Config):
         user = get_jwt_identity()
         app.logger.debug("inside get_availability")
         app.logger.debug(f"User = {user}")
-        quarter = request.args.get("quarter") 
+        quarter = request.args.get("quarter")
+        profile = request.args.get("profile") 
         app.logger.debug(f"User = {user}, quarter = {quarter}") 
         try:
             # preferences = db.get_availability(user,quarter)
-            preferences = availability.get_availability(user,quarter) 
+            if profile:
+                preferences = profile_availability.get_availability(user,profile)
+            else:
+                preferences = availability.get_availability(user,quarter) 
             app.logger.debug(f"Preferences for {quarter} for user {user} = {preferences}")
             return jsonify(preferences), 200
         except Exception as e:

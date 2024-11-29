@@ -5,7 +5,7 @@ import { useState } from "react";
 import axios from "axios";
 import Cookie from "js-cookie";
 
-const Quarter_Questions = ({ quarter }) => {
+const Quarter_Questions = ({ quarter, profile }) => {
   const [agreementAnswers, setAgreementAnswers] = useState({});
   const [writtenAnswers, setWrittenAnswers] = useState({});
   const [saveMessage, setSaveMessage] = useState("");
@@ -26,6 +26,7 @@ const Quarter_Questions = ({ quarter }) => {
           agreementAnswers: agreementAnswers,
           writtenAnswers: writtenAnswers,
           quarter: quarter,
+          profile: profile,
         },
         {
           headers: {

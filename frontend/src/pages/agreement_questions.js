@@ -20,7 +20,7 @@ const initialPreferences = {
       null,
   },
 };
-const Agreement_Questions = ({ onChange, quarter }) => {
+const Agreement_Questions = ({ onChange, quarter, profile }) => {
   const [preferences, setPreferences] = useState({
     oneLabPreference: { MWF: null, TR: null },
     twoLabPreference: { "2 MWF": null, "1 MWF, 1 TR": null, "2 TR": null },
@@ -61,7 +61,7 @@ const Agreement_Questions = ({ onChange, quarter }) => {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/questions?scope=agreement`,
           {
-            params: { quarter: quarter },
+            params: { quarter: quarter, profile: profile },
             headers: {
               Authorization: `Bearer ${Cookie.get("token")}`, // Use token if required for authorization
               // "Content-Type": "application/json", // Ensure content type is JSON
@@ -124,7 +124,7 @@ const Agreement_Questions = ({ onChange, quarter }) => {
     };
 
     fetchAnswers();
-  }, [quarter]);
+  }, [quarter, profile]);
 
   // Use useEffect to trigger the onChange callback after preferences are updated
   useEffect(() => {

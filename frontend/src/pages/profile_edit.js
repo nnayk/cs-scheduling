@@ -13,7 +13,7 @@ const EditProfile = () => {
   return (
     <div>
       <Profile_Availability profile={profile} />
-      <Profile_Quarter_Questions profile={profile} />
+      {/* <Profile_Quarter_Questions profile={profile} /> */}
       {/* <Profile_Written_Questions profile={profile} /> */}
     </div>
   );

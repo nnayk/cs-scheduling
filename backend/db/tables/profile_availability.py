@@ -37,6 +37,7 @@ def createProfileAvailabilityTable():
 def get_availability(user_id, profile,day=None):
     logging.debug(f"Getting availability for user {user_id} in profile {profile}")
     profile_id = profiles.get_profile_id(user_id, profile)
+    logging.debug(f"Profile id = {profile_id}")
     if not profile_id:
         raise ValueError(f"Profile {profile} does not exist for user {user_id}")
     conn, cur = db_config.connect()
@@ -65,9 +66,11 @@ def get_availability(user_id, profile,day=None):
         assert len(data) == 5 and len(data[0]) == TOTAL_COLS and len(data[1]) == TOTAL_COLS, \
             f"Unexpected data format for data: length = {len(data)}, data[0] = {data[0]}, data[1] = {data[1]}"
 
-        prefs = [data[i][3:] for i in range(5)]
+        prefs = {data[2]:data[i][3:] for i in range(5)}
         logging.debug(f"prefs = {prefs}")
-        print(f'prefs={prefs}')
+        # print(f'prefs={prefs}')
+        logging.debug(f"data type = {type(prefs)}")
+        print(f"data type = {type(prefs)}")
         return prefs
         # mwf_prefs = [x if x else "Unacceptable" for x in data[0][2:]]
         # logging.debug(f"mwf_prefs = {mwf_prefs}")

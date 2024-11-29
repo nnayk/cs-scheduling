@@ -49,7 +49,7 @@ const initialAvailability = Array(days.length)
   .fill(null)
   .map(() => Array(times.length).fill("Unacceptable"));
 
-export default function Quarter_Availability({ quarter }) {
+export default function Quarter_Availability({ quarter, profile }) {
   console.log("Quarter = ", quarter);
 
   const { username, setUsername } = useUser();
@@ -76,7 +76,7 @@ export default function Quarter_Availability({ quarter }) {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/availability`,
           {
-            params: { quarter: quarter },
+            params: { quarter: quarter, profile: profile },
             headers: {
               Authorization: `Bearer ${Cookie.get("token")}`, // Use token if required for authorization
               // "Content-Type": "application/json", // Ensure content type is JSON
@@ -85,7 +85,7 @@ export default function Quarter_Availability({ quarter }) {
         );
         const fetchedData = response.data;
         if (fetchedData) {
-          console.log(`fetchedData = ${fetchedData}`);
+          console.log(`fetchedData availability = ${fetchedData}`);
           localStorage.setItem("availabilityData", JSON.stringify(fetchedData));
           // Assuming `fetchedData` is an array of the same shape as `availability`
           setavailability(fetchedData);
@@ -99,7 +99,7 @@ export default function Quarter_Availability({ quarter }) {
     };
 
     fetchAvailability();
-  }, [quarter]);
+  }, [quarter, profile]);
 
   const getNewAvailability = (availability) => {
     if (availability == Preference.UNACCEPTABLE) {

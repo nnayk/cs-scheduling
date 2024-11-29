@@ -26,7 +26,7 @@ const initialAnswers = questions.reduce((acc, question) => {
   return acc;
 }, {});
 
-const Written_Questions = ({ onChange, quarter }) => {
+const Written_Questions = ({ onChange, quarter, profile }) => {
   const [answers, setAnswers] = useState(initialAnswers);
   const handleAnswerChange = (id, answer) => {
     setAnswers((prevAnswers) => ({
@@ -47,7 +47,7 @@ const Written_Questions = ({ onChange, quarter }) => {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/questions?scope=written`,
           {
-            params: { quarter: quarter },
+            params: { quarter: quarter, profile: profile },
             headers: {
               Authorization: `Bearer ${Cookie.get("token")}`, // Use token if required for authorization
               // "Content-Type": "application/json", // Ensure content type is JSON
@@ -72,7 +72,7 @@ const Written_Questions = ({ onChange, quarter }) => {
     };
 
     fetchAnswers();
-  }, [quarter]);
+  }, [quarter, profile]);
   useEffect(() => {
     onChange(answers);
   }, [answers, onChange]);

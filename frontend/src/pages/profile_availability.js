@@ -45,9 +45,11 @@ const Preference = {
 };
 
 // Initial structure for availability
-const initialAvailability = Array(days.length)
-  .fill(null)
-  .map(() => Array(times.length).fill("Unacceptable"));
+const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+const initialAvailability = {};
+for (const day of daysOfWeek) {
+  initialAvailability[day] = "Unacceptable";
+}
 export default function Profile_Availability({ profile }) {
   console.log("Profile = ", profile);
 
@@ -84,7 +86,8 @@ export default function Profile_Availability({ profile }) {
         );
         const fetchedData = response.data;
         if (fetchedData) {
-          console.log(`fetchedData = ${fetchedData}`);
+          throw new Error("Test error");
+          console.log(`fetchedData availability = ${fetchedData}`);
           localStorage.setItem("availabilityData", JSON.stringify(fetchedData));
           // Assuming `fetchedData` is an array of the same shape as `availability`
           setavailability(fetchedData);
