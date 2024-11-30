@@ -47,11 +47,12 @@ const Preference = {
 // Initial structure for availability
 const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 const initialAvailability = {};
-for (const day of daysOfWeek) {
-  initialAvailability[day] = "Unacceptable";
-}
+daysOfWeek.forEach((day) => {
+  initialAvailability[day] = Array(times.length).fill("Unacceptable");
+});
+
 export default function Profile_Availability({ profile }) {
-  console.log("Profile = ", profile);
+  console.log("Givenchy Profile = ", profile);
 
   const { username, setUsername } = useUser();
 
@@ -86,7 +87,6 @@ export default function Profile_Availability({ profile }) {
         );
         const fetchedData = response.data;
         if (fetchedData) {
-          throw new Error("Test error");
           console.log(`fetchedData availability = ${fetchedData}`);
           localStorage.setItem("availabilityData", JSON.stringify(fetchedData));
           // Assuming `fetchedData` is an array of the same shape as `availability`
@@ -99,7 +99,6 @@ export default function Profile_Availability({ profile }) {
         console.error("Error fetching availability:", error);
       }
     };
-
     fetchAvailability();
   }, [profile]);
 
@@ -115,10 +114,10 @@ export default function Profile_Availability({ profile }) {
 
   const getavailabilityStyle = (dayIndex, timeIndex) => {
     // Apply special style for disabled cell due to UU hour conflict (TR 11 AM - 12 PM)
-    if (dayIndex === 1 && timeIndex === 2) {
+    if (dayIndex === "Tuesday" && timeIndex === 2) {
       return styles.disabled;
     }
-
+    console.log(`style availability = ${availability}`);
     return availability[dayIndex][timeIndex] === Preference.UNACCEPTABLE
       ? styles.unacceptable
       : availability[dayIndex][timeIndex] === Preference.PREFERRED
@@ -129,7 +128,7 @@ export default function Profile_Availability({ profile }) {
   };
 
   const getavailabilityIcon = (dayIndex, timeIndex) => {
-    if (dayIndex === 1 && timeIndex === 2) {
+    if (dayIndex === "Tuesday" && timeIndex === 2) {
       return "Conflict (UU Hour)"; // Display 'N/A' for the disabled cell
     }
 
@@ -142,18 +141,33 @@ export default function Profile_Availability({ profile }) {
       : "";
   };
 
-  const toggleavailability = (dayIndex, timeIndex) => {
+  const toggleAvailability = (dayIndex, timeIndex) => {
+    console.log(
+      `toggleAvailability dayIndex = ${dayIndex}, timeIndex = ${timeIndex}`
+    );
+
     // Prevent toggling for the disabled slot
-    if (dayIndex === 1 && timeIndex === 2) {
+    if (dayIndex === "Tuesday" && timeIndex === 2) {
       return; // Do nothing for the TR slot between 11 AM - 12 PM
     }
 
-    const newavailability = [...availability];
-    newavailability[dayIndex][timeIndex] = getNewAvailability(
-      newavailability[dayIndex][timeIndex]
+    // Create a new availability object to avoid mutating state directly
+    const newAvailability = { ...availability };
+
+    // Create a new array for the specific day to avoid mutation
+    newAvailability[dayIndex] = [...newAvailability[dayIndex]];
+
+    // Update the specific time slot
+    newAvailability[dayIndex][timeIndex] = getNewAvailability(
+      newAvailability[dayIndex][timeIndex]
     );
-    console.log(`new avail = ${newavailability}`);
-    setavailability(newavailability);
+
+    console.log(
+      `After: newAvailability[${dayIndex}][${timeIndex}] = ${newAvailability[dayIndex][timeIndex]}`
+    );
+
+    // Update state with the new availability object
+    setavailability(newAvailability);
   };
 
   const processPrefs = async (e) => {
@@ -163,25 +177,27 @@ export default function Profile_Availability({ profile }) {
       setSaveMessage("");
     }, 5000); // Message disappears after 3 seconds
     const prefs = [];
+    //iterate over each day in days array
     for (let dayIndex = 0; dayIndex < days.length; dayIndex++) {
       for (let timeIndex = 0; timeIndex < times.length; timeIndex++) {
-        if (availability[dayIndex][timeIndex] === Preference.PREFERRED) {
+        let curr_day = days[dayIndex];
+        if (availability[curr_day][timeIndex] === Preference.PREFERRED) {
           prefs.push({
-            day: days[dayIndex],
+            day: curr_day,
             time: times[timeIndex],
             preference: "Preferred",
           });
         } else if (
-          availability[dayIndex][timeIndex] === Preference.ACCEPTABLE
+          availability[curr_day][timeIndex] === Preference.ACCEPTABLE
         ) {
           prefs.push({
-            day: days[dayIndex],
+            day: curr_day,
             time: times[timeIndex],
             preference: "Acceptable",
           });
         } else {
           prefs.push({
-            day: days[dayIndex],
+            day: curr_day,
             time: times[timeIndex],
             preference: "Unacceptable",
           });
@@ -240,11 +256,11 @@ export default function Profile_Availability({ profile }) {
               </th>
               {days.map((day, dayIndex) => (
                 <td
-                  key={dayIndex}
-                  className={getavailabilityStyle(dayIndex, timeIndex)}
-                  onClick={() => toggleavailability(dayIndex, timeIndex)}
+                  key={day}
+                  className={getavailabilityStyle(day, timeIndex)}
+                  onClick={() => toggleAvailability(day, timeIndex)}
                 >
-                  {getavailabilityIcon(dayIndex, timeIndex)}
+                  {getavailabilityIcon(day, timeIndex)}
                 </td>
               ))}
             </tr>

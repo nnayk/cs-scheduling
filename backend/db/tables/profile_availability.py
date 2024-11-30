@@ -38,6 +38,7 @@ def get_availability(user_id, profile,day=None):
     logging.debug(f"Getting availability for user {user_id} in profile {profile}")
     profile_id = profiles.get_profile_id(user_id, profile)
     logging.debug(f"Profile id = {profile_id}")
+    print(f'yaro profile = {profile_id}')
     if not profile_id:
         raise ValueError(f"Profile {profile} does not exist for user {user_id}")
     conn, cur = db_config.connect()
@@ -63,11 +64,15 @@ def get_availability(user_id, profile,day=None):
             return [["Unacceptable"] * 16]*5
 
         TOTAL_COLS = NUM_TIMESLOTS + 3  # 3 for user_id and profile and day
+        print("PROFILE DATA FETCHED!!!")
         assert len(data) == 5 and len(data[0]) == TOTAL_COLS and len(data[1]) == TOTAL_COLS, \
             f"Unexpected data format for data: length = {len(data)}, data[0] = {data[0]}, data[1] = {data[1]}"
 
-        prefs = {data[2]:data[i][3:] for i in range(5)}
-        logging.debug(f"prefs = {prefs}")
+        prefs = {}
+        for i in range(5):
+            prefs[data[i][2]] = data[i][3:]
+        # prefs = {data[2]:data[i][3:] for i in range(5)}
+        logging.debug(f"profile prefs = {prefs}")
         # print(f'prefs={prefs}')
         logging.debug(f"data type = {type(prefs)}")
         print(f"data type = {type(prefs)}")
