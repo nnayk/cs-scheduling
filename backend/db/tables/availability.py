@@ -72,7 +72,9 @@ def get_availability(user_id, quarter,day=None):
         assert len(data) == 5 and len(data[0]) == TOTAL_COLS and len(data[1]) == TOTAL_COLS, \
             f"Unexpected data format for data: length = {len(data)}, data[0] = {data[0]}, data[1] = {data[1]}"
 
-        prefs = [data[i][3:] for i in range(5)]
+        prefs = {}
+        for i in range(5):
+            prefs[data[i][2]] = data[i][3:]
         logging.debug(f"prefs = {prefs}")
         print(f'prefs={prefs}')
         return prefs

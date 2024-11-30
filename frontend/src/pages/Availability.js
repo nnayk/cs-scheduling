@@ -45,9 +45,10 @@ const Preference = {
 };
 
 // Initial structure for availability
-const initialAvailability = Array(days.length)
-  .fill(null)
-  .map(() => Array(times.length).fill("Unacceptable"));
+const initialAvailability = {};
+days.forEach((day) => {
+  initialAvailability[day] = Array(times.length).fill("Unacceptable");
+});
 
 export default function Quarter_Availability({ quarter, profile }) {
   console.log("Quarter = ", quarter);
@@ -113,10 +114,10 @@ export default function Quarter_Availability({ quarter, profile }) {
 
   const getavailabilityStyle = (dayIndex, timeIndex) => {
     // Apply special style for disabled cell due to UU hour conflict (TR 11 AM - 12 PM)
-    if (dayIndex === 1 && timeIndex === 2) {
+    if (dayIndex === "Tuesday" && timeIndex === 2) {
       return styles.disabled;
     }
-
+    console.log(`availability[${dayIndex}] = ${availability[dayIndex]}`);
     return availability[dayIndex][timeIndex] === Preference.UNACCEPTABLE
       ? styles.unacceptable
       : availability[dayIndex][timeIndex] === Preference.PREFERRED
@@ -127,7 +128,7 @@ export default function Quarter_Availability({ quarter, profile }) {
   };
 
   const getavailabilityIcon = (dayIndex, timeIndex) => {
-    if (dayIndex === 1 && timeIndex === 2) {
+    if (dayIndex === "Tuesday" && timeIndex === 2) {
       return "Conflict (UU Hour)"; // Display 'N/A' for the disabled cell
     }
 
@@ -142,11 +143,12 @@ export default function Quarter_Availability({ quarter, profile }) {
 
   const toggleavailability = (dayIndex, timeIndex) => {
     // Prevent toggling for the disabled slot
-    if (dayIndex === 1 && timeIndex === 2) {
+    if (dayIndex === "Tuesday" && timeIndex === 2) {
       return; // Do nothing for the TR slot between 11 AM - 12 PM
     }
 
-    const newavailability = [...availability];
+    const newavailability = { ...availability };
+    newavailability[dayIndex] = [...availability[dayIndex]];
     newavailability[dayIndex][timeIndex] = getNewAvailability(
       newavailability[dayIndex][timeIndex]
     );
@@ -163,23 +165,24 @@ export default function Quarter_Availability({ quarter, profile }) {
     const prefs = [];
     for (let dayIndex = 0; dayIndex < days.length; dayIndex++) {
       for (let timeIndex = 0; timeIndex < times.length; timeIndex++) {
-        if (availability[dayIndex][timeIndex] === Preference.PREFERRED) {
+        let curr_day = days[dayIndex];
+        if (availability[curr_day][timeIndex] === Preference.PREFERRED) {
           prefs.push({
-            day: days[dayIndex],
+            day: curr_day,
             time: times[timeIndex],
             preference: "Preferred",
           });
         } else if (
-          availability[dayIndex][timeIndex] === Preference.ACCEPTABLE
+          availability[curr_day][timeIndex] === Preference.ACCEPTABLE
         ) {
           prefs.push({
-            day: days[dayIndex],
+            day: curr_day,
             time: times[timeIndex],
             preference: "Acceptable",
           });
         } else {
           prefs.push({
-            day: days[dayIndex],
+            day: curr_day,
             time: times[timeIndex],
             preference: "Unacceptable",
           });
@@ -236,11 +239,11 @@ export default function Quarter_Availability({ quarter, profile }) {
               </th>
               {days.map((day, dayIndex) => (
                 <td
-                  key={dayIndex}
-                  className={getavailabilityStyle(dayIndex, timeIndex)}
-                  onClick={() => toggleavailability(dayIndex, timeIndex)}
+                  key={day}
+                  className={getavailabilityStyle(day, timeIndex)}
+                  onClick={() => toggleavailability(day, timeIndex)}
                 >
-                  {getavailabilityIcon(dayIndex, timeIndex)}
+                  {getavailabilityIcon(day, timeIndex)}
                 </td>
               ))}
             </tr>
