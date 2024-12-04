@@ -61,7 +61,7 @@ def get_availability(user_id, profile,day=None):
         logging.debug(f"Data = {data}")
         
         if not data:
-            return [["Unacceptable"] * 16]*5
+            return {day: ["Unacceptable"] * NUM_TIMESLOTS for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']}
 
         TOTAL_COLS = NUM_TIMESLOTS + 3  # 3 for user_id and profile and day
         print("PROFILE DATA FETCHED!!!")

@@ -258,7 +258,7 @@ export default function Profile_Availability({ profile }) {
                 <td
                   key={day}
                   className={getavailabilityStyle(day, timeIndex)}
-                  onClick={() => toggleavailability(day, timeIndex)}
+                  onClick={() => toggleAvailability(day, timeIndex)}
                 >
                   {getavailabilityIcon(day, timeIndex)}
                 </td>
