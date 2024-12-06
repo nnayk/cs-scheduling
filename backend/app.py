@@ -126,7 +126,7 @@ def create_app(config_class=Config):
             app.logger.debug(f"Scope = {scope}")
             if scope != "agreement" and scope != "written":
                 return jsonify("Invalid scope"),400
-        app.logger.debug(f"User = {user}, quarter = {quarter}") 
+        app.logger.debug(f"User = {user}, quarter = {quarter},profile = {profile}") 
         try:
             # answers = db.get_answers(user,quarter)
             answers = {}

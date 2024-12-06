@@ -45,7 +45,7 @@ def get_agreement_answers(user_id, profile):
         raise ValueError(f"Profile {profile} does not exist for user {user_id}")
     conn, cur = db_config.connect()
     try:
-        logging.debug("inside get_agreement_answers")
+        logging.debug("inside profile_get_agreement_answers")
         sql = f"""
         SELECT question, category, agreement
         FROM {AGREEMENT_ANSWERS_TABLE}
