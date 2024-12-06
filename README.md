@@ -20,9 +20,7 @@ Poly Prefs is a full stack web application to allow professors at Cal Poly to ea
 
 ## Installation and Setup
 
-
 Make sure you have [Python](https://www.python.org/downloads/) and [Node](https://nodejs.org/en/download) environments set up (this includes npm and pip3). The latest stable releases should be fine as of December 2024, but this project uses Node v20 and Python 3.10.
-
 
 ### Installing the frontend packages
 
@@ -30,7 +28,6 @@ From root:
 
 - `cd Frontend`
 - `npm install`
-
 
 ### Installing the backend packages
 
@@ -43,18 +40,17 @@ From root:
 - `cd Backend`
 - `pip3 install -r requirements.txt`
 
-
 ### Running the app locally
 
 Backend:
 From root:
 
 - `cd Backend`
-- `flask run`
-
+- `python -m flask run`
 
 Frontend:
 From root:
 
 - `cd Frontend`
+- Create a file `.env.local` and add the following env vars:
 - `npm run dev`
