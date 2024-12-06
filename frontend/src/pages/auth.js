@@ -16,8 +16,6 @@ export async function isAuthenticated(token) {
         },
       }
     );
-    console.log("response details:");
-    console.log(response.data);
     return response.data.authenticated;
   } catch (error) {
     console.error("Error during user verification:", error);

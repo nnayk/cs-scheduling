@@ -57,8 +57,16 @@ const Quarter_Questions = ({ quarter, profile }) => {
 
   return (
     <div>
-      <Agreement_Questions onChange={setAgreementAnswers} quarter={quarter} />
-      <Written_Questions onChange={setWrittenAnswers} quarter={quarter} />
+      <Agreement_Questions
+        onChange={setAgreementAnswers}
+        quarter={quarter}
+        profile={profile}
+      />
+      <Written_Questions
+        onChange={setWrittenAnswers}
+        quarter={quarter}
+        profile={profile}
+      />
       <button onClick={processAnswers} className={styles.submitButton}>
         Save Preferences
       </button>

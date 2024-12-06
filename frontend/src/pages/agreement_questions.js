@@ -21,6 +21,12 @@ const initialPreferences = {
   },
 };
 const Agreement_Questions = ({ onChange, quarter, profile }) => {
+  console.log(
+    "in Agreement_Questions, Quarter = ",
+    quarter,
+    "Profile = ",
+    profile
+  );
   const [preferences, setPreferences] = useState({
     oneLabPreference: { MWF: null, TR: null },
     twoLabPreference: { "2 MWF": null, "1 MWF, 1 TR": null, "2 TR": null },
@@ -52,12 +58,6 @@ const Agreement_Questions = ({ onChange, quarter, profile }) => {
     console.log("fetching agreement answers");
     const fetchAnswers = async () => {
       try {
-        // const storedData = localStorage.getItem("availabilityData");
-        // if (storedData) {
-        //   console.log("Using stored data = ", storedData);
-        //   setavailability(JSON.parse(storedData));
-        //   return;
-        // }
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/questions?scope=agreement`,
           {
@@ -76,7 +76,6 @@ const Agreement_Questions = ({ onChange, quarter, profile }) => {
             2
           )}`
         );
-        // console.log(`fetchedData agreement answers = ${fetchedData}`);
         if (Object.keys(fetchedData).length > 0) {
           assert(Object.keys(fetchedData).length === 5),
             "Expected 5 categories, got " + Object.keys(fetchedData).length;
@@ -92,21 +91,10 @@ const Agreement_Questions = ({ onChange, quarter, profile }) => {
           let index = 0;
           // loop through each value in fetchedData and setPreferences
           for (const [key, value] of Object.entries(fetchedData)) {
-            console.log("key = ", key);
-            console.log("value = ", value);
+            // console.log("key = ", key);
+            // console.log("value = ", value);
             prefs[scheduleKeys[index]] = value;
             index++;
-            // for (const [schedule, preference] of Object.entries(value)) {
-            //   console.log("schedule = ", schedule);
-            //   console.log("preference = ", preference);
-            //   setPreferences((prevPreferences) => ({
-            //     ...prevPreferences,
-            //     [key]: {
-            //       ...prevPreferences[key],
-            //       [schedule]: preference,
-            //     },
-            //   }));
-            // }
           }
           console.log("prefs = ", prefs);
           setPreferences(prefs);

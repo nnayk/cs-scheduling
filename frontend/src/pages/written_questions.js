@@ -27,6 +27,12 @@ const initialAnswers = questions.reduce((acc, question) => {
 }, {});
 
 const Written_Questions = ({ onChange, quarter, profile }) => {
+  console.log(
+    "in Written_Questions, Quarter = ",
+    quarter,
+    "Profile = ",
+    profile
+  );
   const [answers, setAnswers] = useState(initialAnswers);
   const handleAnswerChange = (id, answer) => {
     setAnswers((prevAnswers) => ({

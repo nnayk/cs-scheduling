@@ -51,7 +51,12 @@ days.forEach((day) => {
 });
 
 export default function Quarter_Availability({ quarter, profile }) {
-  console.log("Quarter = ", quarter);
+  console.log(
+    "in Quarter_Availability, Quarter = ",
+    quarter,
+    "Profile = ",
+    profile
+  );
 
   const { username, setUsername } = useUser();
 
@@ -63,17 +68,9 @@ export default function Quarter_Availability({ quarter, profile }) {
     initialAvailability
   );
 
-  console.log("TESTTTT!");
-
   useEffect(() => {
     const fetchAvailability = async () => {
       try {
-        // const storedData = localStorage.getItem("availabilityData");
-        // if (storedData && storedData.length > 0) {
-        //   console.log("Using stored data = ", storedData);
-        //   setavailability(JSON.parse(storedData));
-        //   return;
-        // }
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/availability`,
           {
@@ -86,7 +83,7 @@ export default function Quarter_Availability({ quarter, profile }) {
         );
         const fetchedData = response.data;
         if (fetchedData) {
-          console.log(`fetchedData availability = ${fetchedData}`);
+          // console.log(`fetchedData availability = ${fetchedData}`);
           localStorage.setItem("availabilityData", JSON.stringify(fetchedData));
           // Assuming `fetchedData` is an array of the same shape as `availability`
           setavailability(fetchedData);
@@ -117,7 +114,7 @@ export default function Quarter_Availability({ quarter, profile }) {
     if (dayIndex === "Tuesday" && timeIndex === 2) {
       return styles.disabled;
     }
-    console.log(`availability[${dayIndex}] = ${availability[dayIndex]}`);
+    // console.log(`availability[${dayIndex}] = ${availability[dayIndex]}`);
     return availability[dayIndex][timeIndex] === Preference.UNACCEPTABLE
       ? styles.unacceptable
       : availability[dayIndex][timeIndex] === Preference.PREFERRED
@@ -152,7 +149,7 @@ export default function Quarter_Availability({ quarter, profile }) {
     newavailability[dayIndex][timeIndex] = getNewAvailability(
       newavailability[dayIndex][timeIndex]
     );
-    console.log(`new avail = ${newavailability}`);
+    // console.log(`new avail = ${newavailability}`);
     setavailability(newavailability);
   };
 
@@ -204,7 +201,7 @@ export default function Quarter_Availability({ quarter, profile }) {
       );
       if (response.status == 200) setSaveMessage("Availability saved!");
       else setSaveMessage("Failed to save availability");
-      console.log(prefs);
+      // console.log(prefs);
     } catch (error) {
       console.error("Error saving availability:", error);
       setSaveMessage("Failed to save availability. Try again later.");

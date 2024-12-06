@@ -87,7 +87,7 @@ export default function Profile_Availability({ profile }) {
         );
         const fetchedData = response.data;
         if (fetchedData) {
-          console.log(`fetchedData availability = ${fetchedData}`);
+          // console.log(`fetchedData availability = ${fetchedData}`);
           localStorage.setItem("availabilityData", JSON.stringify(fetchedData));
           // Assuming `fetchedData` is an array of the same shape as `availability`
           setavailability(fetchedData);
@@ -117,7 +117,7 @@ export default function Profile_Availability({ profile }) {
     if (dayIndex === "Tuesday" && timeIndex === 2) {
       return styles.disabled;
     }
-    console.log(`style availability = ${availability}`);
+    // console.log(`style availability = ${availability}`);
     return availability[dayIndex][timeIndex] === Preference.UNACCEPTABLE
       ? styles.unacceptable
       : availability[dayIndex][timeIndex] === Preference.PREFERRED
@@ -162,9 +162,9 @@ export default function Profile_Availability({ profile }) {
       newAvailability[dayIndex][timeIndex]
     );
 
-    console.log(
-      `After: newAvailability[${dayIndex}][${timeIndex}] = ${newAvailability[dayIndex][timeIndex]}`
-    );
+    // console.log(
+    //   `After: newAvailability[${dayIndex}][${timeIndex}] = ${newAvailability[dayIndex][timeIndex]}`
+    // );
 
     // Update state with the new availability object
     setavailability(newAvailability);
@@ -204,7 +204,7 @@ export default function Profile_Availability({ profile }) {
         }
       }
     }
-    console.log("prefs = ", prefs);
+    // console.log("prefs = ", prefs);
     localStorage.setItem("availabilityData", JSON.stringify(availability));
     try {
       const response = await axios.post(
