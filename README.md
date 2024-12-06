@@ -53,4 +53,5 @@ From root:
 
 - `cd Frontend`
 - Create a file `.env.local` and add the following env vars:
+  - NEXT_PUBLIC_BACKEND_URL `b`
 - `npm run dev`
