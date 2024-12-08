@@ -4,11 +4,17 @@ const BACKEND_URL = process.env.BACKEND_URL;
 import Cookies from "js-cookie";
 import { UserProvider } from "./UserContext";
 import { isAuthenticated } from "./auth";
+
 export default function InitialLanding() {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-50">
+      {/* Add the green title with two lines */}
+      <h1 className="text-center text-9xl font-bold text-green-900 mb-8">
+        <span className="block">Welcome to</span>
+        <span className="block">Poly Prefs</span>
+      </h1>
+
       <div>
-        <h1>My Next.js Page</h1>
         <Image
           src="/logo.png" // The path to your image
           alt="Description of the image" // Alternative text for the image
@@ -20,12 +26,12 @@ export default function InitialLanding() {
 
       <div className="space-y-4">
         <Link href="/register" passHref>
-          <button className="inline-block px-6 py-2 text-sm font-medium leading-6 text-center text-white uppercase transition bg-blue-500 rounded shadow ripple hover:shadow-lg focus:outline-none hover:bg-blue-600">
+          <button className="inline-block px-6 py-2 text-sm font-medium leading-6 text-center text-white uppercase transition bg-green-900 rounded shadow ripple hover:shadow-lg focus:outline-none hover:bg-green-900">
             Sign Up
           </button>
         </Link>
         <Link href="/login" passHref>
-          <button className="inline-block px-6 py-2 text-sm font-medium leading-6 text-center text-blue-600 uppercase transition border border-blue-500 rounded ripple hover:text-white hover:bg-blue-500 focus:outline-none">
+          <button className="inline-block px-6 py-2 text-sm font-medium leading-6 text-center text-green-900 uppercase transition border border-green-900 rounded ripple hover:text-white hover:bg-green-900 focus:outline-none">
             Log In
           </button>
         </Link>

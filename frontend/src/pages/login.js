@@ -119,14 +119,14 @@ const Login = () => {
 
           <button
             type="submit"
-            className="bg-blue-500 text-white rounded p-2 hover:bg-blue-600 transition duration-200 mb-4"
+            className="bg-green-900 text-white rounded p-2 hover:bg-green-900 transition duration-200 mb-4"
             onClick={handleSubmit}
           >
             Login
           </button>
           <p className="text-gray-600 text-sm">
             Don&apos;t have an account yet?{" "}
-            <Link href="/register" className="text-blue-500 hover:underline">
+            <Link href="/register" className="text-green-900 hover:underline">
               Sign up!
             </Link>
           </p>

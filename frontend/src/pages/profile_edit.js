@@ -1,12 +1,7 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import styles from "./profile_edit_dropdown.module.css"; // Reuse styles
-import Cookie from "js-cookie";
 import { useRouter } from "next/router";
-import { PROFILES } from "../constants/routes.js";
 import Profile_Availability from "./profile_availability.js";
 import Profile_Quarter_Questions from "./profile_questions";
-import Profile_Written_Questions from "./profile_written_questions";
+import { isAuthenticated } from "./auth";
 
 const EditProfile = () => {
   const { profile } = useRouter().query;
@@ -19,4 +14,24 @@ const EditProfile = () => {
   );
 };
 
+export async function getServerSideProps(context) {
+  const { req } = context;
+  const token = req.cookies["token"];
+  console.log("checking if user is authenticated...");
+  if (!(await isAuthenticated(token))) {
+    console.log("user is not authenticated, redirecting to login page...");
+    // If the user is not authenticated, redirect them to the login page
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  // If the user is authenticated, render the availability page
+  return {
+    props: {}, // Will be passed to the page component as props
+  };
+}
 export default EditProfile;

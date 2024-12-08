@@ -4,6 +4,7 @@ import styles from "./profile_edit_dropdown.module.css"; // Reuse styles
 import Cookie from "js-cookie";
 import { useRouter } from "next/router";
 import { PROFILES } from "../constants/routes.js";
+import { isAuthenticated } from "./auth";
 
 export default function EditProfileDropdown() {
   const [profiles, setProfiles] = useState([]); // List of profiles
@@ -84,4 +85,25 @@ export default function EditProfileDropdown() {
       </div>
     </div>
   );
+}
+
+export async function getServerSideProps(context) {
+  const { req } = context;
+  const token = req.cookies["token"];
+  console.log("checking if user is authenticated...");
+  if (!(await isAuthenticated(token))) {
+    console.log("user is not authenticated, redirecting to login page...");
+    // If the user is not authenticated, redirect them to the login page
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  // If the user is authenticated, render the availability page
+  return {
+    props: {}, // Will be passed to the page component as props
+  };
 }
