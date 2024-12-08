@@ -8,17 +8,20 @@ import { isAuthenticated } from "./auth";
 const questions = [
   {
     id: 1,
-    text: "6. Are there constraints you have that don't fit this format?",
+    text: "6. Are there constraints you have that don't fit this format? (500 chars max)",
   },
   {
     id: 2,
-    text: "7. For each of the courses you are teaching in the specified quarter, do you have a room requirement? (Note: scheduling lectures in lab rooms for CSSE from 8am to 3pm is very difficult due to space constraints).",
+    text: "7. For each of the courses you are teaching in the specified quarter, do you have a room requirement? (Note: scheduling lectures in lab rooms for CSSE from 8am to 3pm is very difficult due to space constraints). (500 chars max)",
   },
   {
     id: 3,
-    text: "8. For the courses you are teaching in the specified quarter, do you have a room preference? You can include whiteboard vs blackboard preference here.",
+    text: "8. For the courses you are teaching in the specified quarter, do you have a room preference? You can include whiteboard vs blackboard preference here. (500 chars max)",
   },
-  { id: 4, text: "9. Any other thoughts/questions/comments/concerns?" },
+  {
+    id: 4,
+    text: "9. Any other thoughts/questions/comments/concerns? (500 chars max)",
+  },
 ];
 
 // Initial structure for answers

@@ -1,18 +1,17 @@
 import styles from "./dropdown.module.css";
 import { isAuthenticated } from "./auth";
 
+const QUARTERS = ["fall 2024", "winter 2025", "spring 2025"];
 const Quarter_DropDown = ({ selectedQuarter, handleQuarterChange }) => {
-  const foo = (e) => {
-    console.log("CHANED TO", e.target.value);
-    handleQuarterChange(e.target.value);
-  };
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Required: Select a quarter</h1>
-      <select className={styles.select} onChange={foo}>
-        <option value="fall 2024">Fall 2024</option>
-        <option value="winter 2025">Winter 2025</option>
-        <option value="spring 2025">Spring 2025</option>
+      <select className={styles.select} onChange={handleQuarterChange}>
+        {QUARTERS.map((quarter) => (
+          <option key={quarter} value={quarter}>
+            {quarter}
+          </option>
+        ))}
       </select>
     </div>
   );
