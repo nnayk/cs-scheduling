@@ -35,6 +35,8 @@ I recommend creating a virtual environment to limit the installation scope of th
 
 `python -m venv .venv`
 
+Activate the virtual environment (ex. `source ./venv/bin/activate` on *Nix machines)
+
 From root:
 
 - `cd Backend`
