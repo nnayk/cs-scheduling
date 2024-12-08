@@ -85,6 +85,7 @@ export default function CreateProfile() {
             onChange={handleInputChange}
             placeholder="Enter profile name"
             className={styles.input}
+            maxLength={50}
             required
           />
           {error && <p className={styles.error}>{error}</p>}

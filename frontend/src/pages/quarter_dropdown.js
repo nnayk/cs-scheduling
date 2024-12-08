@@ -3,10 +3,13 @@ import { isAuthenticated } from "./auth";
 
 const QUARTERS = ["fall 2024", "winter 2025", "spring 2025"];
 const Quarter_DropDown = ({ selectedQuarter, handleQuarterChange }) => {
+  const passQuarter = (e) => {
+    handleQuarterChange(e.target.value);
+  };
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Required: Select a quarter</h1>
-      <select className={styles.select} onChange={handleQuarterChange}>
+      <select className={styles.select} onChange={passQuarter}>
         {QUARTERS.map((quarter) => (
           <option key={quarter} value={quarter}>
             {quarter}
