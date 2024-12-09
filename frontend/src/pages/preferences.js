@@ -7,10 +7,13 @@ import styles from "./preferences.module.css";
 import Cookie from "js-cookie";
 import { useEffect } from "react";
 import axios from "axios";
+import { QUARTERS } from "../constants/consts";
 
 const Preferences = () => {
+  console.log("inside Preferences");
+  console.log(`QUARTERS = ${QUARTERS}`);
   // State to store the selected quarter
-  const [selectedQuarter, setSelectedQuarter] = useState("fall 2024");
+  const [selectedQuarter, setSelectedQuarter] = useState(QUARTERS[0]);
   const [profiles, setProfiles] = useState([]); // List of profiles
   const [selectedProfile, setSelectedProfile] = useState(""); // Selected profile
   const [error, setError] = useState("");

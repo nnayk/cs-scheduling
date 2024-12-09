@@ -1,7 +1,6 @@
 import styles from "./dropdown.module.css";
 import { isAuthenticated } from "./auth";
-
-const QUARTERS = ["fall 2024", "winter 2025", "spring 2025"];
+import { QUARTERS } from "../constants/consts";
 const Quarter_DropDown = ({ selectedQuarter, handleQuarterChange }) => {
   const passQuarter = (e) => {
     handleQuarterChange(e.target.value);
