@@ -1,11 +1,11 @@
 import db.db_config as db_config
 import logging
-import profiles
+import db.tables.profiles as profiles
 
 # Constants
 AGREEMENT_ANSWERS_TABLE = "PROFILE_AGREEMENT_ANSWERS"
 
-def createAgreementAnswersTable():
+def createProfileAgreementAnswersTable():
     print("Creating agreement answers table")
     conn, cur = db_config.connect()
     try:

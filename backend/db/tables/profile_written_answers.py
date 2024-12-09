@@ -1,6 +1,6 @@
 import db.db_config as db_config
 import logging
-import profiles
+import db.tables.profiles as profiles
 
 # Constants
 WRITTEN_ANSWERS_TABLE = "PROFILE_WRITTEN_ANSWERS"

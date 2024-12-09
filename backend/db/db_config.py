@@ -1,9 +1,19 @@
 import psycopg2 as pg
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+DB_HOST = os.getenv("DB_HOST")
+DB_NAME = os.getenv("DB_NAME")
+DB_USERNAME = os.getenv("DB_USERNAME")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_PORT = os.getenv("DB_PORT")
 
 # Connect to the database
 def connect():
     print("Connecting to DB")
-    conn = pg.connect(host="localhost",dbname="postgres",user="postgres",password="lillu178!",port=5432)
+    conn = pg.connect(host=DB_HOST,dbname=DB_NAME,user=DB_USERNAME,password=DB_PASSWORD,port=DB_PORT)
     cur = conn.cursor() 
     print("Connected to DB")
     return conn, cur

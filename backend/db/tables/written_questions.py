@@ -11,7 +11,7 @@ QUESTIONS = [
     "Any other thoughts/questions/comments/concerns?",
 ]
 
-def createQuestionsTable():
+def createWrittenQuestionsTable():
     conn, cur = db_config.connect()
     try:
         # Create the questions table if it doesn't exist

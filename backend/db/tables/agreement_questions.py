@@ -15,7 +15,7 @@ QUESTIONS = [
 
 conn,cur = db_config.connect()
 
-def createQuestionsTable():
+def createAgreementQuestionsTable():
     print("Creating questions table")
     try:
         sql_create = f"""CREATE TABLE IF NOT EXISTS {QUESTIONS_TABLE} (

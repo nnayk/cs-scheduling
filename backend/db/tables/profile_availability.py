@@ -1,7 +1,7 @@
 import db.db_config as db_config
 import logging
-import profiles
-from db_constants import time_slots_cols
+import db.tables.profiles as profiles
+from db.tables.db_constants import time_slots_cols
 
 # Constants
 NUM_TIMESLOTS = 16

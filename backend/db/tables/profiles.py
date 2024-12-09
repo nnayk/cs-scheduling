@@ -1,6 +1,6 @@
 import logging
 import db.db_config as db_config
-from db_constants import time_slots
+from db.tables.db_constants import time_slots
 
 PROFILES_TABLE = "profiles"
 
