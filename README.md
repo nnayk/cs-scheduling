@@ -20,7 +20,15 @@ Poly Prefs is a full stack web application to allow professors at Cal Poly to ea
 
 ## Installation and Setup
 
-Make sure you have [Python](https://www.python.org/downloads/) and [Node](https://nodejs.org/en/download) environments set up (this includes npm and pip3). The latest stable releases should be fine as of December 2024, but this project uses Node v20 and Python 3.11.
+Make sure you have [Python](https://www.python.org/downloads/), [PostgreSql](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads), and [Node](https://nodejs.org/en/download) environments set up (this includes pip and npm). The latest stable releases should be fine as of December 2024, but this project uses Python 3.11, PostgreSql 14.13, and Node v20.
+
+To setup Postgres I used the Edb installer (hyperlinked above). I used all the defaults except avoided installing `Stack Builder` (just unchecked this option). Since I was on a Mac I just ran `brew install postgresql` for the sys headers + postgres CLI tools.
+
+Verify that the installations succeded with the following CLI commands:
+
+1. `python3 --version`
+2. `npm --version`
+3. `postgres --version`
 
 ## Frontend setup
 
@@ -103,7 +111,7 @@ Once you have followed the PgAdmin setup instructions you should have a master p
 
    1. In a python shell, use the script backend/db/tables/quarters.py to ADD NEW quarters or delete existing ones:
    2. Note: (Assuming cwd is backend):
-      * from db.tables.quarters import insertQuarters
+      * `from db.tables.quarters import insertQuarters`
       * insertQuarters(`<python list of quarters as strings>`) (ex. insertQuarters(["fall 2023","winter 2024","spring 2024"])
       * Verify in Pgadmin that the quarters table contains rows for the new quarters
         NOTE: To delete quarters the process is similar except you would import and invoke deleteQuarters instead. This will delete all records in all tables for each quarter to be deleted.**
