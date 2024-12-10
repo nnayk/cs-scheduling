@@ -4,7 +4,7 @@ import "tailwindcss/tailwind.css";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Cookies from "js-cookie";
-import { useUser } from "./UserContext";
+import { useUser } from "../context/UserContext";
 import { isAuthenticated } from "./auth";
 
 const Login = () => {
@@ -53,7 +53,11 @@ const Login = () => {
       return response;
     } catch (error) {
       console.log(`error=${error},${error.response}`);
-      if (error.response) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
         let msg = error.response.data.message.toLowerCase();
         if (msg.includes("missing")) {
           if (msg.includes("email")) {
@@ -74,7 +78,7 @@ const Login = () => {
           setemailError("");
         }
       } else {
-        setServerError("");
+        setServerError("Error logging in.");
         // TODO: redirect to error pages
       }
       return false;

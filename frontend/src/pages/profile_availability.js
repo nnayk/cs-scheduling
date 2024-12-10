@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import styles from "./availability.module.css";
 import axios from "axios";
 import { isAuthenticated } from "./auth";
-import { useUser } from "./UserContext";
+import { useUser } from "../context/UserContext";
 import Cookie from "js-cookie";
 
 // const days = ["MWF Schedule", "TR Schedule"];

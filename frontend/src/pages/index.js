@@ -1,8 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 const BACKEND_URL = process.env.BACKEND_URL;
-import Cookies from "js-cookie";
-import { UserProvider } from "./UserContext";
 import { isAuthenticated } from "./auth";
 
 export default function InitialLanding() {
