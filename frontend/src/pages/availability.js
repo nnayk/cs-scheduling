@@ -190,7 +190,7 @@ export default function Quarter_Availability({ quarter, profile }) {
     localStorage.setItem("availabilityData", JSON.stringify(availability));
     try {
       const response = await axios.post(
-        "http://127.0.0.1:5000/availability",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/availability`,
         { prefs: prefs, quarter: quarter },
         {
           headers: {

@@ -208,7 +208,7 @@ export default function Profile_Availability({ profile }) {
     localStorage.setItem("availabilityData", JSON.stringify(availability));
     try {
       const response = await axios.post(
-        "http://127.0.0.1:5000/profile_availability",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/profile_availability`,
         { prefs: prefs, profile: profile },
         {
           headers: {

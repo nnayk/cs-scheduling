@@ -8,6 +8,8 @@ export async function isAuthenticated(token) {
   try {
     // make axios get request sending cookie.
     console.log("Token:", token);
+    const response1 = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}`);
+    console.log("response1:", response1);
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/verify_user`,
       {
