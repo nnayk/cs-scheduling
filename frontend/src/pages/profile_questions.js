@@ -12,11 +12,10 @@ const Profile_Quarter_Questions = ({ profile }) => {
   const [saveMessage, setSaveMessage] = useState("");
 
   const processAnswers = async () => {
-    // Example: Sending data to an API
     setTimeout(() => {
       console.log("setting saveMessage");
       setSaveMessage("");
-    }, 5000); // Message disappears after 3 seconds
+    }, 5000); // Message disappears after 5 seconds
     console.log("Agreement Answers:", agreementAnswers);
     console.log("Written Answers:", writtenAnswers);
     try {
@@ -41,18 +40,6 @@ const Profile_Quarter_Questions = ({ profile }) => {
       console.error("Error saving preferences:", error);
       setSaveMessage("Failed to save answers. Try again later.");
     }
-    // try {
-    //   const response = await fetch("/api/savePreferences", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify(allAnswers),
-    //   });
-    //   if (response.ok) {
-    //     console.log("Preferences saved successfully!");
-    //   }
-    // } catch (error) {
-    //   console.error("Error saving preferences:", error);
-    // }
   };
 
   return (

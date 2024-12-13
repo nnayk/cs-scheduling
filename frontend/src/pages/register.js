@@ -93,21 +93,6 @@ const Register = () => {
       <div className="bg-white p-8 rounded shadow-md w-96">
         <h2 className="text-2xl font-semibold mb-4 text-green-900">Register</h2>
         <form onSubmit={handleSubmit}>
-          {/* <div className="mb-4">
-            <label className="block text-green-900 text-sm font-medium">
-              Username
-            </label>
-            <input
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              className="w-full border rounded p-2 text-green-900"
-            />
-            {usernameError && (
-              <p className="text-red-500 text-sm">{usernameError}</p>
-            )}
-          </div> */}
           <div className="mb-4">
             <label className="block text-green-900 text-sm font-medium">
               Cal Poly Email

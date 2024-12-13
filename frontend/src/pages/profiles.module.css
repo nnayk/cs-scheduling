@@ -29,13 +29,9 @@
 }
 
 .card {
-  /* background-color: #fff; */
-  /* background-color: #cbf392; Lighter background color */
-  /* background-color: #a6cc71; */
   background: darkgreen;
   border: 1px solid #ddd;
   padding: 30px; /* Increase padding for larger profiles */
-  /* width: 450px; Make the profiles wider */
   width: 80%;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -49,13 +45,11 @@
 
 .cardTitle {
   font-size: 24px; /* Larger font size */
-  /* color: #333; */
   color: goldenrod;
 }
 
 .cardDescription {
   font-size: 16px; /* Adjusted font size for better readability */
-  /* color: #777; */
   color: goldenrod;
   margin: 15px 0; /* Increased space between description and button */
 }

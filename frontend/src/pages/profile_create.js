@@ -1,7 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
 import styles from "./profile_create.module.css";
-import Preferences from "./preferences";
 import Cookie from "js-cookie";
 import { useRouter } from "next/router";
 import { PROFILES } from "../constants/routes.js";

@@ -45,11 +45,7 @@ export default function Profile_Availability({ profile }) {
 
   const [saveMessage, setSaveMessage] = useState("");
 
-  const [availability, setavailability] = useState(
-    // availabity is a 2d array where element 0 contains string preferences for MWF 9-5
-    // and element 1 for TR
-    initialAvailability
-  );
+  const [availability, setavailability] = useState(initialAvailability);
 
   console.log("TESTTTT!");
 
@@ -62,13 +58,12 @@ export default function Profile_Availability({ profile }) {
             params: { profile: profile },
             headers: {
               Authorization: `Bearer ${Cookie.get("token")}`, // Use token if required for authorization
-              // "Content-Type": "application/json", // Ensure content type is JSON
+              "Content-Type": "application/json", // Ensure content type is JSON
             },
           }
         );
         const fetchedData = response.data;
         if (fetchedData) {
-          // console.log(`fetchedData availability = ${fetchedData}`);
           localStorage.setItem("availabilityData", JSON.stringify(fetchedData));
           // Assuming `fetchedData` is an array of the same shape as `availability`
           setavailability(fetchedData);
@@ -98,7 +93,6 @@ export default function Profile_Availability({ profile }) {
     if (dayIndex === "Tuesday" && timeIndex === 2) {
       return styles.disabled;
     }
-    // console.log(`style availability = ${availability}`);
     return availability[dayIndex][timeIndex] === Preference.UNACCEPTABLE
       ? styles.unacceptable
       : availability[dayIndex][timeIndex] === Preference.PREFERRED
@@ -143,10 +137,6 @@ export default function Profile_Availability({ profile }) {
       newAvailability[dayIndex][timeIndex]
     );
 
-    // console.log(
-    //   `After: newAvailability[${dayIndex}][${timeIndex}] = ${newAvailability[dayIndex][timeIndex]}`
-    // );
-
     // Update state with the new availability object
     setavailability(newAvailability);
   };
@@ -185,7 +175,6 @@ export default function Profile_Availability({ profile }) {
         }
       }
     }
-    // console.log("prefs = ", prefs);
     localStorage.setItem("availabilityData", JSON.stringify(availability));
     try {
       const response = await axios.post(
@@ -209,7 +198,6 @@ export default function Profile_Availability({ profile }) {
 
   return (
     <div className={styles.container}>
-      {/* <h1 className={styles.title}>Welcome {username}</h1> */}
       <h1 className={styles.title}>
         Select your availability for profile "{profile}"
       </h1>

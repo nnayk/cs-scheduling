@@ -15,13 +15,11 @@
   }
   
   .grid th {
-    /* background-color: #f0f0f0; */
     background-color: green;
     color: goldenrod;
   }
   
   .grid td {
-    /* background-color: #fff; */
     background-color: lightcoral;
   }
   

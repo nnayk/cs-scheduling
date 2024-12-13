@@ -42,18 +42,6 @@ const Quarter_Questions = ({ quarter, profile }) => {
       console.error("Error saving preferences:", error);
       setSaveMessage("Failed to save answers. Try again later.");
     }
-    // try {
-    //   const response = await fetch("/api/savePreferences", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify(allAnswers),
-    //   });
-    //   if (response.ok) {
-    //     console.log("Preferences saved successfully!");
-    //   }
-    // } catch (error) {
-    //   console.error("Error saving preferences:", error);
-    // }
   };
 
   return (

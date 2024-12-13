@@ -1,12 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
-const BACKEND_URL = process.env.BACKEND_URL;
 import { isAuthenticated } from "./auth";
 
 export default function InitialLanding() {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-50">
-      {/* Add the green title with two lines */}
       <h1 className="text-center text-9xl font-bold text-green-900 mb-8">
         <span className="block">Welcome to</span>
         <span className="block">Poly Prefs</span>
@@ -14,7 +12,7 @@ export default function InitialLanding() {
 
       <div>
         <Image
-          src="/logo.png" // The path to your image
+          src="/logo.png" // The path to image
           alt="Description of the image" // Alternative text for the image
           width={500} // Desired width of the image (in pixels)
           height={300} // Desired height of the image (in pixels)
@@ -40,7 +38,7 @@ export default function InitialLanding() {
 
 export async function getServerSideProps(context) {
   const { req } = context;
-  const token = req.cookies["token"]; // Replace "your_cookie_name" with your actual cookie name
+  const token = req.cookies["token"];
 
   if (await isAuthenticated(token)) {
     // If the user is authenticated, redirect them to the Create page

@@ -15,15 +15,12 @@
   }
   
   .grid th {
-    /* background-color: #f0f0f0; */
     background-color: green;
     color: goldenrod;
   }
   
   
   .grid td {
-    /* background-color: #fff; */
-    /* background-color: lightcoral; */
     background-color: #4caf50; /*Green for selected availability*/
   }
   
@@ -72,10 +69,6 @@
   margin-left: 0; /* Ensure it's aligned to the left without extra margin */
 }
 
-/* .hiddenRadio {
-  display: none;
-} */
-
 .clickableCell {
   display: inline-block;
   width: 100%;
@@ -93,7 +86,6 @@
 .wrappedHeader {
   max-width: 80px; /* Adjust width as needed */
   white-space: normal; /* Allows text to wrap */
-  /* word-wrap: break-word; Ensures words break if too long */
   word-break: break-all;
   text-align: left; /* Optional: align text for readability */
 }

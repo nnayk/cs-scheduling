@@ -53,19 +53,13 @@ const Profile_Agreement_Questions = ({ onChange, profile }) => {
     console.log("fetching agreement answers");
     const fetchAnswers = async () => {
       try {
-        // const storedData = localStorage.getItem("availabilityData");
-        // if (storedData) {
-        //   console.log("Using stored data = ", storedData);
-        //   setavailability(JSON.parse(storedData));
-        //   return;
-        // }
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/profile_questions?scope=agreement`,
           {
             params: { profile: profile },
             headers: {
               Authorization: `Bearer ${Cookie.get("token")}`, // Use token if required for authorization
-              // "Content-Type": "application/json", // Ensure content type is JSON
+              "Content-Type": "application/json", // Ensure content type is JSON
             },
           }
         );
@@ -77,7 +71,6 @@ const Profile_Agreement_Questions = ({ onChange, profile }) => {
             2
           )}`
         );
-        // console.log(`fetchedData agreement answers = ${fetchedData}`);
         if (Object.keys(fetchedData).length > 0) {
           assert(Object.keys(fetchedData).length === 5),
             "Expected 5 categories, got " + Object.keys(fetchedData).length;
@@ -91,23 +84,11 @@ const Profile_Agreement_Questions = ({ onChange, profile }) => {
           ];
           let prefs = {};
           let index = 0;
-          // loop through each value in fetchedData and setPreferences
           for (const [key, value] of Object.entries(fetchedData)) {
             console.log("key = ", key);
             console.log("value = ", value);
             prefs[scheduleKeys[index]] = value;
             index++;
-            // for (const [schedule, preference] of Object.entries(value)) {
-            //   console.log("schedule = ", schedule);
-            //   console.log("preference = ", preference);
-            //   setPreferences((prevPreferences) => ({
-            //     ...prevPreferences,
-            //     [key]: {
-            //       ...prevPreferences[key],
-            //       [schedule]: preference,
-            //     },
-            //   }));
-            // }
           }
           console.log("prefs = ", prefs);
           setPreferences(prefs);
@@ -117,8 +98,6 @@ const Profile_Agreement_Questions = ({ onChange, profile }) => {
           console.log("No agreement answers found");
           setPreferences(initialPreferences); // set to empty object
         }
-        // localStorage.setItem("availabilityData", JSON.stringify(fetchedData));
-        // Assuming `fetchedData` is an array of the same shape as `availability`
       } catch (error) {
         console.error("Error fetching availability:", error);
       }
@@ -131,8 +110,6 @@ const Profile_Agreement_Questions = ({ onChange, profile }) => {
   useEffect(() => {
     onChange(preferences);
   }, [preferences, onChange]);
-
-  // ... (renderPreferenceTable and return statement here)
 
   // Render function for each table of questions
   const renderPreferenceTable = (category, schedules) => (

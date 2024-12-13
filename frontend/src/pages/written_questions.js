@@ -48,19 +48,13 @@ const Written_Questions = ({ onChange, quarter, profile }) => {
     console.log("fetching written answers");
     const fetchAnswers = async () => {
       try {
-        // const storedData = localStorage.getItem("availabilityData");
-        // if (storedData) {
-        //   console.log("Using stored data = ", storedData);
-        //   setavailability(JSON.parse(storedData));
-        //   return;
-        // }
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/questions?scope=written`,
           {
             params: { quarter: quarter, profile: profile },
             headers: {
               Authorization: `Bearer ${Cookie.get("token")}`, // Use token if required for authorization
-              // "Content-Type": "application/json", // Ensure content type is JSON
+              "Content-Type": "application/json", // Ensure content type is JSON
             },
           }
         );
@@ -69,7 +63,6 @@ const Written_Questions = ({ onChange, quarter, profile }) => {
         console.log(JSON.stringify(response.data, null, 2));
         if (fetchedData && Object.keys(response.data).length > 0) {
           console.log(`fetchedData written answers = ${fetchedData}`);
-          // localStorage.setItem("availabilityData", JSON.stringify(fetchedData));
           // Assuming `fetchedData` is an array of the same shape as `availability`
           setAnswers(fetchedData);
         } else {
