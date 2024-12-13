@@ -50,21 +50,17 @@ def get_profiles(user_id):
     finally:
         db_config.close_connection(conn, cur)
          
-def create_profile(user_id, name, conns=[],commit=True):
+def create_profile(user_id, name):
     conn, cur = db_config.connect()
     try:
         sql = f"INSERT INTO {PROFILES_TABLE} (user_id, name) VALUES (%s, %s) RETURNING id"
         cur.execute(sql, (user_id, name))
         profile_id = cur.fetchone()[0]
-        if commit:
-            conn.commit()
-        else:
-            conns.append(conn)
+        conn.commit()
         logging.debug(f"Created profile {profile_id}")
         return profile_id
     finally:
-        if commit:
-            db_config.close_connection(conn, cur)
+        db_config.close_connection(conn, cur)
 
 #TODO
 def editProfile(profile):
@@ -78,7 +74,7 @@ def cloneProfile(user_id,original,clone):
         conn, cur = db_config.connect()
         conns = []
         # create a profiles table entry
-        clone_id = create_profile(user_id, clone, conns, commit=False)
+        clone_id = create_profile(user_id, clone)
         original_id = get_profile_id(user_id, original)
         # clone the profile_availability table entry
         times = ",".join(time_slots)

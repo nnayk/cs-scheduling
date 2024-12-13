@@ -5,19 +5,6 @@ import { isAuthenticated } from "./auth";
 import { useUser } from "../context/UserContext";
 import Cookie from "js-cookie";
 
-// const days = ["MWF Schedule", "TR Schedule"];
-// const times = [
-//   "9 AM",
-//   "10 AM",
-//   "11 AM",
-//   "12 PM",
-//   "1 PM",
-//   "2 PM",
-//   "3 PM",
-//   "4 PM",
-//   "5 PM",
-// ];
-
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 const times = [
   "9:00 AM",
@@ -69,12 +56,6 @@ export default function Profile_Availability({ profile }) {
   useEffect(() => {
     const fetchAvailability = async () => {
       try {
-        // const storedData = localStorage.getItem("availabilityData");
-        // if (storedData && storedData.length > 0) {
-        //   console.log("Using stored data = ", storedData);
-        //   setavailability(JSON.parse(storedData));
-        //   return;
-        // }
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/profile_availability`,
           {

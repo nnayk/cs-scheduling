@@ -65,10 +65,17 @@ From root:
 
 I used pgAdmin, an open source Postgres administration desktop app. You can download it here: https://www.pgadmin.org/
 
+#### **Connecting to local DB**
+
 Once you have followed the PgAdmin setup instructions you should have a master password (which you should've set) as well as a username ("postgres" by default). There should also be a default "postgres" database that was created but you can also create a different database if you want.
 
-1. **Connect to the DB**
-   In order to connect to the DB programatically create a file called `.env` and add it to `backend/db`. Populate this file with the following vars:
+#### **Connecting to deployed DB**
+
+To connect to a deployed DB right click `Servers` and then select register a server. Provide the server name, then go to the connection tab and provide the host name, username, password, and port.
+
+#### **Connecting to the DB programatically**
+
+1. In order to connect to the DB programatically create a file called `.env` and add it to `backend/db`. Populate this file with the following vars:
 
    1. `DB_HOST`
    2. `DB_NAME` - name of the DB
@@ -110,7 +117,10 @@ Once you have followed the PgAdmin setup instructions you should have a master p
    Right now the `quarters` table will be empty. As its name suggests it contains all the quarters for which this web app will collect submissions for. In order to add quarters to the DB:
 
    1. In a python shell, use the script backend/db/tables/quarters.py to ADD NEW quarters or delete existing ones:
-   2. Note: (Assuming cwd is backend):
+   2. Note: (Assuming cwd is backend/db since the .env file is in this directory):
+      * All the db files import db_config.py as `import db.db_config as db_config` which is fine when running the backend server since Flask resolves imports relative to the  `/backend` directory. However given that we're working in the python shell in the `backend/db` directory these imports will throw errors. One hacky solution is to just append the parent directory (`db`) to the current path:
+        * `import sys`
+        * `sys.path.insert(0,"..")`
       * `from db.tables.quarters import insertQuarters`
       * insertQuarters(`<python list of quarters as strings>`) (ex. insertQuarters(["fall 2023","winter 2024","spring 2024"])
       * Verify in Pgadmin that the quarters table contains rows for the new quarters

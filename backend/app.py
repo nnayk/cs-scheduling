@@ -148,6 +148,7 @@ def create_app(config_class=Config):
     @app.route("/profile_questions",methods=['POST'])
     @jwt_required()
     def save_profile_answers():
+        app.logger.debug("inside save_profile_answers")
         user = get_jwt_identity()
         data = request.get_json()
         app.logger.debug(f"User = {user}")
@@ -175,7 +176,7 @@ def create_app(config_class=Config):
     @jwt_required()
     def get_profile_answers():
         user = get_jwt_identity()
-        app.logger.debug("inside get_answers")
+        app.logger.debug("inside get_profile__answers")
         app.logger.debug(f"User = {user}")
         profile = request.args.get("profile")
         scope = request.args.get("scope",default=None)
@@ -201,6 +202,7 @@ def create_app(config_class=Config):
     @app.route("/profile_availability",methods=['POST'])
     @jwt_required()
     def set_profile_availability():
+        app.logger.debug("inside set_profile_availability")
         user = get_jwt_identity()
         data = request.get_json()
         app.logger.debug(f"User = {user}")
@@ -229,6 +231,7 @@ def create_app(config_class=Config):
     @app.route("/availability",methods=['POST'])
     @jwt_required()
     def set_availability():
+        app.logger.debug("inside set_availability")
         user = get_jwt_identity()
         data = request.get_json()
         app.logger.debug(f"User = {user}")
@@ -260,29 +263,36 @@ def create_app(config_class=Config):
     
     @app.route("/login",methods=['POST','OPTIONS'])
     def login():
-        # TODO: consider deleting this
-        if request.method == 'OPTIONS':
-            response = make_response()
-            response.headers.add("Access-Control-Allow-Origin", "*")
-            response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
-            response.headers.add("Access-Control-Allow-Methods", "POST, OPTIONS")
-            return response
-        data = request.get_json()
-        app.logger.info(f"login data = {data}")
-        user = users.get_user_by_email(data["email"]) 
-        if not user:
-            return {"message":"Email doesn't exist"},401
-        user_id, email, expected_pwd_hash = user 
-        if check_password(data["password"],expected_pwd_hash):
-            access_token = create_access_token(identity=str(user_id))
-            return {"message":"User authenticated",
-                    "access_token":access_token
-                    },200
-        else:
-            return jsonify({"message":"Incorrect password"}),401
+        app.logger.debug("inside login")
+        try:
+            # TODO: consider deleting this
+            if request.method == 'OPTIONS':
+                response = make_response()
+                response.headers.add("Access-Control-Allow-Origin", "*")
+                response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
+                response.headers.add("Access-Control-Allow-Methods", "POST, OPTIONS")
+                return response
+            data = request.get_json()
+            app.logger.info(f"received login data = {data}")
+            user = users.get_user_by_email(data["email"]) 
+            app.logger.info(f"User = {user}")
+            if not user:
+                return {"message":"Email doesn't exist"},401
+            user_id, email, expected_pwd_hash = user 
+            if check_password(data["password"],expected_pwd_hash):
+                access_token = create_access_token(identity=str(user_id))
+                return {"message":"User authenticated",
+                        "access_token":access_token
+                        },200
+            else:
+                return jsonify({"message":"Incorrect password"}),401
+        except Exception as e:
+            app.logger.error(f"Exception = {e}")
+            return jsonify({"message":"Error logging in"}),500
 
     @app.route("/register",methods=['POST'])
     def register():
+        app.logger.debug("inside register")
         data = request.get_json()
         required_fields = ["password", "email"]
         # Skipping check for existing email given that SAML auth will replace this 
@@ -308,6 +318,7 @@ def create_app(config_class=Config):
     @app.route("/api/verify_user", methods=["GET","OPTIONS"])
     @jwt_required()
     def verify_user():
+        app.logger.debug("inside verify_user")
         if request.method == 'OPTIONS':
             app.logger.info("Got an options request")
             response = make_response()
