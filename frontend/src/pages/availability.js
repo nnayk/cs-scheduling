@@ -5,19 +5,6 @@ import { isAuthenticated } from "./auth";
 import { useUser } from "../context/UserContext";
 import Cookie from "js-cookie";
 
-// const days = ["MWF Schedule", "TR Schedule"];
-// const times = [
-//   "9 AM",
-//   "10 AM",
-//   "11 AM",
-//   "12 PM",
-//   "1 PM",
-//   "2 PM",
-//   "3 PM",
-//   "4 PM",
-//   "5 PM",
-// ];
-
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 const times = [
   "9:00 AM",
@@ -62,11 +49,7 @@ export default function Quarter_Availability({ quarter, profile }) {
 
   const [saveMessage, setSaveMessage] = useState("");
 
-  const [availability, setavailability] = useState(
-    // availabity is a 2d array where element 0 contains string preferences for MWF 9-5
-    // and element 1 for TR
-    initialAvailability
-  );
+  const [availability, setavailability] = useState(initialAvailability);
 
   useEffect(() => {
     const fetchAvailability = async () => {
@@ -76,14 +59,13 @@ export default function Quarter_Availability({ quarter, profile }) {
           {
             params: { quarter: quarter, profile: profile },
             headers: {
-              Authorization: `Bearer ${Cookie.get("token")}`, // Use token if required for authorization
-              // "Content-Type": "application/json", // Ensure content type is JSON
+              Authorization: `Bearer ${Cookie.get("token")}`,
+              "Content-Type": "application/json", // Ensure content type is JSON
             },
           }
         );
         const fetchedData = response.data;
         if (fetchedData) {
-          // console.log(`fetchedData availability = ${fetchedData}`);
           localStorage.setItem("availabilityData", JSON.stringify(fetchedData));
           // Assuming `fetchedData` is an array of the same shape as `availability`
           setavailability(fetchedData);
@@ -114,7 +96,6 @@ export default function Quarter_Availability({ quarter, profile }) {
     if (dayIndex === "Tuesday" && timeIndex === 2) {
       return styles.disabled;
     }
-    // console.log(`availability[${dayIndex}] = ${availability[dayIndex]}`);
     return availability[dayIndex][timeIndex] === Preference.UNACCEPTABLE
       ? styles.unacceptable
       : availability[dayIndex][timeIndex] === Preference.PREFERRED
@@ -149,7 +130,6 @@ export default function Quarter_Availability({ quarter, profile }) {
     newavailability[dayIndex][timeIndex] = getNewAvailability(
       newavailability[dayIndex][timeIndex]
     );
-    // console.log(`new avail = ${newavailability}`);
     setavailability(newavailability);
   };
 
@@ -201,7 +181,6 @@ export default function Quarter_Availability({ quarter, profile }) {
       );
       if (response.status == 200) setSaveMessage("Availability saved!");
       else setSaveMessage("Failed to save availability");
-      // console.log(prefs);
     } catch (error) {
       console.error("Error saving availability:", error);
       setSaveMessage("Failed to save availability. Try again later.");
@@ -210,7 +189,6 @@ export default function Quarter_Availability({ quarter, profile }) {
 
   return (
     <div className={styles.container}>
-      {/* <h1 className={styles.title}>Welcome {username}</h1> */}
       <h1 className={styles.title}>Select your availability</h1>
       <p className={styles.subtitle}>
         <strong>Note:</strong> If you are tenure track, please select

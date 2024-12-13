@@ -64,8 +64,8 @@ const Agreement_Questions = ({ onChange, quarter, profile }) => {
           {
             params: { quarter: quarter, profile: profile },
             headers: {
-              Authorization: `Bearer ${Cookie.get("token")}`, // Use token if required for authorization
-              // "Content-Type": "application/json", // Ensure content type is JSON
+              Authorization: `Bearer ${Cookie.get("token")}`,
+              "Content-Type": "application/json", // Ensure content type is JSON
             },
           }
         );
@@ -92,21 +92,16 @@ const Agreement_Questions = ({ onChange, quarter, profile }) => {
           let index = 0;
           // loop through each value in fetchedData and setPreferences
           for (const [key, value] of Object.entries(fetchedData)) {
-            // console.log("key = ", key);
-            // console.log("value = ", value);
             prefs[scheduleKeys[index]] = value;
             index++;
           }
           console.log("prefs = ", prefs);
           setPreferences(prefs);
           console.log("setPreferences to ", preferences);
-          // setPreferences(fetchedData);
         } else {
           console.log("No agreement answers found");
           setPreferences(initialPreferences); // set to empty object
         }
-        // localStorage.setItem("availabilityData", JSON.stringify(fetchedData));
-        // Assuming `fetchedData` is an array of the same shape as `availability`
       } catch (error) {
         console.error("Error fetching availability:", error);
       }
@@ -119,8 +114,6 @@ const Agreement_Questions = ({ onChange, quarter, profile }) => {
   useEffect(() => {
     onChange(preferences);
   }, [preferences, onChange]);
-
-  // ... (renderPreferenceTable and return statement here)
 
   // Render function for each table of questions
   const renderPreferenceTable = (category, schedules) => (
@@ -210,8 +203,6 @@ export async function getServerSideProps(context) {
       },
     };
   }
-
-  // If the user is authenticated, render the availability page
   return {
     props: {}, // Will be passed to the page component as props
   };
